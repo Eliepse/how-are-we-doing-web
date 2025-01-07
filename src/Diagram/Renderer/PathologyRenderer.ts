@@ -6,6 +6,7 @@ import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { Pathology } from "../Items/Pathology/Pathology";
 
 const defaultStroke = new Stroke(3, "#ffffffaa");
+const hoveredStroke = new Stroke(3, "#ffffffff");
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	private radius = 7;
@@ -19,7 +20,8 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 			() => CirclePainter.make(),
 			true
 		);
-		CirclePainter.update(circle, node.getGlobalPosition(), this.radius, defaultStroke, "none");
+		const stroke = node.isHovered() ? hoveredStroke : defaultStroke;
+		CirclePainter.update(circle, node.getGlobalPosition(), this.radius, stroke, "none");
 	}
 
 	override accepts(engineNode: EngineNode): boolean {

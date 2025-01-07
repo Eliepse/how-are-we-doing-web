@@ -3,7 +3,7 @@ import { Engine } from "./Engine";
 import type { EngineNode } from "./EngineNode";
 
 export abstract class Renderer {
-	private _engine: Engine;
+	protected _engine: Engine;
 
 	constructor(root: Node2D) {
 		this._engine = new Engine(

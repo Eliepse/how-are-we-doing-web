@@ -5,6 +5,7 @@ import { Renderer } from "../../Core/Renderer";
 import type { Node2D } from "../../Node2D";
 import type { Size } from "../../Parameters/Size";
 import { SymbolShape } from "../../SymbolShape";
+import { Vector } from "../../Vector";
 import { VirtualShape } from "../../VirtualShape";
 import { FallbackRenderer } from "./NodeRenderer/FallbackRenderer";
 import { VirtualShapeRenderer } from "./NodeRenderer/VirtualShapeRenderer";
@@ -34,6 +35,25 @@ export class SVGRenderer extends Renderer {
 
 		this._renderers.add(new VirtualShapeRenderer(this));
 		this._renderers.add(new FallbackRenderer(this));
+
+		const correctCursorPosition = (position: Vector): Vector => {
+			const bbox = this._dom.getBoundingClientRect();
+			return new Vector(bbox.x, bbox.y)
+				.sub(position)
+				.mul(new Vector(size.width / bbox.width, size.height / bbox.height));
+		};
+
+		document.addEventListener("mousemove", (e) => {
+			this._engine.triggerEvent("mousemove", {
+				cursor: correctCursorPosition(new Vector(e.clientX, e.clientY)),
+			});
+		});
+
+		document.addEventListener("click", (e) => {
+			this._engine.triggerEvent("click", {
+				cursor: correctCursorPosition(new Vector(e.clientX, e.clientY)),
+			});
+		});
 	}
 
 	addNodeRenderer(renderer: NodeRenderer<SVGRenderer>): void {
@@ -115,5 +135,9 @@ export class SVGRenderer extends Renderer {
 
 	getLastFrameTime(): number {
 		return this._stats.lastFrameTime;
+	}
+
+	getEngine() {
+		return this._engine;
 	}
 }

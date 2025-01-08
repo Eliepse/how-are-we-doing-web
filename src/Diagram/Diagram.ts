@@ -1,4 +1,7 @@
 import db from "../../database.json";
+import type { WithLifecycle } from "../Engine2D/Contract/WithLifecycle";
+import type { Engine } from "../Engine2D/Core/Engine";
+import type { NodeEvent } from "../Engine2D/Core/NodeEvent";
 import { Node2D } from "../Engine2D/Node2D";
 import { Angle } from "../Engine2D/Parameters/Angle";
 import { Vector } from "../Engine2D/Vector";
@@ -11,14 +14,23 @@ import { determinantAssets } from "./Items/Determinant/shapes";
 import { FacilitiesRing } from "./Items/Facility/FacilitiesRing";
 import { Facility } from "./Items/Facility/Facility";
 import { FacilityFamily } from "./Items/Facility/FacilityFamily";
-import { Pathology } from "./Items/Pathology/Pathology";
+import { Pathology, type PathologyEvents } from "./Items/Pathology/Pathology";
 import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
 
-export class Diagram extends Node2D {
+type SelectableNode = Pathology | Determinant | Facility;
+
+export class Diagram extends Node2D implements WithLifecycle {
 	private pathologyFamilies: Array<PathologyFamily> = [];
+	private _selectedNode: SelectableNode | undefined = undefined;
 
 	constructor() {
 		super();
+
+		this.addListener(
+			"click",
+			(e: NodeEvent) => undefined === e.target && this.selectNode(undefined)
+		);
+
 		this.addChildren(new FacilitiesRing(this.buildFacilityGroups(db.facilities), 440));
 		this.addChildren(new DeterminantsRing(this.buildDeterminantFamilies(db.determinants)));
 
@@ -29,6 +41,35 @@ export class Diagram extends Node2D {
 			this.addChildren(family);
 			this.pathologyFamilies.push(family);
 		});
+	}
+
+	onMount(engine: Engine): void | (() => void) {
+		const onClick = (event: PathologyEvents["click"]) => {
+			this.selectNode(event.target);
+			event.stopPropagation();
+		};
+
+		this.pathologyFamilies.forEach((family) => {
+			family.getChildren().forEach((pathology) => {
+				pathology.addListener("click", onClick);
+			});
+		});
+
+		return () => {
+			this.pathologyFamilies.forEach((family) => {
+				family.getChildren().forEach((pathology) => {
+					pathology.removeListener("click", onClick);
+				});
+			});
+		};
+	}
+
+	onRender(deltaTime: number): void {
+		//
+	}
+
+	onUnmount(engine: Engine): void {
+		//
 	}
 
 	private buildFacilityGroups(groups: typeof db.facilities): Array<ArcGroup<Facility>> {
@@ -84,6 +125,26 @@ export class Diagram extends Node2D {
 
 			return family;
 		});
+	}
+
+	selectNode(node: SelectableNode | undefined): void {
+		if (this._selectedNode === node) {
+			return;
+		}
+
+		if (this._selectedNode instanceof Pathology) {
+			const parent = this._selectedNode.getParent() as PathologyFamily;
+			parent.paused = false;
+		}
+
+		if (node instanceof Pathology) {
+			const parent = node.getParent() as PathologyFamily;
+			parent.paused = true;
+		}
+
+		node?.setActive(true);
+		this._selectedNode?.setActive(false);
+		this._selectedNode = node;
 	}
 
 	getPathologyFamilies(): Array<PathologyFamily> {

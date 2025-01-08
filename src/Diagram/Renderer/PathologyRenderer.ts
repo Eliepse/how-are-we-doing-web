@@ -7,6 +7,7 @@ import { Pathology } from "../Items/Pathology/Pathology";
 
 const defaultStroke = new Stroke(3, "#ffffffaa");
 const hoveredStroke = new Stroke(3, "#ffffffff");
+const activeStroke = new Stroke(3, "#ff0000ff");
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	private radius = 7;
@@ -20,7 +21,10 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 			() => CirclePainter.make(),
 			true
 		);
-		const stroke = node.isHovered() ? hoveredStroke : defaultStroke;
+
+		let stroke = node.isHovered() ? hoveredStroke : defaultStroke;
+		stroke = node.active ? activeStroke : stroke;
+
 		CirclePainter.update(circle, node.getGlobalPosition(), this.radius, stroke, "none");
 	}
 

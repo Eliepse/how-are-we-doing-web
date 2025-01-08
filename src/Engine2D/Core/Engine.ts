@@ -1,8 +1,10 @@
 import type { WithLifecycle } from "../Contract/WithLifecycle";
+import type { WithPointerEvents } from "../Contract/WithPointerEvents";
 import type { Node2D } from "../Node2D";
 import type { Vector } from "../Vector";
 import { Clock } from "./Clock";
 import { EngineNode } from "./EngineNode";
+import { NodeEvent } from "./NodeEvent";
 
 export type EngineMouseEvent = { cursor: Vector };
 type Listener<TEvent extends object> = (event: TEvent) => void;
@@ -19,6 +21,7 @@ export class Engine {
 		mousemove: new Set<Listeners["mousemove"]>(),
 		click: new Set<Listeners["click"]>(),
 	};
+	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 
 	constructor(
 		private _rootNode: Node2D,
@@ -27,12 +30,13 @@ export class Engine {
 		private _onRender: (node: EngineNode, deltaTime: number, frames: number) => void
 	) {
 		this._clock = new Clock(60, (delta, frames) => this.tick(delta, frames));
+		this.addEventListener("click", (e) => this.propagateClick(e.cursor));
 	}
 
 	private mountTree(treeNode: EngineNode): void {
 		this._onMount(treeNode);
 
-		const node = treeNode.node as Node2D & Partial<WithLifecycle>;
+		const node = treeNode.node as Node2D & Partial<WithLifecycle & WithPointerEvents>;
 
 		const callback = node.onMount ? node.onMount(this) : undefined;
 
@@ -40,13 +44,25 @@ export class Engine {
 			this._lifecycleCallbacks.set(node, callback);
 		}
 
+		if (undefined !== node.getPointerCollider) {
+			this._pointerEventsNodes.add(node as Node2D & WithPointerEvents);
+		}
+
 		treeNode.children.forEach((child) => this.mountTree(child));
 	}
 
 	private unmountTree(treeNode: EngineNode): void {
 		treeNode.children.forEach((child) => this.unmountTree(child));
+
+		const node = treeNode.node as Node2D & Partial<WithPointerEvents>;
 		const callback = this._lifecycleCallbacks.get(treeNode.node);
+
 		callback && callback();
+
+		if (undefined !== node.getPointerCollider) {
+			this._pointerEventsNodes.delete(node as Node2D & WithPointerEvents);
+		}
+
 		this._onUnmount(treeNode);
 	}
 
@@ -116,11 +132,26 @@ export class Engine {
 		this._listeners[event].delete(callback);
 	}
 
-	triggerEvent<TKey extends keyof Listeners>(
+	dispatchEvent<TKey extends keyof Listeners>(
 		event: TKey,
 		...params: Parameters<Listeners[TKey]>
 	): void {
 		this._listeners[event].forEach((listener) => listener(...params));
+	}
+
+	private propagateClick(cursor: Vector): void {
+		for (const node of this._pointerEventsNodes) {
+			if (false === node.getPointerCollider().isInside(cursor)) {
+				continue;
+			}
+
+			// Stop at first match
+			node.dispatchEvent(new NodeEvent("click", node));
+			return;
+		}
+
+		// Fallback to root node if none match
+		this._rootNode.dispatchEvent(new NodeEvent("click"));
 	}
 
 	private tick(deltaTime: number, frames: number): void {

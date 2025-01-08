@@ -72,6 +72,14 @@ export class Vector {
 		return Math.atan(this.y / this.x);
 	}
 
+	distanceSq(dest: Vector): number {
+		return dest.sub(this).magSq();
+	}
+
+	distance(dest: Vector): number {
+		return Math.sqrt(this.distanceSq(dest));
+	}
+
 	clone(): Vector {
 		return new Vector(this.x, this.y);
 	}

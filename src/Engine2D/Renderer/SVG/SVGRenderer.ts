@@ -44,13 +44,13 @@ export class SVGRenderer extends Renderer {
 		};
 
 		document.addEventListener("mousemove", (e) => {
-			this._engine.triggerEvent("mousemove", {
+			this._engine.dispatchEvent("mousemove", {
 				cursor: correctCursorPosition(new Vector(e.clientX, e.clientY)),
 			});
 		});
 
 		document.addEventListener("click", (e) => {
-			this._engine.triggerEvent("click", {
+			this._engine.dispatchEvent("click", {
 				cursor: correctCursorPosition(new Vector(e.clientX, e.clientY)),
 			});
 		});

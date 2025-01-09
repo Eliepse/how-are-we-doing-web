@@ -14,7 +14,7 @@ import { determinantAssets } from "./Items/Determinant/shapes";
 import { FacilitiesRing } from "./Items/Facility/FacilitiesRing";
 import { Facility } from "./Items/Facility/Facility";
 import { FacilityFamily } from "./Items/Facility/FacilityFamily";
-import { Pathology, type PathologyEvents } from "./Items/Pathology/Pathology";
+import { Pathology } from "./Items/Pathology/Pathology";
 import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
 
 type SelectableNode = Pathology | Determinant | Facility;
@@ -26,10 +26,21 @@ export class Diagram extends Node2D implements WithLifecycle {
 	constructor() {
 		super();
 
-		this.addListener(
-			"click",
-			(e: NodeEvent) => undefined === e.target && this.selectNode(undefined)
-		);
+		this.addListener("click", (e: NodeEvent) => {
+			const target = e.target;
+
+			if (
+				target instanceof Pathology ||
+				target instanceof Determinant ||
+				target instanceof Facility
+			) {
+				this.selectNode(target);
+				e.stopPropagation();
+				return;
+			}
+
+			this.selectNode(undefined);
+		});
 
 		this.addChildren(new FacilitiesRing(this.buildFacilityGroups(db.facilities), 440));
 		this.addChildren(new DeterminantsRing(this.buildDeterminantFamilies(db.determinants)));
@@ -44,24 +55,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 	}
 
 	onMount(engine: Engine): void | (() => void) {
-		const onClick = (event: PathologyEvents["click"]) => {
-			this.selectNode(event.target);
-			event.stopPropagation();
-		};
-
-		this.pathologyFamilies.forEach((family) => {
-			family.getChildren().forEach((pathology) => {
-				pathology.addListener("click", onClick);
-			});
-		});
-
-		return () => {
-			this.pathologyFamilies.forEach((family) => {
-				family.getChildren().forEach((pathology) => {
-					pathology.removeListener("click", onClick);
-				});
-			});
-		};
+		//
 	}
 
 	onRender(deltaTime: number): void {

@@ -44,7 +44,7 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 			symbol,
 			node.getGlobalPosition(),
 			node.getGlobalRotation(),
-			node.active ? shapeStyle.selected : shapeStyle.default,
+			node.isActive() ? shapeStyle.selected : shapeStyle.default,
 		);
 
 		// Create a temporary node to compute the position
@@ -56,7 +56,7 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 			circle,
 			tempNode.getGlobalPosition(),
 			4,
-			node.active ? anchorStyle.selected : anchorStyle.default,
+			node.isActive() ? anchorStyle.selected : anchorStyle.default,
 		);
 	}
 	override accepts(engineNode: EngineNode): boolean {

@@ -13,7 +13,7 @@ export class Pathology
 	implements WithLifecycle, WithPointerEvents
 {
 	private _hovered = false;
-	public active = false;
+	private _active = false;
 
 	onMount(engine: Engine): void | (() => void) {
 		const handleMouseMove = (e: EngineMouseEvent) => {
@@ -44,12 +44,16 @@ export class Pathology
 		return this._hovered;
 	}
 
-	setActive(value: boolean): void {
-		if (value === this.active) {
-			return;
-		}
+	activate(): void {
+		this._active = true;
+	}
 
-		this.active = value;
+	deactivate(): void {
+		this._active = false;
+	}
+
+	isActive(): boolean {
+		return this._active;
 	}
 
 	getPointerCollider(): Collider {

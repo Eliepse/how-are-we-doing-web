@@ -10,7 +10,7 @@ import { FacilityFamily } from "./FacilityFamily";
 import { facilityShape } from "./shapes";
 
 export class Facility extends VirtualShape implements WithPointerEvents, WithLifecycle {
-	public active = false;
+	private _active = false;
 	private _collider?: TorusCollider;
 
 	constructor(private _arc: Angle) {
@@ -58,11 +58,15 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		return this._collider;
 	}
 
-	setActive(value: boolean): void {
-		if (value === this.active) {
-			return;
-		}
+	activate(): void {
+		this._active = true;
+	}
 
-		this.active = value;
+	deactivate(): void {
+		this._active = false;
+	}
+
+	isActive(): boolean {
+		return this._active;
 	}
 }

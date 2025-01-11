@@ -28,7 +28,7 @@ export class FacilityRenderer extends NodeRenderer<SVGRenderer> {
 			symbol,
 			node.getGlobalPosition(),
 			node.getGlobalRotation(),
-			node.active ? shapeStyle.selected : shapeStyle.default,
+			node.isActive() ? shapeStyle.selected : shapeStyle.default,
 		);
 	}
 

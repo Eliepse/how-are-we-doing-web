@@ -27,7 +27,7 @@ const stepClipsOptimized = [
 export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
 	private elements: Array<VirtualShape> = [];
 	private step: number = 2;
-	public active = false;
+	private _active = false;
 	private _collider?: TorusCollider;
 
 	constructor(asset: Symbolic, private _colliderConfig: { arc: Angle }) {
@@ -95,11 +95,15 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		this.step = Math.min(4, Math.max(1, step));
 	}
 
-	setActive(value: boolean): void {
-		if (value === this.active) {
-			return;
-		}
+	activate(): void {
+		this._active = true;
+	}
 
-		this.active = value;
+	deactivate(): void {
+		this._active = false;
+	}
+
+	isActive(): boolean {
+		return this._active;
 	}
 }

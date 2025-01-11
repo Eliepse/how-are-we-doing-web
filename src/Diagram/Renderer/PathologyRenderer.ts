@@ -25,7 +25,7 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 		);
 
 		let style = node.isHovered() ? hoveredStyle : defaultStyle;
-		style = node.active ? activeStyle : style;
+		style = node.isActive() ? activeStyle : style;
 
 		CirclePainter.update(circle, node.getGlobalPosition(), this.radius, style);
 	}

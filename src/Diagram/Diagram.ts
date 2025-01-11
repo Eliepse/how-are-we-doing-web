@@ -141,9 +141,13 @@ export class Diagram extends Node2D implements WithLifecycle {
 			parent.paused = true;
 		}
 
-		node?.setActive(true);
-		this._selectedNode?.setActive(false);
+		node?.activate();
+		this._selectedNode?.deactivate();
 		this._selectedNode = node;
+	}
+
+	getSelectedNode(): SelectableNode | undefined {
+		return this._selectedNode;
 	}
 
 	getPathologyFamilies(): Array<PathologyFamily> {

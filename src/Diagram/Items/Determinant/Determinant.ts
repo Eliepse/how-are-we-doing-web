@@ -5,9 +5,13 @@ import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEv
 import { ConstantCollider } from "../../../Engine2D/Core/ConstantCollider";
 import type { Engine } from "../../../Engine2D/Core/Engine";
 import { TorusCollider } from "../../../Engine2D/Core/TorusCollider";
+import { Node2D } from "../../../Engine2D/Node2D";
 import type { Angle } from "../../../Engine2D/Parameters/Angle";
 import { ClipPath } from "../../../Engine2D/Parameters/Clip";
 import { VirtualShape } from "../../../Engine2D/VirtualShape";
+import { Diagram } from "../../Diagram";
+import { Facility } from "../Facility/Facility";
+import { Pathology } from "../Pathology/Pathology";
 import { DeterminantSubFamily } from "./DeterminantSubFamily";
 
 const stepClips = [
@@ -24,13 +28,19 @@ const stepClipsOptimized = [
 	ClipPath.rect("0", "100%", "100%", "0"),
 ];
 
-export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
-	private elements: Array<VirtualShape> = [];
-	private step: number = 2;
-	private _active = false;
-	private _collider?: TorusCollider;
+type Associations = { pathologies: number[]; facilities: number[] };
 
-	constructor(asset: Symbolic, private _colliderConfig: { arc: Angle }) {
+export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
+	private step: number = 2;
+	private _collider?: TorusCollider;
+	private _diagram?: Diagram;
+
+	constructor(
+		public readonly id: number,
+		asset: Symbolic,
+		private _colliderConfig: { arc: Angle },
+		public readonly assosiactions: Associations,
+	) {
 		super(asset);
 
 		// if (this.optimized) {
@@ -52,6 +62,10 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		if (!(parent instanceof DeterminantSubFamily)) {
 			return;
 		}
+
+		this._diagram = Node2D.findParent(parent, (n) => n instanceof Diagram) as
+			| Diagram
+			| undefined;
 
 		const outerRadius = parent.getRadius() + 8;
 		const torusWidth = parent.getTorusWidth() + 16;
@@ -95,15 +109,21 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		this.step = Math.min(4, Math.max(1, step));
 	}
 
-	activate(): void {
-		this._active = true;
-	}
-
-	deactivate(): void {
-		this._active = false;
-	}
-
 	isActive(): boolean {
-		return this._active;
+		const node = this._diagram?.getSelectedNode();
+
+		if (this === node) {
+			return true;
+		}
+
+		if (node instanceof Facility) {
+			return this.assosiactions.facilities.includes(node.id);
+		}
+
+		if (node instanceof Pathology) {
+			return this.assosiactions.pathologies.includes(node.id);
+		}
+
+		return false;
 	}
 }

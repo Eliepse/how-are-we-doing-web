@@ -46,7 +46,10 @@ export class Diagram extends Node2D implements WithLifecycle {
 		this.addChildren(new DeterminantsRing(this.buildDeterminantFamilies(db.determinants)));
 
 		db.pathologies.forEach((familyData, index) => {
-			const children = familyData.children.map(() => new Pathology());
+			const children = familyData.children.map((child) => {
+				const associatedDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
+				return new Pathology(child.id, { determinants: associatedDeterminants });
+			});
 			const family = new PathologyFamily(children, 96);
 			family.setPosition(Vector.Right.mul(100).rot(index * Math.PI * (2 / 3)));
 			this.addChildren(family);
@@ -74,7 +77,12 @@ export class Diagram extends Node2D implements WithLifecycle {
 			(group) =>
 				new FacilityFamily(
 					group.name,
-					group.children.map(() => new Facility(itemArc)),
+					group.children.map((child) => {
+						const associatedDeterminants = Object.keys(child.determinants).map((v) =>
+							parseInt(v),
+						);
+						return new Facility(child.id, { determinants: associatedDeterminants }, itemArc);
+					}),
 					new Angle(),
 					450,
 				),
@@ -104,8 +112,17 @@ export class Diagram extends Node2D implements WithLifecycle {
 
 				const subFamily = new DeterminantSubFamily(
 					subFamilyData.name,
-					determinants.map(() => {
-						return new Determinant(asset, { arc: itemArc });
+					determinants.map((child) => {
+						const associatedPathologies = Object.keys(child.pathologies).map((v) =>
+							parseInt(v),
+						);
+						const associatedFacilities = Object.keys(child.facilities).map((v) => parseInt(v));
+						return new Determinant(
+							child.id,
+							asset,
+							{ arc: itemArc },
+							{ facilities: associatedFacilities, pathologies: associatedPathologies },
+						);
 					}),
 					subFamilyArc,
 					360,
@@ -141,8 +158,6 @@ export class Diagram extends Node2D implements WithLifecycle {
 			parent.paused = true;
 		}
 
-		node?.activate();
-		this._selectedNode?.deactivate();
 		this._selectedNode = node;
 	}
 

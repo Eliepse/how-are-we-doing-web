@@ -5,17 +5,29 @@ import { CircleCollider } from "../../../Engine2D/Core/CircleCollider";
 import type { Engine, EngineMouseEvent } from "../../../Engine2D/Core/Engine";
 import { NodeEvent } from "../../../Engine2D/Core/NodeEvent";
 import { Node2D } from "../../../Engine2D/Node2D";
+import { Diagram } from "../../Diagram";
+import { Determinant } from "../Determinant/Determinant";
+import { Facility } from "../Facility/Facility";
 
 export type PathologyEvents = { click: NodeEvent<Pathology> };
+type Associations = { determinants: number[] };
 
 export class Pathology
 	extends Node2D<PathologyEvents>
 	implements WithLifecycle, WithPointerEvents
 {
 	private _hovered = false;
-	private _active = false;
+	private _diagram?: Diagram;
+
+	constructor(public readonly id: number, public readonly associations: Associations) {
+		super();
+	}
 
 	onMount(engine: Engine): void | (() => void) {
+		this._diagram = Node2D.findParent(this.getParent(), (n) => n instanceof Diagram) as
+			| Diagram
+			| undefined;
+
 		const handleMouseMove = (e: EngineMouseEvent) => {
 			const hovered = this.getPointerCollider().isInside(e.cursor);
 
@@ -44,16 +56,23 @@ export class Pathology
 		return this._hovered;
 	}
 
-	activate(): void {
-		this._active = true;
-	}
-
-	deactivate(): void {
-		this._active = false;
-	}
-
 	isActive(): boolean {
-		return this._active;
+		const node = this._diagram?.getSelectedNode();
+
+		if (this === node) {
+			return true;
+		}
+
+		if (node instanceof Determinant) {
+			return this.associations.determinants.includes(node.id);
+		}
+
+		if (node instanceof Facility) {
+			const activeDets = node.associations.determinants;
+			return undefined !== this.associations.determinants.find((id) => activeDets.includes(id));
+		}
+
+		return false;
 	}
 
 	getPointerCollider(): Collider {

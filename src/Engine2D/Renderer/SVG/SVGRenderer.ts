@@ -8,7 +8,6 @@ import { SymbolShape } from "../../SymbolShape";
 import { Vector } from "../../Vector";
 import { VirtualShape } from "../../VirtualShape";
 import { FallbackRenderer } from "./NodeRenderer/FallbackRenderer";
-import { VirtualShapeRenderer } from "./NodeRenderer/VirtualShapeRenderer";
 
 type NodeDOMStore = Map<string, Element>;
 
@@ -33,7 +32,6 @@ export class SVGRenderer extends Renderer {
 		this._dom.setAttribute("viewBox", `0 0 ${w} ${h}`);
 		this._container.append(this._dom);
 
-		this._renderers.add(new VirtualShapeRenderer(this));
 		this._renderers.add(new FallbackRenderer(this));
 
 		const correctCursorPosition = (position: Vector): Vector => {
@@ -99,7 +97,7 @@ export class SVGRenderer extends Renderer {
 		node: EngineNode,
 		key: string,
 		fallback: (dom: SVGElement) => TElement,
-		appendToDOM = false
+		appendToDOM = false,
 	): TElement {
 		let nodeStore: NodeDOMStore | undefined = this._nodesStore.get(node.node);
 		let value = nodeStore?.get(key) as TElement | undefined;
@@ -121,6 +119,10 @@ export class SVGRenderer extends Renderer {
 		}
 
 		return value;
+	}
+
+	getDOMUnsafe<TElement extends Element>(node: EngineNode, key: string): TElement | undefined {
+		return this._nodesStore.get(node.node)?.get(key) as TElement | undefined;
 	}
 
 	override render(): void {

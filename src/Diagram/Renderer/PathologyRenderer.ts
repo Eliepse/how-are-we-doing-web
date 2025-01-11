@@ -1,13 +1,15 @@
 import type { EngineNode } from "../../Engine2D/Core/EngineNode";
 import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
+import { Color } from "../../Engine2D/Renderer/Color";
+import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { CirclePainter } from "../../Engine2D/Renderer/SVG/Painter/CirclePainter";
 import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { Pathology } from "../Items/Pathology/Pathology";
 
-const defaultStroke = new Stroke(3, "#ffffffaa");
-const hoveredStroke = new Stroke(3, "#ffffffff");
-const activeStroke = new Stroke(3, "#ff0000ff");
+const defaultStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffffaa"));
+const hoveredStyle = new FillAndStroke(undefined, new Stroke(3, Color.White.toHex()));
+const activeStyle = new FillAndStroke(undefined, new Stroke(3, Color.Red.toHex()));
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	private radius = 7;
@@ -19,13 +21,13 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 			engineNode,
 			"circle",
 			() => CirclePainter.make(),
-			true
+			true,
 		);
 
-		let stroke = node.isHovered() ? hoveredStroke : defaultStroke;
-		stroke = node.active ? activeStroke : stroke;
+		let style = node.isHovered() ? hoveredStyle : defaultStyle;
+		style = node.active ? activeStyle : style;
 
-		CirclePainter.update(circle, node.getGlobalPosition(), this.radius, stroke, "none");
+		CirclePainter.update(circle, node.getGlobalPosition(), this.radius, style);
 	}
 
 	override accepts(engineNode: EngineNode): boolean {

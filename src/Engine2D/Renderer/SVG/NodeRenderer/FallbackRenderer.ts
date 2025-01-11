@@ -1,8 +1,12 @@
 import { EngineNode } from "../../../Core/EngineNode";
 import { NodeRenderer } from "../../../Core/NodeRenderer";
+import { Color } from "../../Color";
+import { FillAndStroke } from "../FillAndStroke";
 import { CirclePainter } from "../Painter/CirclePainter";
 import { Stroke } from "../Painter/Stroke";
 import { SVGRenderer } from "../SVGRenderer";
+
+const style = new FillAndStroke(Color.White, new Stroke(1, Color.Red.toHex()));
 
 export class FallbackRenderer extends NodeRenderer<SVGRenderer> {
 	render(node: EngineNode): void {
@@ -15,9 +19,9 @@ export class FallbackRenderer extends NodeRenderer<SVGRenderer> {
 			node,
 			"debug:origin",
 			(dom) => CirclePainter.make(),
-			true
+			true,
 		);
-		CirclePainter.update(origin, position, 2, new Stroke(1, "#ff0000"), "#ffffff");
+		CirclePainter.update(origin, position, 2, style);
 	}
 
 	accepts(node: EngineNode): boolean {

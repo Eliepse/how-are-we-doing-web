@@ -2,6 +2,7 @@ import { Config } from "../../../../config";
 import type { Symbolic } from "../../../Contract/renderable";
 import type { Angle } from "../../../Parameters/Angle";
 import type { Vector } from "../../../Vector";
+import type { FillAndStroke } from "../FillAndStroke";
 import { Painter } from "./Painter";
 
 export class SymbolPainter extends Painter {
@@ -15,7 +16,8 @@ export class SymbolPainter extends Painter {
 		element: SVGUseElement,
 		symbol: Symbolic,
 		position: Vector,
-		rotation: Angle
+		rotation: Angle,
+		style: FillAndStroke,
 	): void {
 		const domPosition = position.sub(symbol.getPivot()).toAttributes();
 		const transformPivot = position.toAttributes();
@@ -25,5 +27,7 @@ export class SymbolPainter extends Painter {
 		element.setAttribute("x", domPosition.x);
 		element.setAttribute("y", domPosition.y);
 		element.setAttribute("transform", transformAttr);
+
+		style.updateElement(element);
 	}
 }

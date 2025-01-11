@@ -73,8 +73,8 @@ export class Diagram extends Node2D implements WithLifecycle {
 					group.name,
 					group.children.map(() => new Facility()),
 					new Angle(),
-					450
-				)
+					450,
+				),
 		);
 	}
 
@@ -82,7 +82,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 		const totalDeterminants = data.reduce(
 			(sum, family) =>
 				family.children.reduce((sum, subFamily) => sum + subFamily.children.length, sum),
-			0
+			0,
 		);
 		const itemArc = new Angle(Math.PI * 2).div(totalDeterminants);
 		let ringAngleCursor = new Angle();
@@ -101,9 +101,11 @@ export class Diagram extends Node2D implements WithLifecycle {
 
 				const subFamily = new DeterminantSubFamily(
 					subFamilyData.name,
-					determinants.map(() => new Determinant(asset)),
+					determinants.map(() => {
+						return new Determinant(asset, { arc: itemArc });
+					}),
 					subFamilyArc,
-					360
+					360,
 				);
 
 				subFamily.setRotation(familyAngleCursor);

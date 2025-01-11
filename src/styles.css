@@ -58,5 +58,6 @@ text {
     text-align: center;
     font-size: .875rem;
     text-transform: uppercase;
+    user-select: none;
     /* letter-spacing: -.025em; */
 }

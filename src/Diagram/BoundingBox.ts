@@ -1,24 +1,24 @@
-import { Vector } from "./Vector";
+import { Vector } from "../Engine2D/Vector";
 
 export class BoundingBox {
-    public start: Vector = Vector.Zero;
-    public end: Vector = Vector.Zero;
+	public start: Vector = Vector.Zero;
+	public end: Vector = Vector.Zero;
 
-    constructor() {}
+	constructor() {}
 
-    size(): Vector {
-        return this.end.sub(this.start);
-    }
+	size(): Vector {
+		return this.start.sub(this.end);
+	}
 
-    isInside(point: Vector): boolean {
-        if(this.start.x > point.x || this.start.y < point.y) {
-            return false;
-        }
+	isInside(point: Vector): boolean {
+		if (this.start.x > point.x || this.start.y < point.y) {
+			return false;
+		}
 
-        if(this.end.x < point.x || this.end.y > point.y) {
-            return false;
-        }
+		if (this.end.x < point.x || this.end.y > point.y) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

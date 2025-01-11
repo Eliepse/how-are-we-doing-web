@@ -13,7 +13,7 @@ export class VirtualShapeRenderer extends NodeRenderer<SVGRenderer> {
 			engineNode,
 			"virtualShape:use",
 			() => SymbolPainter.make(symbol),
-			true
+			true,
 		);
 
 		SymbolPainter.update(element, symbol, node.getGlobalPosition(), node.getGlobalRotation());

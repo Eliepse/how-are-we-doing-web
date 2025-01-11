@@ -23,7 +23,7 @@ export class SVGRenderer extends Renderer {
 		private _container: Element,
 		root: Node2D,
 		private size: Size,
-		private debug: boolean = false
+		private debug: boolean = false,
 	) {
 		super(root);
 
@@ -38,8 +38,8 @@ export class SVGRenderer extends Renderer {
 
 		const correctCursorPosition = (position: Vector): Vector => {
 			const bbox = this._dom.getBoundingClientRect();
-			return new Vector(bbox.x, bbox.y)
-				.sub(position)
+			return position
+				.sub(new Vector(bbox.x, bbox.y))
 				.mul(new Vector(size.width / bbox.width, size.height / bbox.height));
 		};
 

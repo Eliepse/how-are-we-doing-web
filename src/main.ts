@@ -1,3 +1,4 @@
+import { Config } from "./config";
 import { Diagram } from "./Diagram/Diagram";
 import { DeterminantRenderer } from "./Diagram/Renderer/DeterminantRenderer";
 import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubFamilyRenderer";
@@ -15,7 +16,12 @@ root.setPosition(new Vector(500, 500));
 const diagram = new Diagram();
 root.addChildren(diagram);
 
-const renderer = new SVGRenderer(document.body, diagram, new Size(1000, 1000), false);
+const renderer = new SVGRenderer(
+document.body,
+diagram,
+new Size(1000, 1000),
+	Config.Render.debug
+);
 
 renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer));
 renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));

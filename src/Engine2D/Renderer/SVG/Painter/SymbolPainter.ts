@@ -17,7 +17,7 @@ export class SymbolPainter extends Painter {
 		position: Vector,
 		rotation: Angle
 	): void {
-		const domPosition = symbol.getPivot().sub(position).toAttributes();
+		const domPosition = position.sub(symbol.getPivot()).toAttributes();
 		const transformPivot = position.toAttributes();
 		const degrees = rotation.add(symbol.getAngle()).deg.toFixed(Config.Render.precision);
 		const transformAttr = `rotate(${degrees}, ${transformPivot.x}, ${transformPivot.y})`;

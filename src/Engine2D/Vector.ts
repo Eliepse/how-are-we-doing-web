@@ -22,7 +22,7 @@ export class Vector {
 	}
 
 	sub(v: Vector): Vector {
-		return new Vector(v.x - this.x, v.y - this.y);
+		return new Vector(this.x - v.x, this.y - v.y);
 	}
 
 	/**
@@ -40,7 +40,7 @@ export class Vector {
 
 		return new Vector(
 			this.x * Math.cos(value) - this.y * Math.sin(value),
-			this.x * Math.sin(value) + this.y * Math.cos(value)
+			this.x * Math.sin(value) + this.y * Math.cos(value),
 		);
 	}
 
@@ -68,8 +68,22 @@ export class Vector {
 		return Math.sqrt(this.magSq());
 	}
 
-	angle(): number {
-		return Math.atan(this.y / this.x);
+	/**
+	 * @param fullCircle When true, base the angle on [0, 2 * PI] instead of [Pi, -Pi]
+	 */
+	angle(fullCircle = false): Angle {
+		const angle = new Angle(Math.atan2(this.y, this.x));
+
+		if (fullCircle && this.y < 0) {
+			return angle.add(Angle.PI2);
+		}
+
+		return angle;
+	}
+
+	angleTo(target: Vector): Angle {
+		const dot = this.mul(target);
+		return new Angle(Math.atan2(dot.x - dot.y, dot.x + dot.y));
 	}
 
 	distanceSq(dest: Vector): number {

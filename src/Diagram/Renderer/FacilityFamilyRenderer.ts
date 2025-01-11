@@ -12,7 +12,7 @@ export class FacilityFamilyRenderer extends NodeRenderer<SVGRenderer> {
 			engineNode,
 			"separator",
 			() => LinePainter.make(),
-			true
+			true,
 		);
 
 		const position = node.getGlobalPosition();

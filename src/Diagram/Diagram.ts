@@ -67,11 +67,14 @@ export class Diagram extends Node2D implements WithLifecycle {
 	}
 
 	private buildFacilityGroups(groups: typeof db.facilities): Array<ArcGroup<Facility>> {
+		const totalFacilities = groups.reduce((sum, family) => sum + family.children.length, 0);
+		const itemArc = new Angle(Math.PI * 2).div(totalFacilities);
+
 		return groups.map(
 			(group) =>
 				new FacilityFamily(
 					group.name,
-					group.children.map(() => new Facility()),
+					group.children.map(() => new Facility(itemArc)),
 					new Angle(),
 					450,
 				),

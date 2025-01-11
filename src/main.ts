@@ -3,6 +3,7 @@ import { Diagram } from "./Diagram/Diagram";
 import { DeterminantRenderer } from "./Diagram/Renderer/DeterminantRenderer";
 import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubFamilyRenderer";
 import { FacilityFamilyRenderer } from "./Diagram/Renderer/FacilityFamilyRenderer";
+import { FacilityRenderer } from "./Diagram/Renderer/FacilityRenderer";
 import { GroupWithArcTextRenderer } from "./Diagram/Renderer/GroupWithArcTextRenderer";
 import { PathologyRenderer } from "./Diagram/Renderer/PathologyRenderer";
 import { Node2D } from "./Engine2D/Node2D";
@@ -17,14 +18,15 @@ const diagram = new Diagram();
 root.addChildren(diagram);
 
 const renderer = new SVGRenderer(
-document.body,
-diagram,
-new Size(1000, 1000),
-	Config.Render.debug
+	document.body,
+	diagram,
+	new Size(1000, 1000),
+	Config.Render.debug,
 );
 
 renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer));
 renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
+renderer.addNodeRenderer(new FacilityRenderer(renderer));
 renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
 renderer.addNodeRenderer(new DeterminantRenderer(renderer));
 renderer.addNodeRenderer(new PathologyRenderer(renderer));

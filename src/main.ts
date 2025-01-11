@@ -18,6 +18,7 @@ const diagram = new Diagram();
 root.addChildren(diagram);
 
 const renderer = new SVGRenderer(
+	"diagram",
 	document.body,
 	diagram,
 	new Size(1000, 1000),

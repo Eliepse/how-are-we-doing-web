@@ -40,6 +40,13 @@ svg {
     height: 100%;
 }
 
+#diagram {
+    margin: 32px;
+    max-width: calc(88%);
+    max-height: calc(88%);
+    aspect-ratio: 1;
+}
+
 use {
     transform: translate(0, 0, 0);
     opacity: 1;

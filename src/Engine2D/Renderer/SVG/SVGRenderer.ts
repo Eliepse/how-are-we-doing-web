@@ -19,6 +19,7 @@ export class SVGRenderer extends Renderer {
 	private _renderers = new Set<NodeRenderer<SVGRenderer>>();
 
 	constructor(
+		public readonly key: string,
 		private _container: Element,
 		root: Node2D,
 		private size: Size,
@@ -30,6 +31,7 @@ export class SVGRenderer extends Renderer {
 		const w = this.size.width.toFixed();
 		const h = this.size.height.toFixed();
 		this._dom.setAttribute("viewBox", `0 0 ${w} ${h}`);
+		this._dom.id = this.key;
 		this._container.append(this._dom);
 
 		this._renderers.add(new FallbackRenderer(this));

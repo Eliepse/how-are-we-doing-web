@@ -6,6 +6,8 @@ const degToRadRatio = Math.PI / 180;
 
 export class Angle implements Parameter {
 	static Zero = new Angle(0);
+	static PI = new Angle(Math.PI);
+	static PI2 = new Angle(Math.PI * 2);
 
 	constructor(private radian: number = 0) {}
 
@@ -63,7 +65,7 @@ export class Angle implements Parameter {
 
 		return new Vector(
 			cos * (point.x - origin.x) + sin * (point.y - origin.y) + origin.x,
-			cos * (point.y - origin.y) - sin * (point.x - origin.x) + origin.y
+			cos * (point.y - origin.y) - sin * (point.x - origin.x) + origin.y,
 		);
 	}
 

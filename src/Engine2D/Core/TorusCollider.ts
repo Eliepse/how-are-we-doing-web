@@ -1,41 +1,59 @@
 import type { Collider } from "../Contract/Collider";
-import type { Angle } from "../Parameters/Angle";
-import type { Vector } from "../Vector";
+import { Angle } from "../Parameters/Angle";
+import { Vector } from "../Vector";
 
 export class TorusCollider implements Collider {
 	private _torusInnerRadiusSq: number;
 	private _torusOuterRadiusSq: number;
+	private _torusOffset: Angle = Angle.Zero;
+	private _startAngle: Angle = Angle.Zero;
+	private _endAngle: Angle = Angle.PI2;
 
-	constructor(_torusCenter: Vector, _torusRadius: number, _torusWidth: number);
 	constructor(
 		private _torusCenter: Vector,
 		torusRadius: number,
 		torusWidth: number,
-		private _arc?: Angle,
-		private _arcOffset?: Angle
+		arc: Angle = Angle.PI2,
+		arcStart: Angle = Angle.Zero,
 	) {
 		const halfWidth = torusWidth / 2;
 		this._torusInnerRadiusSq = Math.pow(torusRadius - halfWidth, 2);
 		this._torusOuterRadiusSq = Math.pow(torusRadius + halfWidth, 2);
+
+		if (arcStart.rad < 0) {
+			this._torusOffset = arcStart;
+			arcStart = Angle.Zero;
+		}
+
+		this._startAngle = arcStart;
+		this._endAngle = arcStart.add(arc);
+	}
+
+	setCenter(point: Vector): void {
+		this._torusCenter;
 	}
 
 	isInside(point: Vector): boolean {
-		const distance = this._torusCenter.distanceSq(point);
+		const relativePoint = point.sub(this._torusCenter);
+		const distance = relativePoint.magSq();
 
 		// Is it inside the torus ?
 		if (this._torusInnerRadiusSq > distance || this._torusOuterRadiusSq < distance) {
 			return false;
 		}
 
-		// No angle check
-		if (undefined === this._arc || undefined === this._arcOffset) {
+		// Ne need to check the angle
+		if (Angle.Zero === this._startAngle && Angle.PI2 === this._endAngle) {
 			return true;
 		}
 
-		const angleStart = this._arcOffset;
-		const angleEnd = this._arcOffset.add(this._arc);
-		const pointAngle = point.sub(this._torusCenter).angle();
+		let pointAngle = relativePoint.angle(true);
 
-		return angleStart.rad <= pointAngle && angleEnd.rad >= pointAngle;
+		// When the start point is negative, we change the base for the 0
+		if (Angle.Zero !== this._torusOffset) {
+			pointAngle = pointAngle.sub(Angle.PI2.add(this._torusOffset));
+		}
+
+		return this._startAngle.rad <= pointAngle.rad && this._endAngle.rad >= pointAngle.rad;
 	}
 }

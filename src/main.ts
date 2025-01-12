@@ -26,12 +26,12 @@ const renderer = new SVGRenderer(
 
 root.setPosition(renderer.size.div(2));
 
+renderer.addNodeRenderer(new FacilityRenderer(renderer, diagram));
+renderer.addNodeRenderer(new DeterminantRenderer(renderer, diagram));
+renderer.addNodeRenderer(new PathologyRenderer(renderer, diagram));
 renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer));
 renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
-renderer.addNodeRenderer(new FacilityRenderer(renderer));
 renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
-renderer.addNodeRenderer(new DeterminantRenderer(renderer));
-renderer.addNodeRenderer(new PathologyRenderer(renderer));
 renderer.addNodeRenderer(new PathologyLinkRenderer(renderer));
 
 renderer.render();

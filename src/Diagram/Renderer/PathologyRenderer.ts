@@ -5,6 +5,7 @@ import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { CirclePainter } from "../../Engine2D/Renderer/SVG/Painter/CirclePainter";
 import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
+import type { Diagram } from "../Diagram";
 import { Pathology } from "../Items/Pathology/Pathology";
 
 const defaultStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffffff"));
@@ -16,10 +17,14 @@ const coreStyle = new FillAndStroke(Color.Red);
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	private radius = 8;
 
+	constructor(renderer: SVGRenderer, private diagram: Diagram) {
+		super(renderer);
+	}
+
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as Pathology;
 		const isActive = node.isActive();
-		const selectedNode = node.getDiagram()?.getSelectedNode();
+		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
 
 		const edge = this._renderer.getDOM(

@@ -8,6 +8,7 @@ import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
 import { SymbolPainter } from "../../Engine2D/Renderer/SVG/Painter/SymbolPainter";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { Vector } from "../../Engine2D/Vector";
+import type { Diagram } from "../Diagram";
 import { Determinant } from "../Items/Determinant/Determinant";
 
 const shapeStyle = {
@@ -27,11 +28,15 @@ const anchorCoreStyle = new FillAndStroke(Color.Red);
 export const determinantAnchorOffset = new Vector(-128, 0);
 
 export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
+	constructor(renderer: SVGRenderer, private diagram: Diagram) {
+		super(renderer);
+	}
+
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as Determinant;
 		const symbol = node.getShape();
 		const isActive = node.isActive();
-		const selectedNode = node.getDiagram()?.getSelectedNode();
+		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
 		// Create a temporary node to compute the position

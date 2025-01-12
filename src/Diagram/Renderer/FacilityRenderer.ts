@@ -4,6 +4,7 @@ import { Color } from "../../Engine2D/Renderer/Color";
 import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { SymbolPainter } from "../../Engine2D/Renderer/SVG/Painter/SymbolPainter";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
+import type { Diagram } from "../Diagram";
 import { Facility } from "../Items/Facility/Facility";
 
 const shapeStyle = {
@@ -13,11 +14,15 @@ const shapeStyle = {
 } as const;
 
 export class FacilityRenderer extends NodeRenderer<SVGRenderer> {
+	constructor(renderer: SVGRenderer, private diagram: Diagram) {
+		super(renderer);
+	}
+
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as Facility;
 		const isActive = node.isActive();
 		const symbol = node.getShape();
-		const selectedNode = node.getDiagram()?.getSelectedNode();
+		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
 

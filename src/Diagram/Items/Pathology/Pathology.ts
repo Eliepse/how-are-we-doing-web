@@ -78,4 +78,8 @@ export class Pathology
 	getPointerCollider(): Collider {
 		return new CircleCollider(this.getGlobalPosition(), 10);
 	}
+
+	getDiagram(): Diagram | undefined {
+		return this._diagram;
+	}
 }

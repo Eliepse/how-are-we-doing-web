@@ -94,4 +94,8 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 
 		return false;
 	}
+
+	getDiagram(): Diagram | undefined {
+		return this._diagram;
+	}
 }

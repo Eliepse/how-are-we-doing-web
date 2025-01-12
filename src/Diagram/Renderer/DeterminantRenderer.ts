@@ -13,11 +13,13 @@ import { Determinant } from "../Items/Determinant/Determinant";
 const shapeStyle = {
 	default: new FillAndStroke(Color.White),
 	selected: new FillAndStroke(Color.Red),
+	dimmed: new FillAndStroke(Color.White, undefined, 0.47),
 } as const;
 
 const anchorStyle = {
 	default: new FillAndStroke(undefined, new Stroke(2, "#ffffffaa")),
 	selected: new FillAndStroke(undefined, new Stroke(2, Color.Red.toHex())),
+	dimmed: new FillAndStroke(undefined, new Stroke(2, "#ffffff77")),
 } as const;
 
 const anchorCoreStyle = new FillAndStroke(Color.Red);
@@ -29,6 +31,14 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 		const node = engineNode.node as unknown as Determinant;
 		const symbol = node.getShape();
 		const isActive = node.isActive();
+		const selectedNode = node.getDiagram()?.getSelectedNode();
+		const position = node.getGlobalPosition();
+		const rotation = node.getGlobalRotation();
+		// Create a temporary node to compute the position
+		const anchor = new Node2D();
+		anchor.setParent(node);
+		anchor.setPosition(determinantAnchorOffset);
+		const anchorPosition = anchor.getGlobalPosition();
 
 		const circle = this._renderer.getDOM(
 			engineNode,
@@ -51,30 +61,18 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 			true,
 		);
 
-		SymbolPainter.update(
-			element,
-			symbol,
-			node.getGlobalPosition(),
-			node.getGlobalRotation(),
-			isActive ? shapeStyle.selected : shapeStyle.default,
-		);
-
-		// Create a temporary node to compute the position
-		const anchorPosition = new Node2D();
-		anchorPosition.setParent(node);
-		anchorPosition.setPosition(determinantAnchorOffset);
-
-		CirclePainter.update(
-			circle,
-			anchorPosition.getGlobalPosition(),
-			5,
-			isActive ? anchorStyle.selected : anchorStyle.default,
-		);
-
 		if (isActive) {
+			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.selected);
+			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.selected);
 			circleCore.style.display = "";
-			CirclePainter.update(circleCore, anchorPosition.getGlobalPosition(), 3, anchorCoreStyle);
+			CirclePainter.update(circleCore, anchorPosition, 3, anchorCoreStyle);
+		} else if (undefined !== selectedNode && node !== selectedNode) {
+			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.dimmed);
+			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.dimmed);
+			circleCore.style.display = "none";
 		} else {
+			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.default);
+			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.default);
 			circleCore.style.display = "none";
 		}
 	}

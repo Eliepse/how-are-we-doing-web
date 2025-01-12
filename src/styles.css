@@ -50,7 +50,7 @@ svg {
 use {
     transform: translate(0, 0, 0);
     opacity: 1;
-    transition: opacity 250ms;
+    /* transition: opacity 150ms, fill 150ms, stroke 150ms; */
 }
 
 #fps {

@@ -3,29 +3,27 @@ import type { Color } from "../Color";
 import type { Stroke } from "./Painter/Stroke";
 
 export class FillAndStroke {
-	constructor(private _fill?: Color, private _stroke?: Stroke) {}
-
-	fill(): Color | undefined {
-		return this._fill;
-	}
-
-	stroke(): Stroke | undefined {
-		return this._stroke;
-	}
+	constructor(
+		public readonly fill?: Color,
+		public readonly stroke?: Stroke,
+		public readonly opacity: number = 1,
+	) {}
 
 	updateElement(element: SVGElement): void {
-		if (this._fill) {
-			element.setAttribute("fill", this._fill.toHexAlpha());
+		if (this.fill) {
+			element.setAttribute("fill", this.fill.toHexAlpha());
 		} else {
 			element.setAttribute("fill", "none");
 		}
 
-		if (this._stroke) {
-			element.setAttribute("stroke", this._stroke.color);
-			element.setAttribute("stroke-width", this._stroke.width.toFixed(Config.Render.precision));
+		if (this.stroke) {
+			element.setAttribute("stroke", this.stroke.color);
+			element.setAttribute("stroke-width", this.stroke.width.toFixed(Config.Render.precision));
 		} else {
 			element.removeAttribute("stroke");
 			element.removeAttribute("stroke-width");
 		}
+
+		element.style.opacity = this.opacity.toFixed(2);
 	}
 }

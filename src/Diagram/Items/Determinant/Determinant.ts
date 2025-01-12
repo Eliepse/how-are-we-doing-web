@@ -126,4 +126,8 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 
 		return false;
 	}
+
+	getDiagram(): Diagram | undefined {
+		return this._diagram;
+	}
 }

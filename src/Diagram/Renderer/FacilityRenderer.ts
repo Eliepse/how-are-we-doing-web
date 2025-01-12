@@ -9,12 +9,17 @@ import { Facility } from "../Items/Facility/Facility";
 const shapeStyle = {
 	default: new FillAndStroke(Color.White),
 	selected: new FillAndStroke(Color.Red),
+	dimmed: new FillAndStroke(Color.White, undefined, 0.47),
 } as const;
 
 export class FacilityRenderer extends NodeRenderer<SVGRenderer> {
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as Facility;
+		const isActive = node.isActive();
 		const symbol = node.getShape();
+		const selectedNode = node.getDiagram()?.getSelectedNode();
+		const position = node.getGlobalPosition();
+		const rotation = node.getGlobalRotation();
 
 		const element = this._renderer.getDOM(
 			engineNode,
@@ -23,13 +28,13 @@ export class FacilityRenderer extends NodeRenderer<SVGRenderer> {
 			true,
 		);
 
-		SymbolPainter.update(
-			element,
-			symbol,
-			node.getGlobalPosition(),
-			node.getGlobalRotation(),
-			node.isActive() ? shapeStyle.selected : shapeStyle.default,
-		);
+		if (isActive) {
+			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.selected);
+		} else if (undefined !== selectedNode && node !== selectedNode) {
+			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.dimmed);
+		} else {
+			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.default);
+		}
 	}
 
 	override accepts(engineNode: EngineNode): boolean {

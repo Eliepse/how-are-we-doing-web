@@ -7,9 +7,10 @@ import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { Pathology } from "../Items/Pathology/Pathology";
 
-const defaultStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffffaa"));
+const defaultStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffffff"));
 const hoveredStyle = new FillAndStroke(undefined, new Stroke(3, Color.White.toHex()));
 const activeStyle = new FillAndStroke(undefined, new Stroke(3, Color.Red.toHex()));
+const dimmedStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffff77"));
 const coreStyle = new FillAndStroke(Color.Red);
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
@@ -18,6 +19,8 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as Pathology;
 		const isActive = node.isActive();
+		const selectedNode = node.getDiagram()?.getSelectedNode();
+		const position = node.getGlobalPosition();
 
 		const edge = this._renderer.getDOM(
 			engineNode,
@@ -33,10 +36,15 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 			true,
 		);
 
-		const position = node.getGlobalPosition();
-		let style = isActive ? activeStyle : node.isHovered() ? hoveredStyle : defaultStyle;
-
-		CirclePainter.update(edge, position, this.radius, style);
+		if (isActive) {
+			CirclePainter.update(edge, position, this.radius, activeStyle);
+		} else if (node.isHovered()) {
+			CirclePainter.update(edge, position, this.radius, hoveredStyle);
+		} else if (undefined !== selectedNode && node !== selectedNode) {
+			CirclePainter.update(edge, position, this.radius, dimmedStyle);
+		} else {
+			CirclePainter.update(edge, position, this.radius, defaultStyle);
+		}
 
 		if (isActive) {
 			core.style.display = "";

@@ -20,8 +20,9 @@ import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
 type SelectableNode = Pathology | Determinant | Facility;
 
 export class Diagram extends Node2D implements WithLifecycle {
-	private pathologyFamilies: Array<PathologyFamily> = [];
 	private _selectedNode: SelectableNode | undefined = undefined;
+	private _pathologies = new Map<number, Pathology>();
+	private _determinants = new Map<number, Determinant>();
 
 	constructor() {
 		super();
@@ -48,12 +49,14 @@ export class Diagram extends Node2D implements WithLifecycle {
 		db.pathologies.forEach((familyData, index) => {
 			const children = familyData.children.map((child) => {
 				const associatedDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
-				return new Pathology(child.id, { determinants: associatedDeterminants });
+				const pathology = new Pathology(child.id, { determinants: associatedDeterminants });
+				this._pathologies.set(pathology.id, pathology);
+				return pathology;
 			});
+
 			const family = new PathologyFamily(children, 96);
 			family.setPosition(Vector.Right.mul(100).rot(index * Math.PI * (2 / 3)));
 			this.addChildren(family);
-			this.pathologyFamilies.push(family);
 		});
 	}
 
@@ -113,16 +116,18 @@ export class Diagram extends Node2D implements WithLifecycle {
 				const subFamily = new DeterminantSubFamily(
 					subFamilyData.name,
 					determinants.map((child) => {
-						const associatedPathologies = Object.keys(child.pathologies).map((v) =>
-							parseInt(v),
-						);
-						const associatedFacilities = Object.keys(child.facilities).map((v) => parseInt(v));
-						return new Determinant(
+						const assoPathologies = Object.keys(child.pathologies).map((v) => parseInt(v));
+						const assoFacilities = Object.keys(child.facilities).map((v) => parseInt(v));
+						const determinant = new Determinant(
 							child.id,
 							asset,
 							{ arc: itemArc },
-							{ facilities: associatedFacilities, pathologies: associatedPathologies },
+							{ facilities: assoFacilities, pathologies: assoPathologies },
 						);
+
+						this._determinants.set(determinant.id, determinant);
+
+						return determinant;
 					}),
 					subFamilyArc,
 					360,
@@ -165,7 +170,11 @@ export class Diagram extends Node2D implements WithLifecycle {
 		return this._selectedNode;
 	}
 
-	getPathologyFamilies(): Array<PathologyFamily> {
-		return this.pathologyFamilies;
+	getPathologies(): Map<number, Pathology> {
+		return this._pathologies;
+	}
+
+	getDeterminants(): Map<number, Determinant> {
+		return this._determinants;
 	}
 }

@@ -10,24 +10,40 @@ import { Pathology } from "../Items/Pathology/Pathology";
 const defaultStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffffaa"));
 const hoveredStyle = new FillAndStroke(undefined, new Stroke(3, Color.White.toHex()));
 const activeStyle = new FillAndStroke(undefined, new Stroke(3, Color.Red.toHex()));
+const coreStyle = new FillAndStroke(Color.Red);
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
-	private radius = 7;
+	private radius = 8;
 
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as Pathology;
+		const isActive = node.isActive();
 
-		const circle = this._renderer.getDOM(
+		const edge = this._renderer.getDOM(
 			engineNode,
-			"circle",
+			"circle:edge",
 			() => CirclePainter.make(),
 			true,
 		);
 
-		let style = node.isHovered() ? hoveredStyle : defaultStyle;
-		style = node.isActive() ? activeStyle : style;
+		const core = this._renderer.getDOM(
+			engineNode,
+			"circle:core",
+			() => CirclePainter.make(),
+			true,
+		);
 
-		CirclePainter.update(circle, node.getGlobalPosition(), this.radius, style);
+		const position = node.getGlobalPosition();
+		let style = isActive ? activeStyle : node.isHovered() ? hoveredStyle : defaultStyle;
+
+		CirclePainter.update(edge, position, this.radius, style);
+
+		if (isActive) {
+			core.style.display = "";
+			CirclePainter.update(core, position, this.radius - 3, coreStyle);
+		} else {
+			core.style.display = "none";
+		}
 	}
 
 	override accepts(engineNode: EngineNode): boolean {

@@ -20,14 +20,26 @@ const anchorStyle = {
 	selected: new FillAndStroke(undefined, new Stroke(2, Color.Red.toHex())),
 } as const;
 
+const anchorCoreStyle = new FillAndStroke(Color.Red);
+
+export const determinantAnchorOffset = new Vector(-128, 0);
+
 export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as Determinant;
 		const symbol = node.getShape();
+		const isActive = node.isActive();
 
 		const circle = this._renderer.getDOM(
 			engineNode,
 			"anchor:circle",
+			() => CirclePainter.make(),
+			true,
+		);
+
+		const circleCore = this._renderer.getDOM(
+			engineNode,
+			"anchor:circle:core",
 			() => CirclePainter.make(),
 			true,
 		);
@@ -44,20 +56,27 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 			symbol,
 			node.getGlobalPosition(),
 			node.getGlobalRotation(),
-			node.isActive() ? shapeStyle.selected : shapeStyle.default,
+			isActive ? shapeStyle.selected : shapeStyle.default,
 		);
 
 		// Create a temporary node to compute the position
-		const tempNode = new Node2D();
-		tempNode.setParent(node);
-		tempNode.setPosition(new Vector(-128, 0));
+		const anchorPosition = new Node2D();
+		anchorPosition.setParent(node);
+		anchorPosition.setPosition(determinantAnchorOffset);
 
 		CirclePainter.update(
 			circle,
-			tempNode.getGlobalPosition(),
-			4,
-			node.isActive() ? anchorStyle.selected : anchorStyle.default,
+			anchorPosition.getGlobalPosition(),
+			5,
+			isActive ? anchorStyle.selected : anchorStyle.default,
 		);
+
+		if (isActive) {
+			circleCore.style.display = "";
+			CirclePainter.update(circleCore, anchorPosition.getGlobalPosition(), 3, anchorCoreStyle);
+		} else {
+			circleCore.style.display = "none";
+		}
 	}
 	override accepts(engineNode: EngineNode): boolean {
 		return engineNode.node instanceof Determinant;

@@ -109,6 +109,11 @@ export class Vector {
 		} as const;
 	}
 
+	toString(withComma = false): string {
+		const attr = this.toAttributes();
+		return [attr.x, attr.y].join(withComma ? ", " : " ");
+	}
+
 	static rand(size: number = 1) {
 		return new Vector((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2).mul(size);
 	}

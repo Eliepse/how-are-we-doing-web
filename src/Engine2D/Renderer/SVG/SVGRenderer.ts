@@ -3,7 +3,6 @@ import type { EngineNode } from "../../Core/EngineNode";
 import type { NodeRenderer } from "../../Core/NodeRenderer";
 import { Renderer } from "../../Core/Renderer";
 import type { Node2D } from "../../Node2D";
-import type { Size } from "../../Parameters/Size";
 import { SymbolShape } from "../../SymbolShape";
 import { Vector } from "../../Vector";
 import { VirtualShape } from "../../VirtualShape";
@@ -22,14 +21,14 @@ export class SVGRenderer extends Renderer {
 		public readonly key: string,
 		private _container: Element,
 		root: Node2D,
-		private size: Size,
+		public readonly size: Vector,
 		private debug: boolean = false,
 	) {
 		super(root);
 
 		this._dom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		const w = this.size.width.toFixed();
-		const h = this.size.height.toFixed();
+		const w = this.size.x.toFixed();
+		const h = this.size.y.toFixed();
 		this._dom.setAttribute("viewBox", `0 0 ${w} ${h}`);
 		this._dom.id = this.key;
 		this._container.append(this._dom);
@@ -40,7 +39,7 @@ export class SVGRenderer extends Renderer {
 			const bbox = this._dom.getBoundingClientRect();
 			return position
 				.sub(new Vector(bbox.x, bbox.y))
-				.mul(new Vector(size.width / bbox.width, size.height / bbox.height));
+				.mul(new Vector(size.x / bbox.width, size.y / bbox.height));
 		};
 
 		document.addEventListener("mousemove", (e) => {
@@ -121,6 +120,11 @@ export class SVGRenderer extends Renderer {
 		}
 
 		return value;
+	}
+
+	removeDOM(node: EngineNode, key: string): void {
+		this.getDOMUnsafe(node, key)?.remove();
+		this._nodesStore.get(node.node)?.delete(key);
 	}
 
 	getDOMUnsafe<TElement extends Element>(node: EngineNode, key: string): TElement | undefined {

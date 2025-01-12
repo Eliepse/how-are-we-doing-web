@@ -52,7 +52,9 @@ export class Color {
 		const r = this.r().toString(16).padStart(2, "0");
 		const g = this.g().toString(16).padStart(2, "0");
 		const b = this.b().toString(16).padStart(2, "0");
-		const a = (this.alpha() * 255).toString(16).padStart(2, "0");
+		const a = Math.round(this.alpha() * 255)
+			.toString(16)
+			.padStart(2, "0");
 		return "#" + [r, g, b, a].join("");
 	}
 }

@@ -5,14 +5,13 @@ import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubF
 import { FacilityFamilyRenderer } from "./Diagram/Renderer/FacilityFamilyRenderer";
 import { FacilityRenderer } from "./Diagram/Renderer/FacilityRenderer";
 import { GroupWithArcTextRenderer } from "./Diagram/Renderer/GroupWithArcTextRenderer";
+import { PathologyLinkRenderer } from "./Diagram/Renderer/PathologyLinksRenderer";
 import { PathologyRenderer } from "./Diagram/Renderer/PathologyRenderer";
 import { Node2D } from "./Engine2D/Node2D";
-import { Size } from "./Engine2D/Parameters/Size";
 import { SVGRenderer } from "./Engine2D/Renderer/SVG/SVGRenderer";
 import { Vector } from "./Engine2D/Vector";
 
 const root = new Node2D();
-root.setPosition(new Vector(500, 500));
 
 const diagram = new Diagram();
 root.addChildren(diagram);
@@ -21,9 +20,11 @@ const renderer = new SVGRenderer(
 	"diagram",
 	document.body,
 	diagram,
-	new Size(1000, 1000),
+	new Vector(1000, 1000),
 	Config.Render.debug,
 );
+
+root.setPosition(renderer.size.div(2));
 
 renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer));
 renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
@@ -31,6 +32,7 @@ renderer.addNodeRenderer(new FacilityRenderer(renderer));
 renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
 renderer.addNodeRenderer(new DeterminantRenderer(renderer));
 renderer.addNodeRenderer(new PathologyRenderer(renderer));
+renderer.addNodeRenderer(new PathologyLinkRenderer(renderer));
 
 renderer.render();
 console.debug("Render: " + renderer.getLastFrameTime() + " ms");

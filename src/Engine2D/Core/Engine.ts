@@ -22,15 +22,17 @@ export class Engine {
 		click: new Set<Listeners["click"]>(),
 	};
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
+	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
 
 	constructor(
 		private _rootNode: Node2D,
 		private _onMount: (node: EngineNode) => void,
 		private _onUnmount: (node: EngineNode) => void,
-		private _onRender: (node: EngineNode, deltaTime: number, frames: number) => void
+		private _onRender: (node: EngineNode, deltaTime: number, frames: number) => void,
 	) {
 		this._clock = new Clock(60, (delta, frames) => this.tick(delta, frames));
 		this.addEventListener("click", (e) => this.propagateClick(e.cursor));
+		this.addEventListener("mousemove", (e) => this.handleMouseMove(e.cursor));
 	}
 
 	private mountTree(treeNode: EngineNode): void {
@@ -101,7 +103,7 @@ export class Engine {
 
 			this.compareTreeRecursive(
 				Array.from(previousNode.children),
-				Array.from(currentNode.children)
+				Array.from(currentNode.children),
 			);
 		});
 	}
@@ -119,7 +121,7 @@ export class Engine {
 
 	addEventListener<TKey extends keyof Listeners>(
 		event: TKey,
-		callback: Listeners[TKey]
+		callback: Listeners[TKey],
 	): () => void {
 		this._listeners[event].add(callback);
 		return () => this.removeEventListener(event, callback);
@@ -127,7 +129,7 @@ export class Engine {
 
 	removeEventListener<TKey extends keyof Listeners>(
 		event: TKey,
-		callback: Listeners[TKey]
+		callback: Listeners[TKey],
 	): void {
 		this._listeners[event].delete(callback);
 	}
@@ -154,6 +156,25 @@ export class Engine {
 		this._rootNode.dispatchEvent(new NodeEvent("click"));
 	}
 
+	private handleMouseMove(cursor: Vector): void {
+		for (const node of this._pointerEventsNodes) {
+			const hovering = node.getPointerCollider().isInside(cursor);
+			const nodeHovered = this._hoveredNodes.has(node);
+
+			if (hovering && false === nodeHovered) {
+				this._hoveredNodes.add(node);
+				node.dispatchEvent(new NodeEvent("mouseenter", node));
+				continue;
+			}
+
+			if (false === hovering && nodeHovered) {
+				this._hoveredNodes.delete(node);
+				node.dispatchEvent(new NodeEvent("mouseleave", node));
+				continue;
+			}
+		}
+	}
+
 	private tick(deltaTime: number, frames: number): void {
 		this.updateTree();
 
@@ -162,6 +183,10 @@ export class Engine {
 		}
 
 		this.renderTree(this._tree, deltaTime, frames);
+	}
+
+	isHovering(node: Node2D & WithPointerEvents): boolean {
+		return this._hoveredNodes.has(node);
 	}
 
 	start(): void {

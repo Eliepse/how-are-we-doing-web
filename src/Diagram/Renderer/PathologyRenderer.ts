@@ -21,11 +21,12 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 		super(renderer);
 	}
 
-	override render(engineNode: EngineNode): void {
-		const node = engineNode.node as unknown as Pathology;
+	override render(engineNode: EngineNode<Pathology>): void {
+		const node = engineNode.node;
 		const isActive = node.isActive();
 		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
+		const isHovered = this._renderer.getEngine().isHovering(node);
 
 		const edge = this._renderer.getDOM(
 			engineNode,
@@ -43,7 +44,7 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 
 		if (isActive) {
 			CirclePainter.update(edge, position, this.radius, activeStyle);
-		} else if (node.isHovered()) {
+		} else if (isHovered) {
 			CirclePainter.update(edge, position, this.radius, hoveredStyle);
 		} else if (undefined !== selectedNode && node !== selectedNode) {
 			CirclePainter.update(edge, position, this.radius, dimmedStyle);

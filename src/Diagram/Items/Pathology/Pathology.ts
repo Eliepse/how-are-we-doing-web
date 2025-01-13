@@ -2,7 +2,7 @@ import type { Collider } from "../../../Engine2D/Contract/Collider";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { CircleCollider } from "../../../Engine2D/Core/CircleCollider";
-import type { Engine, EngineMouseEvent } from "../../../Engine2D/Core/Engine";
+import type { Engine } from "../../../Engine2D/Core/Engine";
 import { NodeEvent } from "../../../Engine2D/Core/NodeEvent";
 import { Node2D } from "../../../Engine2D/Node2D";
 import { Diagram } from "../../Diagram";
@@ -16,7 +16,6 @@ export class Pathology
 	extends Node2D<PathologyEvents>
 	implements WithLifecycle, WithPointerEvents
 {
-	private _hovered = false;
 	private _diagram?: Diagram;
 
 	constructor(public readonly id: number, public readonly associations: Associations) {
@@ -27,21 +26,6 @@ export class Pathology
 		this._diagram = Node2D.findParent(this.getParent(), (n) => n instanceof Diagram) as
 			| Diagram
 			| undefined;
-
-		const handleMouseMove = (e: EngineMouseEvent) => {
-			const hovered = this.getPointerCollider().isInside(e.cursor);
-
-			if (hovered === this._hovered) {
-				return;
-			}
-
-			this._hovered = hovered;
-		};
-
-		engine.addEventListener("mousemove", handleMouseMove);
-		return () => {
-			engine.removeEventListener("mousemove", handleMouseMove);
-		};
 	}
 
 	onRender(deltaTime: number): void {
@@ -50,10 +34,6 @@ export class Pathology
 
 	onUnmount(engine: Engine): void {
 		//
-	}
-
-	isHovered(): boolean {
-		return this._hovered;
 	}
 
 	isActive(): boolean {

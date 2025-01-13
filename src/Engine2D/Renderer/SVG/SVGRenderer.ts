@@ -16,6 +16,7 @@ export class SVGRenderer extends Renderer {
 	private _stats = { lastFrameTime: 0 };
 	private _shapes = new Map<SymbolShape, Element>();
 	private _renderers = new Set<NodeRenderer<SVGRenderer>>();
+	public onRender = (renderer: SVGRenderer) => undefined;
 
 	constructor(
 		public readonly key: string,
@@ -135,6 +136,7 @@ export class SVGRenderer extends Renderer {
 		const startedAt = Date.now();
 		super.render();
 		this._stats.lastFrameTime = Date.now() - startedAt;
+		this.onRender(this);
 	}
 
 	isDebug(): boolean {

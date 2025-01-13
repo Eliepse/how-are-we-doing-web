@@ -68,3 +68,12 @@ text {
     user-select: none;
     /* letter-spacing: -.025em; */
 }
+
+#profiling {
+    display: none;
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    font-size: 12px;
+    color: white;
+}

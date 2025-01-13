@@ -40,51 +40,6 @@ console.debug("Render: " + renderer.getLastFrameTime() + " ms");
 renderer.getEngine().start();
 
 /**
- * Test area
- */
-
-let lastFpsUpdateTime = Date.now();
-let lastFpsUpdateFrames = 0;
-const fpsCounter = document.querySelector("#fps") as HTMLDivElement;
-const startedAt = Date.now();
-let lastFrameTime = startedAt;
-let frames = 0;
-const frameRate = 1000 / 30;
-
-function frame(): void {
-	const now = Date.now();
-	const delta = now - lastFrameTime;
-
-	if (delta < frameRate) {
-		requestAnimationFrame(frame);
-		return;
-	}
-
-	const deltaTime = delta / 1000;
-	const time = (now - startedAt) / 1000;
-
-	// const angle = new Angle((time * (Math.PI / 15)) % (Math.PI * 2));
-	// diagram.setRotation(angle);
-	// diagram.getPathologyFamilies().forEach((family) => family.updateShiftedPosition(time));
-
-	// renderer.render();
-
-	if (fpsCounter && now - lastFpsUpdateTime >= 1000) {
-		const fpsUpdateDelta = now - lastFpsUpdateTime;
-		const fpsAverage = ((frames - lastFpsUpdateFrames) / fpsUpdateDelta) * 1000;
-		fpsCounter.textContent = `${fpsAverage.toFixed()} fps`;
-		lastFpsUpdateTime = now;
-		lastFpsUpdateFrames = frames;
-	}
-
-	lastFrameTime = now;
-	frames++;
-	requestAnimationFrame(frame);
-}
-
-// frame();
-
-/**
  * Debugger
  */
 /*

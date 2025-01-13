@@ -56,6 +56,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		//   this.elements.push(shape);
 		// }
 	}
+
 	onMount(engine: Engine): void | (() => void) {
 		const parent = this.getParent();
 

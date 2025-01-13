@@ -2,20 +2,17 @@ import type { EngineNode } from "../../Engine2D/Core/EngineNode";
 import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
 import { Node2D } from "../../Engine2D/Node2D";
 import { Angle } from "../../Engine2D/Parameters/Angle";
-import { Color } from "../../Engine2D/Renderer/Color";
 import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { Vector } from "../../Engine2D/Vector";
+import { colors } from "../colors";
 import { Diagram } from "../Diagram";
 import type { Determinant } from "../Items/Determinant/Determinant";
 import type { Pathology } from "../Items/Pathology/Pathology";
 import { determinantAnchorOffset } from "./DeterminantRenderer";
 
-const pathStyle = new FillAndStroke(
-	undefined,
-	new Stroke(3, new Color(255, 0, 0, 0.75).toHexAlpha()),
-);
+const pathStyle = new FillAndStroke(undefined, new Stroke(3, colors.selected.alpha(0.75)));
 
 export class PathologyLinkRenderer extends NodeRenderer<SVGRenderer> {
 	override render(engineNode: EngineNode): void {

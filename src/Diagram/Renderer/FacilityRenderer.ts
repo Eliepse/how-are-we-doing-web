@@ -4,13 +4,14 @@ import { Color } from "../../Engine2D/Renderer/Color";
 import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { SymbolPainter } from "../../Engine2D/Renderer/SVG/Painter/SymbolPainter";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
+import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Facility } from "../Items/Facility/Facility";
 
 const shapeStyle = {
 	default: new FillAndStroke(Color.White),
 	selected: new FillAndStroke(Color.Red),
-	dimmed: new FillAndStroke(Color.White, undefined, 0.47),
+	dimmed: new FillAndStroke(colors.dimmedWhite),
 } as const;
 
 export class FacilityRenderer extends NodeRenderer<SVGRenderer> {
@@ -25,6 +26,7 @@ export class FacilityRenderer extends NodeRenderer<SVGRenderer> {
 		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
+		const isHovering = this._renderer.getEngine().isHovering(node);
 
 		const element = this._renderer.getDOM(
 			engineNode,
@@ -35,7 +37,7 @@ export class FacilityRenderer extends NodeRenderer<SVGRenderer> {
 
 		if (isActive) {
 			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.selected);
-		} else if (undefined !== selectedNode && node !== selectedNode) {
+		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
 			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.dimmed);
 		} else {
 			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.default);

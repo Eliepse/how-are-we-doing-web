@@ -8,22 +8,23 @@ import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
 import { SymbolPainter } from "../../Engine2D/Renderer/SVG/Painter/SymbolPainter";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { Vector } from "../../Engine2D/Vector";
+import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Determinant } from "../Items/Determinant/Determinant";
 
 const shapeStyle = {
-	default: new FillAndStroke(Color.White),
-	selected: new FillAndStroke(Color.Red),
-	dimmed: new FillAndStroke(Color.White, undefined, 0.47),
+	default: new FillAndStroke(colors.defaultWhite),
+	selected: new FillAndStroke(colors.selected),
+	dimmed: new FillAndStroke(colors.dimmedWhite),
 } as const;
 
 const anchorStyle = {
-	default: new FillAndStroke(undefined, new Stroke(2, "#ffffffaa")),
-	selected: new FillAndStroke(undefined, new Stroke(2, Color.Red.toHex())),
-	dimmed: new FillAndStroke(undefined, new Stroke(2, "#ffffff77")),
+	default: new FillAndStroke(undefined, new Stroke(2, Color.White.alpha(0.67))),
+	selected: new FillAndStroke(undefined, new Stroke(2, colors.selected)),
+	dimmed: new FillAndStroke(undefined, new Stroke(2, colors.dimmedWhite)),
 } as const;
 
-const anchorCoreStyle = new FillAndStroke(Color.Red);
+const anchorCoreStyle = new FillAndStroke(colors.selected);
 
 export const determinantAnchorOffset = new Vector(-128, 0);
 
@@ -44,6 +45,7 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 		anchor.setParent(node);
 		anchor.setPosition(determinantAnchorOffset);
 		const anchorPosition = anchor.getGlobalPosition();
+		const isHovering = this._renderer.getEngine().isHovering(node);
 
 		const circle = this._renderer.getDOM(
 			engineNode,
@@ -71,7 +73,7 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.selected);
 			circleCore.style.display = "";
 			CirclePainter.update(circleCore, anchorPosition, 3, anchorCoreStyle);
-		} else if (undefined !== selectedNode && node !== selectedNode) {
+		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
 			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.dimmed);
 			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.dimmed);
 			circleCore.style.display = "none";

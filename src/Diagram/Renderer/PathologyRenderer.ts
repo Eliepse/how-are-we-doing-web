@@ -1,18 +1,18 @@
 import type { EngineNode } from "../../Engine2D/Core/EngineNode";
 import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
-import { Color } from "../../Engine2D/Renderer/Color";
 import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { CirclePainter } from "../../Engine2D/Renderer/SVG/Painter/CirclePainter";
 import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
+import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Pathology } from "../Items/Pathology/Pathology";
 
-const defaultStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffffff"));
-const hoveredStyle = new FillAndStroke(undefined, new Stroke(3, Color.White.toHex()));
-const activeStyle = new FillAndStroke(undefined, new Stroke(3, Color.Red.toHex()));
-const dimmedStyle = new FillAndStroke(undefined, new Stroke(3, "#ffffff77"));
-const coreStyle = new FillAndStroke(Color.Red);
+const defaultStyle = new FillAndStroke(undefined, new Stroke(3, colors.defaultWhite));
+const hoveredStyle = new FillAndStroke(undefined, new Stroke(3, colors.defaultWhite));
+const activeStyle = new FillAndStroke(undefined, new Stroke(3, colors.selected));
+const dimmedStyle = new FillAndStroke(undefined, new Stroke(3, colors.dimmedWhite));
+const coreStyle = new FillAndStroke(colors.selected);
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	private radius = 8;

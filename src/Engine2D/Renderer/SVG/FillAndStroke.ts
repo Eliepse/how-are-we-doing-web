@@ -17,7 +17,7 @@ export class FillAndStroke {
 		}
 
 		if (this.stroke) {
-			element.setAttribute("stroke", this.stroke.color);
+			element.setAttribute("stroke", this.stroke.color.toHexAlpha());
 			element.setAttribute("stroke-width", this.stroke.width.toFixed(Config.Render.precision));
 		} else {
 			element.removeAttribute("stroke");

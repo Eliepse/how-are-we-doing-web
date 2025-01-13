@@ -27,16 +27,20 @@ html {
 
 body {
     font-family: Inter, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background: repeat center/20px url('data:image/svg+xml,<svg style="opacity: 0.3" viewBox="0 0 100 100" stroke="white" xmlns="http://www.w3.org/2000/svg"><path stroke-width="1" d="M50 35v30M35 50h30"/></svg>'); */
     color: #fff;
     fill: #fff;
 }
 
 svg {
     /* width: 100%; */
+    height: 100%;
+}
+
+#diagramContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     height: 100%;
 }
 
@@ -76,4 +80,19 @@ text {
     left: 8px;
     font-size: 12px;
     color: white;
+}
+
+#floatingLabel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-width: 180px;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid white;
+    background: var(--dark-blue);
+    color: white;
+    font-size: 14px;
+    user-select: none;
 }

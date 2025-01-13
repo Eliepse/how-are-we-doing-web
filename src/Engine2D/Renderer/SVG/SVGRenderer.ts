@@ -36,22 +36,15 @@ export class SVGRenderer extends Renderer {
 
 		this._renderers.add(new FallbackRenderer(this));
 
-		const correctCursorPosition = (position: Vector): Vector => {
-			const bbox = this._dom.getBoundingClientRect();
-			return position
-				.sub(new Vector(bbox.x, bbox.y))
-				.mul(new Vector(size.x / bbox.width, size.y / bbox.height));
-		};
-
 		document.addEventListener("mousemove", (e) => {
 			this._engine.dispatchEvent("mousemove", {
-				cursor: correctCursorPosition(new Vector(e.clientX, e.clientY)),
+				cursor: this.windowToLocalPoint(new Vector(e.clientX, e.clientY)),
 			});
 		});
 
 		document.addEventListener("click", (e) => {
 			this._engine.dispatchEvent("click", {
-				cursor: correctCursorPosition(new Vector(e.clientX, e.clientY)),
+				cursor: this.windowToLocalPoint(new Vector(e.clientX, e.clientY)),
 			});
 		});
 	}
@@ -137,6 +130,22 @@ export class SVGRenderer extends Renderer {
 		super.render();
 		this._stats.lastFrameTime = Date.now() - startedAt;
 		this.onRender(this);
+	}
+
+	localPointToWindow(point: Vector): Vector {
+		const bbox = this._dom.getBoundingClientRect();
+		return new Vector(
+			(point.x + bbox.x) / (this.size.x / bbox.width),
+			(point.y + bbox.y) / (this.size.y / bbox.height),
+		);
+	}
+
+	windowToLocalPoint(point: Vector): Vector {
+		const bbox = this._dom.getBoundingClientRect();
+		return new Vector(
+			(point.x - bbox.x) * (this.size.x / bbox.width),
+			(point.y - bbox.y) * (this.size.y / bbox.height),
+		);
 	}
 
 	isDebug(): boolean {

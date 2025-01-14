@@ -59,7 +59,22 @@ diagram.addListener("mouseenter", (event: NodeEvent) => {
 	);
 });
 
-diagram.addListener("mouseleave", (event) => {
+diagram.addListener("nodeSelected", (event: NodeEvent) => {
+	if (undefined === event.target) {
+		labelManager.hide("selected");
+		return;
+	}
+
+	labelManager.show(
+		"selected",
+		event.target.id,
+		renderer.localPointToWindow(event.target?.getGlobalPosition()),
+		"left",
+		16,
+	);
+});
+
+diagram.addListener("mouseleave", () => {
 	if (0 !== engine.getHovering().length) {
 		return;
 	}

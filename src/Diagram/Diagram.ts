@@ -1,7 +1,7 @@
 import db from "../../database.json";
 import type { WithLifecycle } from "../Engine2D/Contract/WithLifecycle";
 import type { Engine } from "../Engine2D/Core/Engine";
-import type { NodeEvent } from "../Engine2D/Core/NodeEvent";
+import { NodeEvent } from "../Engine2D/Core/NodeEvent";
 import { Node2D } from "../Engine2D/Node2D";
 import { Angle } from "../Engine2D/Parameters/Angle";
 import { Vector } from "../Engine2D/Vector";
@@ -164,6 +164,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 		}
 
 		this._selectedNode = node;
+		this.dispatchEvent(new NodeEvent("nodeSelected", this._selectedNode));
 	}
 
 	getSelectedNode(): SelectableNode | undefined {

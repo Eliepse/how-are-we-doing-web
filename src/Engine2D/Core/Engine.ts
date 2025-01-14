@@ -189,6 +189,10 @@ export class Engine {
 		return this._hoveredNodes.has(node);
 	}
 
+	getHovering(): Array<Node2D & WithPointerEvents> {
+		return Array.from(this._hoveredNodes.values());
+	}
+
 	start(): void {
 		this._clock.start();
 	}

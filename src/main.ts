@@ -1,5 +1,6 @@
 import { Config } from "./config";
 import { Diagram } from "./Diagram/Diagram";
+import { FloatingLabelManager } from "./Diagram/FloatingLabelManager";
 import { DeterminantRenderer } from "./Diagram/Renderer/DeterminantRenderer";
 import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubFamilyRenderer";
 import { FacilityFamilyRenderer } from "./Diagram/Renderer/FacilityFamilyRenderer";
@@ -12,16 +13,17 @@ import { SVGRenderer } from "./Engine2D/Renderer/SVG/SVGRenderer";
 import { Vector } from "./Engine2D/Vector";
 
 const container = document.querySelector("#diagramContainer");
-const label = document.querySelector("#floatingLabel") as HTMLDivElement;
+const labelContainer = document.querySelector("#labels") as HTMLDivElement;
 
 if (null === container) {
 	throw new Error("Missing container");
 }
 
-if (null === label) {
-	throw new Error("Missing label");
+if (null === labelContainer) {
+	throw new Error("Missing labels container");
 }
 
+const labelManager = new FloatingLabelManager(labelContainer);
 const diagram = new Diagram();
 const renderer = new SVGRenderer(
 	"diagram",
@@ -48,17 +50,21 @@ diagram.addListener("mouseenter", (event: NodeEvent) => {
 		return;
 	}
 
-	label.textContent = event.target.id;
-	const labelBBox = label.getBoundingClientRect();
-	const anchor = renderer
-		.localPointToWindow(event.target?.getGlobalPosition())
-		.sub(new Vector(labelBBox.width, labelBBox.height).div(2));
-	label.style.transform = `translate(${anchor.x.toFixed()}px, ${anchor.y.toFixed()}px)`;
-	label.style.display = "";
+	labelManager.show(
+		"hover",
+		event.target.id,
+		renderer.localPointToWindow(event.target?.getGlobalPosition()),
+		"left",
+		16,
+	);
 });
 
 diagram.addListener("mouseleave", (event) => {
-	label.style.display = "none";
+	if (0 !== engine.getHovering().length) {
+		return;
+	}
+
+	labelManager.hide("hover");
 });
 
 renderer.render();

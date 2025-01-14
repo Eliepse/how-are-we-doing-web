@@ -134,18 +134,14 @@ export class SVGRenderer extends Renderer {
 
 	localPointToWindow(point: Vector): Vector {
 		const bbox = this._dom.getBoundingClientRect();
-		return new Vector(
-			(point.x + bbox.x) / (this.size.x / bbox.width),
-			(point.y + bbox.y) / (this.size.y / bbox.height),
-		);
+		const scaleFactor = new Vector(this.size.x / bbox.width, this.size.y / bbox.height);
+		return new Vector(bbox.x + point.x / scaleFactor.x, bbox.y + point.y / scaleFactor.y);
 	}
 
 	windowToLocalPoint(point: Vector): Vector {
 		const bbox = this._dom.getBoundingClientRect();
-		return new Vector(
-			(point.x - bbox.x) * (this.size.x / bbox.width),
-			(point.y - bbox.y) * (this.size.y / bbox.height),
-		);
+		const scaleFactor = new Vector(this.size.x / bbox.width, this.size.y / bbox.height);
+		return new Vector((point.x - bbox.x) * scaleFactor.x, (point.y - bbox.y) * scaleFactor.y);
 	}
 
 	isDebug(): boolean {

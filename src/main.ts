@@ -46,7 +46,7 @@ diagram.setPosition(renderer.size.div(2));
 renderer.addNodeRenderer(new FacilityRenderer(renderer, diagram));
 renderer.addNodeRenderer(new DeterminantRenderer(renderer, diagram));
 renderer.addNodeRenderer(new PathologyRenderer(renderer, diagram));
-renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer));
+renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, translator));
 renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
 renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
 renderer.addNodeRenderer(new PathologyLinkRenderer(renderer));

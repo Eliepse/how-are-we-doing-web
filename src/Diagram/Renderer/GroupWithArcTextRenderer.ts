@@ -4,8 +4,13 @@ import { ArcTextPainter } from "../../Engine2D/Renderer/SVG/Painter/ArcTextPaint
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily";
 import { FacilityFamily } from "../Items/Facility/FacilityFamily";
+import type { Translator } from "../Translation/Translator";
 
 export class GroupWithArcTextRenderer extends NodeRenderer<SVGRenderer> {
+	constructor(renderer: SVGRenderer, private translator: Translator) {
+		super(renderer);
+	}
+
 	override render(engineNode: EngineNode): void {
 		const node = engineNode.node as unknown as FacilityFamily | DeterminantSubFamily;
 		const position = node.getGlobalPosition();
@@ -27,13 +32,13 @@ export class GroupWithArcTextRenderer extends NodeRenderer<SVGRenderer> {
 		textPath = this._renderer.getDOM(engineNode, "arcText:textPath", () => textPath);
 		arc = this._renderer.getDOM(engineNode, "arcText:path", () => arc, true);
 
-		ArcTextPainter.updateText(textPath, node.getName());
+		ArcTextPainter.updateText(textPath, this.translator.translate(node.getName(), "nodes"));
 		ArcTextPainter.updateArc(
 			arc,
 			position,
 			node.getRadius() + 32,
 			rotation.sub(angleShift),
-			rotation.sub(angleShift).add(node.getArc())
+			rotation.sub(angleShift).add(node.getArc()),
 		);
 	}
 

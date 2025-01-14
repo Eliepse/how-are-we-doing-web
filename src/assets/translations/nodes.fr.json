@@ -1,192 +1,193 @@
-socio-economy and lifestyles
-built environment
-landscape environment
-urban ecosystem and biodiversity
+{
+	"socio-economy and lifestyles": "SOCIO-ECONOMIE ET MODES DE VIE",
+	"built environment": "ENVIRONNEMENT BATI",
+	"landscape environment": "ENVIRONNEMENT PAYSAGER",
+	"urban ecosystem and biodiversity": "ECOSYSTEME URBAIN ET BIODIVERSITE",
 
-socio-economy
-lifestyles
-buildings quality
-functional mixity
-landscape and athmosphere
-outdoor usages
-intermodality
-territory and biodiversity
-pollution and nuisances
+	"socio-economy": "SOCIO-ECONOMIE",
+	"lifestyles": "MODES DE VIE",
+	"buildings quality": "QUALITE DU BATI",
+	"functional mixity": "MIXITE FONCTIONNELLE",
+	"landscape and athmosphere": "PAYSAGE ET AMBIANCES",
+	"outdoor usages": "USAGES EXTERIEURS",
+	"intermodality": "INTERMODALITE",
+	"territory and biodiversity": "TERRITOIRE ET BIODIVERSITE",
+	"pollution and nuisances": "POLLUTIONS ET NUISANCES",
 
-social cohesion and involvement
-social mixity, equity and solidarity
-neighbourhood socio-economic status
-population economic activity and security
-active transportation choice
-relaxing, cultural and recreational activities
-healthy food knowledge and choice
-sport and physical activities
-sun light access and visual indoor comfort
-indoor air quality and hygrothermal comfort
-acoustic indoor comfort
-stability and regularity of access to quality housing
-neighbourhood functional mix
-access to a diversified and qualitative offer
-urban concentration and urbanization level
-multi-sensory outdoor comfort and diversity
-interactions with natural environments
-aeraulic and hygrothermal outdoor comfort
-sun light exposure and visual outdoor comfort
-urban appropriation access and equity
-spatial legibility and security feeling
-road network quality for active transportation
-access to and variety of the transportation offer
-environment and biodiversity preservation
-prevention and resilience to environmental hazards
-environment and biodiversity awareness
-air pollution and electromagnetic fields low exposure
-industrial, water and soil pollution low exposure
-road traffic low exposure
-qualitative and adequate sound environment
+	"social cohesion and involvement": "cohésion sociale et participation",
+	"social mixity, equity and solidarity": "mixité sociale, équité et solidarité",
+	"neighbourhood socio-economic status": "s,tatut socio-économique du quartier",
+	"population economic activity and security": "activité et sécurité économiques de la population",
+	"active transportation choice": "déplacements actifs",
+	"relaxing, cultural and recreational activities": "activités relaxantes, culturelles et récréatives",
+	"healthy food knowledge and choice": "connaissance et choix de nourriture saine",
+	"sport and physical activities": "sport et activités physiques",
+	"sun light access and visual indoor comfort": "accès au soleil et confort visuel en intérieur",
+	"indoor air quality and hygrothermal comfort": "qualité de l'air et confort hygrothermique en intérieur",
+	"acoustic indoor comfort": "confort acoustique intérieur",
+	"stability and regularity of access to quality housing": "stabilité et régularité de l'accès à un logement décent",
+	"neighbourhood functional mix": "mixité programmatique du quartier",
+	"access to a diversified and qualitative offer": "accès à une offre diversifiée et qualitative",
+	"urban concentration and urbanization level": "densité urbaine et degré d'urbanisation",
+	"multi-sensory outdoor comfort and diversity": "confort et diversité des ambiances multi-sensorielles",
+	"interactions with natural environments": "interactions avec des espaces naturels",
+	"aeraulic and hygrothermal outdoor comfort": "confort aéraulique et hygrothermique extérieur",
+	"sun light exposure and visual outdoor comfort": "exposition au soleil et confort visuel extérieur",
+	"urban appropriation access and equity": "appropriation urbaine, accès et équité",
+	"spatial legibility and security feeling": "lisibilité spatiale et sentiment de sécurité",
+	"road network quality for active transportation": "qualité du réseau pour les modes actifs de déplacement",
+	"access to and variety of the transportation offer": "disponibilité et variété de l'offre de transport",
+	"environment and biodiversity preservation": "p,réservation de l'environnement et la biodiversité",
+	"prevention and resilience to environmental hazards": "prévention et résilience aux aléas environnementaux",
+	"environment and biodiversity awareness": "sensibillisation à l'environnement et la biodiversité",
+	"air pollution and electromagnetic fields low exposure": "faible exposition à la pollution de l'air et aux champs électromagnétiques",
+	"industrial, water and soil pollution low exposure": "faible exposition aux pollutions de l'industrie, l'eau et les sols",
+	"road traffic low exposure": "faible exposition au trafic routier",
+	"qualitative and adequate sound environment": "environnement sonore qualitatif et adéquat",
 
-mental
-physical
-social
+	"mental": "MENTAL",
+	"physical": "PHYSIQUE",
+	"social": "SOCIAL",
 
-psychotic disorders (schizophrenia)
-stress, anxiety and mood disorders (depression, bipolarity)
-neurodegenerative diseases (alzheimer, parkinson, huntington)
-self-deprecation and indetermination
-nutritional disorders
-attention and concentration disorders
-learning and cognitive under-performance
-stress-coping incapacities
-neuro-cognitive development disorders
-psychoactive substance use
-mental disorders
-negative mood and psychological states
-heart diseases (coronary heart disease, myocardial infraction)
-circulatory system diseases (cardiovascular disease, hypertension, stroke)
-respiratory system diseases (pneumoconiosis, bronchitis, asthma, allergies)
-cancers (different types)
-lung cancers
-overweight and obesity
-type 2 diabetes
-genital organs, reproduction and fertility disorders
-miscarriage and spontaneous abortion
-hypertensive disorders of pregnancy
-prematurity, length of gestation or fetal growth disorders
-musculoskeletal diseases (osteopathies, arthropathies, osteomalacia)
-accidental traumatic injuries (accidents, falls)
-congenital malformations and deformations
-sleep disorders
-thermal stress (syncope, hypothermia, stroke, mortality)
-skin cancers and diseases (sunburn, keratoses, premature aging)
-eyes cancers and diseases (carcinoma, cataract, conjunctivitis)
-hearing impairment (surdity, fatigue, tinnitus)
-water/vector-borne and parasitic diseases
-human immunodeficiency virus disease
-immune mechanism deficiency
-vitamin d deficiency
-all-cause mortality
-premature mortality
-social isolation
-violence and aggressions exposure
-inaccessibility or non-adherence to healthcare
+	"psychotic disorders (schizophrenia)": "troubles psychotiques",
+	"stress, anxiety and mood disorders (depression, bipolarity)": "stress, anxiété et troubles de l'humeur",
+	"neurodegenerative diseases (alzheimer, parkinson, huntington)": "maladies neurodégénératives",
+	"self-deprecation and indetermination": "autodépréciation et indétermination",
+	"nutritional disorders": "troubles nutritionnels",
+	"attention and concentration disorders": "t,roubles de l'attention et de la concentration",
+	"learning and cognitive under-performance": "troubles cognitifs et de l'apprentissage",
+	"stress-coping incapacities": "incapacités de gestion du stress",
+	"neuro-cognitive development disorders": "troubles du développement neuro-cognitif",
+	"psychoactive substance use": "usage de substances psychoactives",
+	"mental disorders": "troubles mentaux",
+	"negative mood and psychological states": "humeurs et états psychologiques négatifs",
+	"heart diseases (coronary heart disease, myocardial infraction)": "maladies du cœur",
+	"circulatory system diseases (cardiovascular disease, hypertension, stroke)": "maladies du système circulatoire",
+	"respiratory system diseases (pneumoconiosis, bronchitis, asthma, allergies)": "maladies du système respiratoire",
+	"cancers (different types)": "cancers (différents types)",
+	"lung cancers": "cancers des poumons",
+	"overweight and obesity": "surpoids et obésité",
+	"type 2 diabetes": "diabètes de type 2",
+	"genital organs, reproduction and fertility disorders": "troubles des organes génitaux, la reproduction ou la fertilité",
+	"miscarriage and spontaneous abortion": "fausse-couche et avortement spontané",
+	"hypertensive disorders of pregnancy": "troubles hypertensifs liés à la grossesse",
+	"prematurity, length of gestation or fetal growth disorders": "p,rématurité, troubles de la gestation ou croissance fétale",
+	"musculoskeletal diseases (osteopathies, arthropathies, osteomalacia)": "maladies musculosquelettiques",
+	"accidental traumatic injuries (accidents, falls)": "blessures traumatiques accidentelles",
+	"congenital malformations and deformations": "malformations et déformations congénitales",
+	"sleep disorders": "troubles du sommeil",
+	"thermal stress (syncope, hypothermia, stroke, mortality)": "stress thermique",
+	"skin cancers and diseases (sunburn, keratoses, premature aging)": "cancers et maladies de la peau",
+	"eyes cancers and diseases (carcinoma, cataract, conjunctivitis)": "cancers et maladies des yeux",
+	"hearing impairment (surdity, fatigue, tinnitus)": "déficience auditive",
+	"water/vector-borne and parasitic diseases": "maladies d'origine hydriques, vectorielles et parasitaires",
+	"human immunodeficiency virus disease": "troubles liés au virus de l'immunodéficience humaine",
+	"immune mechanism deficiency": "déficience du mécanisme immunitaire",
+	"vitamin d deficiency": "déficience en vitamine D",
+	"all-cause mortality": "mortalité toutes causes confondues",
+	"premature mortality": "mortalité prématurée",
+	"social isolation": "isolation sociale",
+	"violence and aggressions exposure": "exposition à la violence ou des aggressions",
+	"inaccessibility or non-adherence to healthcare": "inaccessibilité ou non-adhésion aux soins médicaux",
 
+	"urban fabric and buildings": "TISSU URBAIN ET BATIMENTS",
+	"natural and landscaped spaces": "ESPACES NATURELS ET PAYSAGERS",
+	"public spaces and landscape amenities": "E,SPACES PUBLICS ET AMENITES URBAINES",
+	"mobility and infrastructures": "MOBILITES ET INFRASTRUCTURES URBAINES",
+	"uses and functions": "USAGES ET FONCTIONS",
 
-urban fabric and buildings
-natural and landscaped spaces
-public spaces and landscape amenities
-mobility and infrastructures
-uses and functions
+	"residential density": "densité résidentielle",
+	"absence of abandoned building": "absence de bâtiment à l'abandon",
+	"urban sprawl limitation": "i,nterruption de l'étalement urbain",
+	"improved housing thermal isolation or heat source efficiency": "i,solation thermique et sources de chaleur performantes",
+	"indoor ventilation levels allowing air replacement": "renouvellement de l'air intérieur",
+	"particulate matter level in indoor air limitation": "limitation du taux de particules dans l'air intérieur",
+	"domestic allergens level in indoor air limitation": "limitation du taux d'allergènes dans l'air intérieur",
+	"ventilation air intakes away from road traffic and other nuisances": "prises d'air de ventilation éloignées du trafic routier et autres nuisances",
+	"buildings orientations and dimensions favouring indoor direct solar irradiation": "morphologie bâtie favorisant l'irradiation solaire intérieure",
+	"east-west larger than nord-south oriented streets": "rues est-ouest plus larges que celles d'axe nord-sud",
+	"elongated urban squares and parks": "squares et parcs urbains plus longs que larges",
+	"buildings with a limited depth or with patios": "bâtiments de faible profondeur ou avec patios",
+	"various buildings heights without excessive neighbour difference": "hauteurs bâties variées sans différence de voisinage excessive",
+	"implantation distance increased for high and slender buildings": "distance d'implantation majorée pour les bâtiments hauts et élancés",
+	"street network oblique to prevailing wind direction": "réseau viaire oblique par rapport aux vents dominants",
+	"street parallel to prevailing wind direction disconnected from open terrain": "rue parallèle au vent dominant déconnectée des espaces ouverts",
+	"openings and intersections in canyon streets preventing pressure short-circuiting": "prévention des court-circuits aérauliques dans les rues canyon",
+	"sun light exposure of indoor/outdoor environments": "accès au rayonnement solaire direct en intérieur/extérieur",
+	"busy roads bordered with flat/green roof buildings": "routes à fort trafic bordées de toitures plates/végétalisées",
+	"high traffic roads with a continuous and specular built front": "routes à fort trafic avec front bâti continu et réfléchissant",
+	"street grids with short distances, especially for busy roads": "réseau viaire à courtes distances, surtout en cas de fort trafic",
 
-residential density
-absence of abandoned building
-urban sprawl limitation
-improved housing thermal isolation or heat source efficiency
-indoor ventilation levels allowing air replacement
-particulate matter level in indoor air limitation
-domestic allergens level in indoor air limitation
-ventilation air intakes away from road traffic and other nuisances
-buildings orientations and dimensions favouring indoor direct solar irradiation
-east-west larger than nord-south oriented streets
-elongated urban squares and parks
-buildings with a limited depth or with patios
-various buildings heights without excessive neighbour difference
-implantation distance increased for high and slender buildings
-street network oblique to prevailing wind direction
-street parallel to prevailing wind direction disconnected from open terrain
-openings and intersections in canyon streets preventing pressure short-circuiting
-sun light exposure of indoor/outdoor environments
-busy roads bordered with flat/green roof buildings
-high traffic roads with a continuous and specular built front
-street grids with short distances, especially for busy roads
+	"plants and vegetables garden access": "accès à des jardins potagers",
+	"large parks or natural environment access": "accès à des grands parcs et espaces naturels",
+	"vegetation in public spaces": "présence de végétation dans l'espace public",
+	"plants and vegetables garden access in schools": "accès à des jardins potagers pour les établissements scolaires",
+	"large urban parks at larger distance rather than manier small urban parks at shorter distance": "grands parcs à grande distance privilégiés à de plus nombreux petits parcs",
+	"parks with sparse tree cover at regular intervals": "parcs avec canopée végétale clairsemée à intervalle régulier",
+	"park favouring wild nature, species richness, refuge places": "parc privilégiant nature sauvage, biodiversité, espaces refuges",
+	"richness of biodiversity in green landscape": "richesse de la biodiversité dans les espaces verts",
+	"small parks, squares and green public spaces access": "accès à des petits parcs, squares et espaces verts publics",
+	"urban attractive views of nature (parks, garden, seaside, trees…)": "vues attractives sur la nature",
+	"land form and vegetation barrier on roadsides": "axes routiers bordés de talus et barrières végétales",
+	"location and typology of plant species": "positions et typologies des espèces végétales",
+	"urban tree canopy allowing busy roads natural ventilation": "canopée végétale permettant la ventilation des axes routiers",
+	"urban tree canopy of medium density": "canopée végétale urbaine de densité moyenne",
+	"presence of wetlands and aquatic ecosystems": "présence de zones humides et écosystèmes aquatiques",
+	"ecological maintenance of green/blue public spaces": "maintenance écologique des espaces publics végétalisés",
 
-plants and vegetables garden access
-large parks or natural environment access
-vegetation in public spaces
-plants and vegetables garden access in schools
-large urban parks at larger distance rather than manier small urban parks at shorter distance
-parks with sparse tree cover at regular intervals
-park favouring wild nature, species richness, refuge places
-richness of biodiversity in green landscape
-small parks, squares and green public spaces access
-urban attractive views of nature (parks, garden, seaside, trees…)
-land form and vegetation barrier on roadsides
-location and typology of plant species
-urban tree canopy allowing busy roads natural ventilation
-urban tree canopy of medium density
-presence of wetlands and aquatic ecosystems
-ecological maintenance of green/blue public spaces
+	"formal or informal playing open spaces access": "accès à des espaces de jeux extérieurs formels ou informels",
+	"regular maintenance of vegetation in public spaces": "entretien régulier de la végétation dans les espaces publics",
+	"absence of signs of incivility or durtiness in the neighbourhood": "propreté et absence de signes d'incivilité dans le quartier",
+	"park with amenities and pedestrian paths": "parc avec des aménités et chemins piétonniers",
+	"environment with variation between nature and built elements": "paysage urbain avec alternance entre nature et constructions",
+	"public furniture and amenities satisfying different needs": "m,obilier et aménités publics satisfaisant différents besoins",
+	"sonic landscape : biodiversity, textures, water, wind…": "paysage sonore : biodiversité, textures, eau, vent…",
+	"parks and playgrounds efficient cleaning management (wastes, animals faeces…)": "propreté des parcs et aires de jeux (ordures, déjections)",
+	"sun light protection and mitigation": "possibilité de protection du rayonnement solaire direct",
+	"deciduous/coniferous vegetation location optimizing solar gain and visual comfort": "v,égétation optimisant l'exposition au soleil du bâti",
+	"adequate albedo and thermal inertia of covering materials": "revêtemens à albedo et inertie thermique adéquats",
+	"low thermal admittance and high albedo surface materials": "revêtemens à admittance thermique faible et albedo elevé",
+	"porosity and permeability of coating materials": "porosité et perméabilité des revêtements",
+	"busy roads with walking/cycling paths on downwind side": "routes à fort trafic avec voies piétons/vélos côté vent dominant",
+	"adequate typology and management of artificial lighting": "typologie et management adapté de l'éclairage artificiel",
+	"public spaces capacity to favour socialization and grouping": "capacité des espaces publics à encourager la socialisation",
 
-formal or informal playing open spaces access
-regular maintenance of vegetation in public spaces
-absence of signs of incivility or durtiness in the neighbourhood
-park with amenities and pedestrian paths
-environment with variation between nature and built elements
-public furniture and amenities satisfying different needs
-sonic landscape : biodiversity, textures, water, wind…
-parks and playgrounds efficient cleaning management (wastes, animals faeces…)
-sun light protection and mitigation
-deciduous/coniferous vegetation location optimizing solar gain and visual comfort
-adequate albedo and thermal inertia of covering materials
-low thermal admittance and high albedo surface materials
-porosity and permeability of coating materials
-busy roads with walking/cycling paths on downwind side
-adequate typology and management of artificial lighting
-public spaces capacity to favour socialization and grouping
+	"30km/h and priority given to active transportation zones": "zones à 30km/h et priorisant les déplacements actifs",
+	"active transportation network connectivity": "connectivité du réseau viaire pour les déplacements actifs",
+	"public transport access and availability": "disponibilité et accès au réseau de transports en commun",
+	"efficacity and coverage area of public transportation": "efficacité et aire de desserte des transports en commun",
+	"infrastructures encouraging intermodality": "infrastructures encourageant l'intermodalité",
+	"cycling infrastructures (lanes, signage, priority at crossroads, racks...)": "infrastructures cyclistes",
+	"street network without interruption or usage conflict": "réseau viaire sans interruption ou conflit d'usages",
+	"infrastructures for road safety and traffic limitation (lights, speed bumps, sidewalks...)": "infrastructures de sécurisation et limitation du trafic routier",
+	"neighbourhood walkability": "degré élevé de marchabilité du quartier",
+	"aircraft noise protection and mitigation": "protection ou mitigation du bruit aérien",
+	"aircraft high level noise protection or mitigation": "protection ou mitigation des niveaux élevés de bruit aérien",
+	"road traffic noise protection or mitigation": "protection ou mitigation du bruit routier",
+	"occupational noise protection or mitigation": "protection ou mitigation du bruit induit par l'activité humaine",
+	"environnemental noise protection or mitigation": "protection ou mitigation du bruit environnant",
+	"particulate matter air pollution protection or mitigation": "protection ou mitigation de la pollution aux particules fines",
+	"nitrogen oxides air pollution protection or mitigation": "protection ou mitigation de la pollution aux oxydes d'azote",
+	"carbon monoxide air pollution protection or mitigation": "protection ou mitigation de la pollution au monoxide de carbone",
+	"ozone air pollution protection or mitigation": "protection ou mitigation de la pollution à l'ozone",
+	"sulfur oxides air pollution protection or mitigation": "protection ou mitigation de la pollution aux oxydes de soufre",
+	"road with heavy traffic remoteness": "éloignement des routes à fort trafic",
 
-30km/h and priority given to active transportation zones
-active transportation network connectivity
-public transport access and availability
-efficacity and coverage area of public transportation
-infrastructures encouraging intermodality
-cycling infrastructures (lanes, signage, priority at crossroads, racks...)
-street network without interruption or usage conflict
-infrastructures for road safety and traffic limitation (lights, speed bumps, sidewalks...)
-neighbourhood walkability
-aircraft noise protection and mitigation
-aircraft high level noise protection or mitigation
-road traffic noise protection or mitigation
-occupational noise protection or mitigation
-environnemental noise protection or mitigation
-particulate matter air pollution protection or mitigation
-nitrogen oxides air pollution protection or mitigation
-carbon monoxide air pollution protection or mitigation
-ozone air pollution protection or mitigation
-sulfur oxides air pollution protection or mitigation
-road with heavy traffic remoteness
-
-clustered housing for people with disabilities
-disadvantaged people moved from high to low poverty areas with adapted rent levels
-dispersed housing for people with disabilities
-rental subsidy given to disadvantaged people to access the private housing market
-housing search assistance for disadvantaged people
-relocation of distressed public housing residents in the private housing market
-relocation of distressed public housing residents in the public housing market
-land use mix and pedestrian access to first necessity offer
-supermarkets and grocery stores access
-supportive housing for vulnerable people access
-healthy food retails access
-fast and ultra processed food stores remoteness
-qualitative housing disponibility and access
-proximity between places of residence and education
-sports and recreational facilities access
-sources of air pollution placed downwind from residential areas
-outdoor activities areas remoteness from sources of nuisances
+	"clustered housing for people with disabilities": "hébergements pour personnes avec handicaps groupés en ville",
+	"disadvantaged people moved from high to low poverty areas with adapted rent levels": "ménages défavorisés relogés dans un quartier à faible pauvreté",
+	"dispersed housing for people with disabilities": "h,ébergements pour personnes avec handicaps dispersés en ville",
+	"rental subsidy given to disadvantaged people to access the private housing market": "aides financières accordées pour l'accès au marché locatif privé",
+	"housing search assistance for disadvantaged people": "service d'aide à la recherche de logement pour les plus défavorisés",
+	"relocation of distressed public housing residents in the private housing market": "résidents de logements publics indécents relogés dans le privé",
+	"relocation of distressed public housing residents in the public housing market": "résidents de logements publics indécents relogés dans le public",
+	"land use mix and pedestrian access to first necessity offer": "mixité fonctionnelle et accès à une offre de première nécessité",
+	"supermarkets and grocery stores access": "accès à des supermarchés et commerces alimentaires",
+	"supportive housing for vulnerable people access": "accès à des logements avec services pour les plus vulnérables",
+	"healthy food retails access": "accès à des commerces avec une offre alimentaire saine",
+	"fast and ultra processed food stores remoteness": "éloignement de l'offre en alimentation rapide/ultra-transformée",
+	"qualitative housing disponibility and access": "d,isponibilité et accessibilité à des logements décents",
+	"proximity between places of residence and education": "proximité entre lieux de résidence et d'éducation",
+	"sports and recreational facilities access": "accès à des équipements dédiés aux sports et aux loisirs",
+	"sources of air pollution placed downwind from residential areas": "habitations côté vent vis-à-vis des sources de pollution de l'air",
+	"outdoor activities areas remoteness from sources of nuisances": "activités en extérieur éloignées des sources de pollution"
+}

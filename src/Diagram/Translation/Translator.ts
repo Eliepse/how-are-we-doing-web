@@ -46,10 +46,14 @@ export class Translator {
 		await this.loadContexts();
 	}
 
-	async loadContexts(): Promise<void> {
+	async loadContexts(locale?: Locale): Promise<void> {
 		await Promise.allSettled(
-			this.contexts.map((context) => this.loadContext(context, this._currentLocale)),
+			this.contexts.map((context) => this.loadContext(context, locale ?? this._currentLocale)),
 		);
+	}
+
+	async loadAll(): Promise<void> {
+		await Promise.allSettled(this.supportedLocales.map((locale) => this.loadContexts(locale)));
 	}
 
 	private getLocaleContexts(locale: Locale): Map<string, IntlContext> {

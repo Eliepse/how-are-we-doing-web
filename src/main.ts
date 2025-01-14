@@ -25,7 +25,7 @@ if (null === labelContainer) {
 }
 
 const translator = new Translator(
-	"/assets/translations/{context}.{lang}.json",
+	"/translations/{context}.{lang}.json",
 	"fr",
 	["en", "fr", "it"],
 	["nodes"],

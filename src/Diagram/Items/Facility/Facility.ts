@@ -21,6 +21,7 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 
 	constructor(
 		public readonly id: number,
+		public readonly label: string,
 		public readonly associations: Associations,
 		private _arc: Angle,
 	) {

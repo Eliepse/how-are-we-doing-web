@@ -17,7 +17,7 @@ import { FacilityFamily } from "./Items/Facility/FacilityFamily";
 import { Pathology } from "./Items/Pathology/Pathology";
 import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
 
-type SelectableNode = Pathology | Determinant | Facility;
+export type SelectableNode = Pathology | Determinant | Facility;
 
 export class Diagram extends Node2D implements WithLifecycle {
 	private _selectedNode: SelectableNode | undefined = undefined;
@@ -49,7 +49,9 @@ export class Diagram extends Node2D implements WithLifecycle {
 		db.pathologies.forEach((familyData, index) => {
 			const children = familyData.children.map((child) => {
 				const associatedDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
-				const pathology = new Pathology(child.id, { determinants: associatedDeterminants });
+				const pathology = new Pathology(child.id, child.name, {
+					determinants: associatedDeterminants,
+				});
 				this._pathologies.set(pathology.id, pathology);
 				return pathology;
 			});
@@ -84,7 +86,12 @@ export class Diagram extends Node2D implements WithLifecycle {
 						const associatedDeterminants = Object.keys(child.determinants).map((v) =>
 							parseInt(v),
 						);
-						return new Facility(child.id, { determinants: associatedDeterminants }, itemArc);
+						return new Facility(
+							child.id,
+							child.name,
+							{ determinants: associatedDeterminants },
+							itemArc,
+						);
 					}),
 					new Angle(),
 					450,
@@ -120,6 +127,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 						const assoFacilities = Object.keys(child.facilities).map((v) => parseInt(v));
 						const determinant = new Determinant(
 							child.id,
+							child.name,
 							asset,
 							{ arc: itemArc },
 							{ facilities: assoFacilities, pathologies: assoPathologies },

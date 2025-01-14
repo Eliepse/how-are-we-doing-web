@@ -18,7 +18,11 @@ export class Pathology
 {
 	private _diagram?: Diagram;
 
-	constructor(public readonly id: number, public readonly associations: Associations) {
+	constructor(
+		public readonly id: number,
+		public readonly label: string,
+		public readonly associations: Associations,
+	) {
 		super();
 	}
 

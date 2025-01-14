@@ -37,6 +37,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 
 	constructor(
 		public readonly id: number,
+		public readonly label: string,
 		asset: Symbolic,
 		private _colliderConfig: { arc: Angle },
 		public readonly assosiactions: Associations,

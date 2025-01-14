@@ -1,5 +1,5 @@
 import { Config } from "./config";
-import { Diagram } from "./Diagram/Diagram";
+import { Diagram, type SelectableNode } from "./Diagram/Diagram";
 import { FloatingLabelManager } from "./Diagram/FloatingLabelManager";
 import { DeterminantRenderer } from "./Diagram/Renderer/DeterminantRenderer";
 import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubFamilyRenderer";
@@ -8,6 +8,7 @@ import { FacilityRenderer } from "./Diagram/Renderer/FacilityRenderer";
 import { GroupWithArcTextRenderer } from "./Diagram/Renderer/GroupWithArcTextRenderer";
 import { PathologyLinkRenderer } from "./Diagram/Renderer/PathologyLinksRenderer";
 import { PathologyRenderer } from "./Diagram/Renderer/PathologyRenderer";
+import { Translator } from "./Diagram/Translation/Translator";
 import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { SVGRenderer } from "./Engine2D/Renderer/SVG/SVGRenderer";
 import { Vector } from "./Engine2D/Vector";
@@ -22,6 +23,13 @@ if (null === container) {
 if (null === labelContainer) {
 	throw new Error("Missing labels container");
 }
+
+const translator = new Translator(
+	"/assets/translations/{context}.{lang}.json",
+	"en",
+	["en"],
+	["nodes"],
+);
 
 const labelManager = new FloatingLabelManager(labelContainer);
 const diagram = new Diagram();
@@ -45,21 +53,21 @@ renderer.addNodeRenderer(new PathologyLinkRenderer(renderer));
 
 const engine = renderer.getEngine();
 
-diagram.addListener("mouseenter", (event: NodeEvent) => {
+diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 	if (undefined === event.target) {
 		return;
 	}
 
 	labelManager.show(
 		"hover",
-		event.target.id,
+		translator.translate(event.target.label, "nodes"),
 		renderer.localPointToWindow(event.target?.getGlobalPosition()),
 		"left",
 		16,
 	);
 });
 
-diagram.addListener("nodeSelected", (event: NodeEvent) => {
+diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 	if (undefined === event.target) {
 		labelManager.hide("selected");
 		return;
@@ -67,7 +75,7 @@ diagram.addListener("nodeSelected", (event: NodeEvent) => {
 
 	labelManager.show(
 		"selected",
-		event.target.id,
+		translator.translate(event.target.label, "nodes"),
 		renderer.localPointToWindow(event.target?.getGlobalPosition()),
 		"left",
 		16,
@@ -82,8 +90,10 @@ diagram.addListener("mouseleave", () => {
 	labelManager.hide("hover");
 });
 
-renderer.render();
-engine.start();
+translator.loadContexts().then(() => {
+	renderer.render();
+	engine.start();
+});
 
 /**
  * Debugger

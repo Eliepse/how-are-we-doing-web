@@ -17,6 +17,7 @@ export class FloatingLabelManager {
 		if (undefined === dom) {
 			dom = document.createElement("div");
 			dom.classList.add("floatingLabel");
+			dom.dataset.id = key;
 			this._labels.set(key, dom);
 			this._container.append(dom);
 		}

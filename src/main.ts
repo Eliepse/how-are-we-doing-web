@@ -58,6 +58,11 @@ diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>)
 		return;
 	}
 
+	if (event.target === diagram.getSelectedNode()) {
+		labelManager.hide("hover");
+		return;
+	}
+
 	labelManager.show(
 		"hover",
 		translator.translate(event.target.label, "nodes"),
@@ -73,6 +78,7 @@ diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined
 		return;
 	}
 
+	labelManager.hide("hover");
 	labelManager.show(
 		"selected",
 		translator.translate(event.target.label, "nodes"),

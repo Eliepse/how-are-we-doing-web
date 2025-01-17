@@ -1,4 +1,4 @@
-import db from "../../database.json";
+import type db from "../../database.json";
 import type { WithLifecycle } from "../Engine2D/Contract/WithLifecycle";
 import type { Engine } from "../Engine2D/Core/Engine";
 import { NodeEvent } from "../Engine2D/Core/NodeEvent";
@@ -19,12 +19,28 @@ import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
 
 export type SelectableNode = Pathology | Determinant | Facility;
 
+export type PathologiesData = (typeof db)["pathologies"];
+export type FacilitiesData = (typeof db)["facilities"];
+export type DeterminantsData = (typeof db)["determinants"];
+
+type Source = { source: string; doi: string };
+type SourceList = Map<number, Array<Source>>;
+
 export class Diagram extends Node2D implements WithLifecycle {
 	private _selectedNode: SelectableNode | undefined = undefined;
 	private _pathologies = new Map<number, Pathology>();
 	private _determinants = new Map<number, Determinant>();
+	private _facilities = new Map<number, Facility>();
+	private _linksSources = new Map<
+		Determinant["id"],
+		{ pathologies: SourceList; facilities: SourceList }
+	>();
 
-	constructor() {
+	constructor(
+		pathologiesData: PathologiesData,
+		facilitiesData: FacilitiesData,
+		determinantsData: DeterminantsData,
+	) {
 		super();
 
 		this.addListener("click", (e: NodeEvent) => {
@@ -43,10 +59,32 @@ export class Diagram extends Node2D implements WithLifecycle {
 			this.selectNode(undefined);
 		});
 
-		this.addChildren(new FacilitiesRing(this.buildFacilityGroups(db.facilities), 440));
-		this.addChildren(new DeterminantsRing(this.buildDeterminantFamilies(db.determinants)));
+		this.addChildren(new FacilitiesRing(this.buildFacilityGroups(facilitiesData), 440));
+		this.addChildren(new DeterminantsRing(this.buildDeterminantFamilies(determinantsData)));
 
-		db.pathologies.forEach((familyData, index) => {
+		determinantsData.forEach((family) =>
+			family.children.forEach((subFamily) =>
+				subFamily.children.forEach((det) => {
+					const pathologiesSources: SourceList = new Map();
+					const facilitiesSources: SourceList = new Map();
+
+					Object.entries(det.pathologies).forEach(([id, sources]) =>
+						pathologiesSources.set(parseInt(id), sources.sources),
+					);
+
+					Object.entries(det.facilities).forEach(([id, sources]) =>
+						facilitiesSources.set(parseInt(id), sources.sources),
+					);
+
+					this._linksSources.set(det.id, {
+						pathologies: pathologiesSources,
+						facilities: facilitiesSources,
+					});
+				}),
+			),
+		);
+
+		pathologiesData.forEach((familyData, index) => {
 			const children = familyData.children.map((child) => {
 				const associatedDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
 				const pathology = new Pathology(child.id, child.name, {
@@ -74,7 +112,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 		//
 	}
 
-	private buildFacilityGroups(groups: typeof db.facilities): Array<ArcGroup<Facility>> {
+	private buildFacilityGroups(groups: FacilitiesData): Array<ArcGroup<Facility>> {
 		const totalFacilities = groups.reduce((sum, family) => sum + family.children.length, 0);
 		const itemArc = new Angle(Math.PI * 2).div(totalFacilities);
 
@@ -86,12 +124,16 @@ export class Diagram extends Node2D implements WithLifecycle {
 						const associatedDeterminants = Object.keys(child.determinants).map((v) =>
 							parseInt(v),
 						);
-						return new Facility(
+						const facility = new Facility(
 							child.id,
 							child.name,
 							{ determinants: associatedDeterminants },
 							itemArc,
 						);
+
+						this._facilities.set(facility.id, facility);
+
+						return facility;
 					}),
 					new Angle(),
 					450,
@@ -99,7 +141,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 		);
 	}
 
-	private buildDeterminantFamilies(data: typeof db.determinants): Array<DeterminantFamily> {
+	private buildDeterminantFamilies(data: DeterminantsData): Array<DeterminantFamily> {
 		const totalDeterminants = data.reduce(
 			(sum, family) =>
 				family.children.reduce((sum, subFamily) => sum + subFamily.children.length, sum),
@@ -185,5 +227,88 @@ export class Diagram extends Node2D implements WithLifecycle {
 
 	getDeterminants(): Map<number, Determinant> {
 		return this._determinants;
+	}
+
+	getFacilities(): Map<number, Facility> {
+		return this._facilities;
+	}
+
+	getActiveNodes(): {
+		pathologies: Pathology[];
+		determinants: Determinant[];
+		facilities: Facility[];
+	} {
+		const selectedNode = this._selectedNode;
+
+		if (undefined === selectedNode) {
+			return { pathologies: [], determinants: [], facilities: [] };
+		}
+
+		let facilitiesId: number[] = [];
+		let determinantsId: number[] = [];
+		let pathologiesId: number[] = [];
+
+		if (selectedNode instanceof Determinant) {
+			facilitiesId = selectedNode.associations.facilities;
+			determinantsId = [selectedNode.id];
+			pathologiesId = selectedNode.associations.pathologies;
+		} else if (selectedNode instanceof Facility) {
+			facilitiesId = [selectedNode.id];
+			determinantsId = selectedNode.associations.determinants;
+			selectedNode.associations.determinants.forEach((id) => {
+				const pathologies = this._determinants.get(id)?.associations?.pathologies;
+				pathologies?.forEach((patId) => pathologiesId.push(patId));
+			});
+		} else if (selectedNode instanceof Pathology) {
+			pathologiesId = [selectedNode.id];
+			determinantsId = selectedNode.associations.determinants;
+			selectedNode.associations.determinants.forEach((id) => {
+				const facilities = this._determinants.get(id)?.associations?.facilities;
+				facilities?.forEach((facId) => facilitiesId.push(facId));
+			});
+		}
+
+		return {
+			pathologies: pathologiesId
+				.map((id) => this._pathologies.get(id))
+				.filter((v) => undefined !== v),
+			determinants: determinantsId
+				.map((id) => this._determinants.get(id))
+				.filter((v) => undefined !== v),
+			facilities: facilitiesId
+				.map((id) => this._facilities.get(id))
+				.filter((v) => undefined !== v),
+		};
+	}
+
+	getActiveLinksSources(): { pathologies: Source[]; facilities: Source[] } {
+		const sources = { pathologies: [], facilities: [] } as {
+			pathologies: Source[];
+			facilities: Source[];
+		};
+
+		if (undefined === this._selectedNode) {
+			return sources;
+		}
+
+		const activeNodes = this.getActiveNodes();
+
+		activeNodes.determinants.forEach((determinant) => {
+			const links = this._linksSources.get(determinant.id);
+
+			if (undefined === links) {
+				return;
+			}
+
+			activeNodes.facilities.forEach((facility) =>
+				sources.facilities.push(...(links.facilities.get(facility.id) ?? [])),
+			);
+
+			activeNodes.pathologies.forEach((pathologies) =>
+				sources.pathologies.push(...(links.pathologies.get(pathologies.id) ?? [])),
+			);
+		});
+
+		return sources;
 	}
 }

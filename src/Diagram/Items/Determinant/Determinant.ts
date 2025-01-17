@@ -40,7 +40,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		public readonly label: string,
 		asset: Symbolic,
 		private _colliderConfig: { arc: Angle },
-		public readonly assosiactions: Associations,
+		public readonly associations: Associations,
 	) {
 		super(asset);
 
@@ -119,11 +119,11 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		}
 
 		if (node instanceof Facility) {
-			return this.assosiactions.facilities.includes(node.id);
+			return this.associations.facilities.includes(node.id);
 		}
 
 		if (node instanceof Pathology) {
-			return this.assosiactions.pathologies.includes(node.id);
+			return this.associations.pathologies.includes(node.id);
 		}
 
 		return false;

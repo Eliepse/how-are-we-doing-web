@@ -1,3 +1,4 @@
+import db from "../database.json";
 import { Config } from "./config";
 import { Diagram, type SelectableNode } from "./Diagram/Diagram";
 import { FloatingLabelManager } from "./Diagram/FloatingLabelManager";
@@ -32,7 +33,7 @@ const translator = new Translator(
 );
 
 const labelManager = new FloatingLabelManager(labelContainer);
-const diagram = new Diagram();
+const diagram = new Diagram(db.pathologies, db.facilities, db.determinants);
 const renderer = new SVGRenderer(
 	"diagram",
 	container,
@@ -94,6 +95,42 @@ diagram.addListener("mouseleave", () => {
 	}
 
 	labelManager.hide("hover");
+});
+
+const biblio = document.querySelector("#bibliography") as HTMLDivElement;
+
+diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
+	biblio.querySelectorAll(".biblio-nodes").forEach((list) => (list.innerHTML = ""));
+
+	if (undefined === event.target) {
+		biblio.style.display = "none";
+		return;
+	}
+
+	const activeNodes = diagram.getActiveNodes();
+
+	biblio.querySelectorAll<HTMLUListElement>(".biblio-nodes").forEach((list) => {
+		let nodes: SelectableNode[] = [];
+
+		switch (list.dataset.type) {
+			case "pathology":
+				nodes = activeNodes.pathologies;
+				break;
+			case "determinant":
+				nodes = activeNodes.determinants;
+				break;
+			case "facility":
+				nodes = activeNodes.facilities;
+				break;
+		}
+
+		nodes.forEach((node) => {
+			const entry = document.createElement("li");
+			entry.textContent = translator.translate(node.label, "nodes");
+			list.append(entry);
+		});
+	});
+	biblio.style.display = "";
 });
 
 translator.loadContexts().then(() => {

@@ -116,9 +116,9 @@ text {
 
 #bibliography {
     position: fixed;
-    top: 32px;
-    right: 32px;
-    bottom: 32px;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
     max-width: 320px;
     overflow-y: auto;
     z-index: 20;
@@ -130,6 +130,7 @@ text {
     padding: 12px;
     background-color: #191733cc;
     list-style: none;
+    margin: 0;
 }
 
 .biblio-nodes li {
@@ -142,4 +143,11 @@ text {
 
 .biblio-nodes li + li {
     margin-top: 8px;
+}
+
+#bibliography div[data-link] {
+    font-size: 12px;
+    margin: 8px 0;
+    color: red;
+    text-align: center;
 }

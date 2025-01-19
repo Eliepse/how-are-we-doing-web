@@ -109,7 +109,7 @@ diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined
 
 	const activeNodes = diagram.getActiveNodes();
 
-	biblio.querySelectorAll<HTMLUListElement>(".biblio-nodes").forEach((list) => {
+	biblio.querySelectorAll<HTMLUListElement>(".biblio-nodes[data-type]").forEach((list) => {
 		let nodes: SelectableNode[] = [];
 
 		switch (list.dataset.type) {
@@ -130,6 +130,19 @@ diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined
 			list.append(entry);
 		});
 	});
+
+	const links = diagram.getActiveLinksSources();
+	const facilityLinks = new Set(links.facilities.map((l) => l.source.toLowerCase()));
+	const pathologiesLinks = new Set(links.facilities.map((l) => l.source.toLowerCase()));
+
+	biblio.querySelectorAll<HTMLUListElement>("[data-link]").forEach((list) => {
+		if ("facilities" === list.dataset.link) {
+			list.textContent = Array.from(facilityLinks.values()).join(" / ");
+		} else if ("pathologies" === list.dataset.link) {
+			list.textContent = Array.from(pathologiesLinks.values()).join(" / ");
+		}
+	});
+
 	biblio.style.display = "";
 });
 

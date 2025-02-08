@@ -1,4 +1,4 @@
-import type { Node2D } from "../Node2D";
+import type { Node2D } from "../Node/Node2D";
 
 export class EngineNode<TNode extends Node2D = Node2D> {
 	private _children = new Set<EngineNode>();

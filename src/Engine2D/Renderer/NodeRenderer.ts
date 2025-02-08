@@ -1,4 +1,4 @@
-import type { EngineNode } from "./EngineNode";
+import type { EngineNode } from "../Core/EngineNode";
 import type { Renderer } from "./Renderer";
 
 export abstract class NodeRenderer<TRenderer extends Renderer> {

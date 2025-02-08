@@ -1,12 +1,12 @@
-import type { Collider } from "../../../Engine2D/Contract/Collider";
+import type { Collider } from "../../../Engine2D/Physic/Collider";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
-import { ConstantCollider } from "../../../Engine2D/Core/ConstantCollider";
+import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
 import type { Engine } from "../../../Engine2D/Core/Engine";
-import { TorusCollider } from "../../../Engine2D/Core/TorusCollider";
-import { Node2D } from "../../../Engine2D/Node2D";
+import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
+import { Node2D } from "../../../Engine2D/Node/Node2D";
 import type { Angle } from "../../../Engine2D/Parameters/Angle";
-import { VirtualShape } from "../../../Engine2D/VirtualShape";
+import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
 import { Diagram } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
 import { Pathology } from "../Pathology/Pathology";

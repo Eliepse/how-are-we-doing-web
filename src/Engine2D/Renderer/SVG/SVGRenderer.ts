@@ -1,11 +1,11 @@
 import type { Symbolic } from "../../Contract/renderable";
 import type { EngineNode } from "../../Core/EngineNode";
-import type { NodeRenderer } from "../../Core/NodeRenderer";
-import { Renderer } from "../../Core/Renderer";
-import type { Node2D } from "../../Node2D";
+import type { NodeRenderer } from "../NodeRenderer";
+import { Renderer } from "../Renderer";
+import type { Node2D } from "../../Node/Node2D";
 import { SymbolShape } from "../../SymbolShape";
 import { Vector } from "../../Vector";
-import { VirtualShape } from "../../VirtualShape";
+import { VirtualShape } from "../../Node/VirtualShape";
 import { FallbackRenderer } from "./NodeRenderer/FallbackRenderer";
 
 type NodeDOMStore = Map<string, Element>;

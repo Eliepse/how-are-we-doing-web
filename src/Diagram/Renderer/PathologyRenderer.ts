@@ -1,5 +1,5 @@
 import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
+import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
 import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { CirclePainter } from "../../Engine2D/Renderer/SVG/Painter/CirclePainter";
 import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";

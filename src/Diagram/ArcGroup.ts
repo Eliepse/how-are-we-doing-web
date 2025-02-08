@@ -1,5 +1,5 @@
 import type { Element2D } from "../Engine2D/Contract/renderable";
-import { Node2D } from "../Engine2D/Node2D";
+import { Node2D } from "../Engine2D/Node/Node2D";
 import { Angle } from "../Engine2D/Parameters/Angle";
 import { Vector } from "../Engine2D/Vector";
 

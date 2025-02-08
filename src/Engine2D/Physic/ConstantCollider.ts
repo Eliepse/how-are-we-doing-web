@@ -1,4 +1,4 @@
-import type { Collider } from "../Contract/Collider";
+import type { Collider } from "./Collider";
 import type { Vector } from "../Vector";
 
 export class ConstantCollider implements Collider {

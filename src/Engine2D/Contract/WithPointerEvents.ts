@@ -1,4 +1,4 @@
-import type { Collider } from "./Collider";
+import type { Collider } from "../Physic/Collider";
 
 export interface WithPointerEvents {
 	getPointerCollider(): Collider;

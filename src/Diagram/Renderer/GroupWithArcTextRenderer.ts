@@ -1,5 +1,5 @@
 import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
+import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
 import { ArcTextPainter } from "../../Engine2D/Renderer/SVG/Painter/ArcTextPainter";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily";

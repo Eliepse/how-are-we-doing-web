@@ -1,6 +1,6 @@
 import type { EngineNode } from "../../../Core/EngineNode";
-import { NodeRenderer } from "../../../Core/NodeRenderer";
-import { VirtualShape } from "../../../VirtualShape";
+import { NodeRenderer } from "../../NodeRenderer";
+import { VirtualShape } from "../../../Node/VirtualShape";
 import { SymbolPainter } from "../Painter/SymbolPainter";
 import type { SVGRenderer } from "../SVGRenderer";
 

@@ -1,4 +1,4 @@
-import type { Symbolic } from "./Contract/renderable";
+import type { Symbolic } from "../Contract/renderable";
 import { Node2D } from "./Node2D";
 
 export class VirtualShape extends Node2D {

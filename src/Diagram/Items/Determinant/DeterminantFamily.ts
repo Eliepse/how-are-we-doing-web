@@ -1,4 +1,4 @@
-import { Node2D } from "../../../Engine2D/Node2D";
+import { Node2D } from "../../../Engine2D/Node/Node2D";
 import type { DeterminantSubFamily } from "./DeterminantSubFamily";
 
 export class DeterminantFamily extends Node2D {

@@ -1,4 +1,4 @@
-import type { Collider } from "../Contract/Collider";
+import type { Collider } from "./Collider";
 import { Angle } from "../Parameters/Angle";
 import { Vector } from "../Vector";
 

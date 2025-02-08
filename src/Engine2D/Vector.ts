@@ -9,10 +9,7 @@ export class Vector {
 	public static Bottom = new Vector(0, -1);
 	public static Left = new Vector(-1, 0);
 
-	public x: number;
-	public y: number;
-
-	constructor(x: number, y: number) {
+	constructor(public x: number, public y: number) {
 		this.x = x;
 		this.y = y;
 	}

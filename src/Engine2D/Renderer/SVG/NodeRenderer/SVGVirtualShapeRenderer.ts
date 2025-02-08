@@ -1,5 +1,5 @@
 import { Config } from "../../../../config";
-import { VirtualShape } from "../../../VirtualShape";
+import { VirtualShape } from "../../../Node/VirtualShape";
 import { TreeNode } from "../TreeNode";
 import { SVGNodeRenderer } from "./SVGNodeRenderer";
 

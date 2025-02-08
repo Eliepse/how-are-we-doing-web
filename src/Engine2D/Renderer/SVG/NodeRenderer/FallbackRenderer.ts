@@ -1,5 +1,5 @@
 import { EngineNode } from "../../../Core/EngineNode";
-import { NodeRenderer } from "../../../Core/NodeRenderer";
+import { NodeRenderer } from "../../NodeRenderer";
 import { Color } from "../../Color";
 import { FillAndStroke } from "../FillAndStroke";
 import { CirclePainter } from "../Painter/CirclePainter";

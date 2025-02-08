@@ -1,4 +1,4 @@
-import type { NodeEvent } from "../Core/NodeEvent";
+import type { NodeEvent } from "./Core/NodeEvent";
 
 export type NodeEventListener<TEvent extends NodeEvent = NodeEvent> = (event: TEvent) => void;
 export type NodeEvents = { [key: string]: NodeEvent };

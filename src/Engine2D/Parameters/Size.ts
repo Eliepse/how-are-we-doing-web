@@ -1,4 +1,4 @@
-import type { Parameter } from "../Contract/Parameter";
+import type { Parameter } from "./Parameter";
 import { Vector } from "../Vector";
 
 export class Size implements Parameter {

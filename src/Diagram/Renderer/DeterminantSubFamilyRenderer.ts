@@ -1,5 +1,5 @@
 import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
+import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
 import { LinePainter } from "../../Engine2D/Renderer/SVG/Painter/LinePainter";
 import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
 import { Vector } from "../../Engine2D/Vector";

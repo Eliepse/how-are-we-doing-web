@@ -1,25 +1,17 @@
-import type { HasEvents, NodeEvents } from "./Contract/HasEvents";
-import type { ParameterMap } from "./Contract/renderable";
-import type { NodeEvent } from "./Core/NodeEvent";
-import { Angle } from "./Parameters/Angle";
-import { Vector } from "./Vector";
-
-type Parameters = {
-	position: Vector;
-	rotation: Angle;
-	pivot: Vector;
-};
+import type { HasEvents, NodeEvents } from "../HasEvents";
+import type { NodeEvent } from "../Core/NodeEvent";
+import { Angle } from "../Parameters/Angle";
+import { Vector } from "../Vector";
 
 type DefaultEvents = { [key: string]: NodeEvent };
 
 export class Node2D<TNodeEvents extends NodeEvents = DefaultEvents>
-	implements HasEvents<TNodeEvents>
-{
+	implements HasEvents<TNodeEvents> {
 	protected _parent?: Node2D = undefined;
 	protected children: Array<Node2D> = [];
 	protected position = Vector.Zero;
 	protected rotation = Angle.Zero;
-	protected pivot: Vector = Vector.Zero;
+	// protected pivot: Vector = Vector.Zero;
 	protected _listeners = new Map<keyof TNodeEvents, Set<Function>>();
 
 	setPosition(value: Vector): void {
@@ -59,15 +51,7 @@ export class Node2D<TNodeEvents extends NodeEvents = DefaultEvents>
 		return this.children;
 	}
 
-	getParameters(): ParameterMap<Parameters> {
-		return {
-			position: this.position,
-			rotation: this.rotation,
-			pivot: this.pivot,
-		};
-	}
-
-	setParent(element: Node2D): void {
+	setParent(element: Node2D<any>): void {
 		this._parent = element;
 	}
 
@@ -98,7 +82,7 @@ export class Node2D<TNodeEvents extends NodeEvents = DefaultEvents>
 		node: Node2D | undefined,
 		callback: (node: Node2D) => boolean,
 	): Node2D | undefined {
-		if (undefined === node || true === callback(node)) {
+		if (undefined === node || callback(node)) {
 			return node;
 		}
 

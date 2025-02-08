@@ -1,5 +1,5 @@
 import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
+import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
 import { Color } from "../../Engine2D/Renderer/Color";
 import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { SymbolPainter } from "../../Engine2D/Renderer/SVG/Painter/SymbolPainter";

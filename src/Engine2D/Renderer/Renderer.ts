@@ -1,6 +1,6 @@
-import type { Node2D } from "../Node2D";
-import { Engine } from "./Engine";
-import type { EngineNode } from "./EngineNode";
+import type { Node2D } from "../Node/Node2D";
+import { Engine } from "../Core/Engine";
+import type { EngineNode } from "../Core/EngineNode";
 
 export abstract class Renderer {
 	protected _engine: Engine;

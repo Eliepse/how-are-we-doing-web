@@ -1,10 +1,10 @@
-import type { Collider } from "../../../Engine2D/Contract/Collider";
+import type { Collider } from "../../../Engine2D/Physic/Collider";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
-import { CircleCollider } from "../../../Engine2D/Core/CircleCollider";
+import { CircleCollider } from "../../../Engine2D/Physic/CircleCollider";
 import type { Engine } from "../../../Engine2D/Core/Engine";
 import { NodeEvent } from "../../../Engine2D/Core/NodeEvent";
-import { Node2D } from "../../../Engine2D/Node2D";
+import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Diagram } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
 import { Facility } from "../Facility/Facility";

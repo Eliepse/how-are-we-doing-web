@@ -1,4 +1,4 @@
-import type { Node2D } from "../Node2D";
+import type { Node2D } from "../Node/Node2D";
 
 export class NodeEvent<Target extends Node2D | undefined = Node2D> {
 	private _propagate: boolean = true;

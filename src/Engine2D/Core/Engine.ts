@@ -1,6 +1,6 @@
 import type { WithLifecycle } from "../Contract/WithLifecycle";
 import type { WithPointerEvents } from "../Contract/WithPointerEvents";
-import type { Node2D } from "../Node2D";
+import type { Node2D } from "../Node/Node2D";
 import type { Vector } from "../Vector";
 import { Clock } from "./Clock";
 import { EngineNode } from "./EngineNode";

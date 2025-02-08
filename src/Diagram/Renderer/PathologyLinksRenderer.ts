@@ -1,6 +1,6 @@
 import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Core/NodeRenderer";
-import { Node2D } from "../../Engine2D/Node2D";
+import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
+import { Node2D } from "../../Engine2D/Node/Node2D";
 import { Angle } from "../../Engine2D/Parameters/Angle";
 import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
 import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";

@@ -3,7 +3,7 @@ import { Angle } from "../Angle";
 import { Vector } from "../Vector";
 
 export class SymbolShape implements Symbolic {
-	private dom: SVGSymbolElement;
+	private readonly dom: SVGSymbolElement;
 
 	constructor(
 		id: string,

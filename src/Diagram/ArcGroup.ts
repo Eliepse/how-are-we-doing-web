@@ -1,15 +1,14 @@
-import type { Element2D } from "../Engine2D/Contract/renderable";
 import { Node2D } from "../Engine2D/Node/Node2D";
 import { Angle } from "../Engine2D/ValueObject/Angle";
 import { Vector } from "../Engine2D/ValueObject/Vector";
 
-export class ArcGroup<T extends Element2D = Element2D> extends Node2D {
+export class ArcGroup<T extends Node2D = Node2D> extends Node2D {
 	constructor(
 		private name: string,
 		children: Array<T>,
 		private arc: Angle,
 		private radius: number = 100,
-		private show: boolean = true
+		private show: boolean = true,
 	) {
 		super();
 		children.forEach((child) => this.addChildren(child));
@@ -65,7 +64,7 @@ export class ArcGroup<T extends Element2D = Element2D> extends Node2D {
 			const angle = this.getItemArc().rad * index;
 
 			child.setPosition(
-				new Vector(Math.cos(angle) * this.radius, Math.sin(angle) * this.radius)
+				new Vector(Math.cos(angle) * this.radius, Math.sin(angle) * this.radius),
 			);
 
 			// Correct the angle to have every element pointed toward the center

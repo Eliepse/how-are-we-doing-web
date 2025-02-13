@@ -1,4 +1,4 @@
-import { Parameter } from "./Parameter";
+import type { Parameter } from "./Parameter";
 
 export class Opacity implements Parameter {
   constructor(private value: number = 1) {}

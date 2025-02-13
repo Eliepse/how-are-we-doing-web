@@ -13,7 +13,8 @@ export class FacilitiesRing extends Node2D {
 		const stepAngle = (Math.PI * 2) / totalFacilities;
 		let angle = new Angle();
 
-		this.children.forEach((group) => {
+		const children = this.children as unknown as ArcGroup[];
+		children.forEach((group) => {
 			group.setRotation(angle);
 			const arc = group.getChildren().length * stepAngle;
 			group.setArc(arc);
@@ -23,6 +24,7 @@ export class FacilitiesRing extends Node2D {
 
 	setRadius(radius: number): void {
 		this.radius = radius;
-		this.children.forEach((child) => child.setRadius(this.radius));
+		const children = this.children as unknown as ArcGroup[];
+		children.forEach((child) => child.setRadius(this.radius));
 	}
 }

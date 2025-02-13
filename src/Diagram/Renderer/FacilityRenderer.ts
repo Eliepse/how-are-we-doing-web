@@ -1,7 +1,7 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
 import { Color } from "../../Engine2D/ValueObject/Color";
-import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
+import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { SymbolPainter } from "../../SVGRenderer/Painter/SymbolPainter";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
@@ -10,9 +10,9 @@ import { Facility } from "../Items/Facility/Facility";
 import type { Engine } from "../../Engine2D/Engine";
 
 const shapeStyle = {
-	default: new FillAndStroke({ fill: Color.White }),
-	selected: new FillAndStroke({ fill: Color.Red }),
-	dimmed: new FillAndStroke({ fill: colors.dimmedWhite }),
+	default: new SVGStyle({ fill: Color.White }),
+	selected: new SVGStyle({ fill: Color.Red }),
+	dimmed: new SVGStyle({ fill: colors.dimmedWhite }),
 } as const;
 
 export class FacilityRenderer extends NodeRenderer<SVGRenderer> {

@@ -1,5 +1,5 @@
 import type { Vector } from "../../Engine2D/ValueObject/Vector";
-import type { FillAndStroke } from "../FillAndStroke";
+import type { SVGStyle } from "../ValueObject/SVGStyle";
 import { Painter } from "./Painter";
 
 export class CirclePainter extends Painter {
@@ -11,7 +11,7 @@ export class CirclePainter extends Painter {
 		element: SVGCircleElement,
 		position: Vector,
 		radius: number,
-		style: FillAndStroke,
+		style: SVGStyle,
 	): void {
 		element.setAttribute("r", radius.toFixed(1));
 

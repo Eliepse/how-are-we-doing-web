@@ -2,7 +2,7 @@ import { Config } from "../../config";
 import type { Symbolic } from "../../Engine2D/Contract/renderable";
 import type { Angle } from "../../Engine2D/ValueObject/Angle";
 import type { Vector } from "../../Engine2D/ValueObject/Vector";
-import type { FillAndStroke } from "../FillAndStroke";
+import type { SVGStyle } from "../ValueObject/SVGStyle";
 import { Painter } from "./Painter";
 
 export class SymbolPainter extends Painter {
@@ -17,7 +17,7 @@ export class SymbolPainter extends Painter {
 		symbol: Symbolic,
 		position: Vector,
 		rotation: Angle,
-		style: FillAndStroke,
+		style: SVGStyle,
 	): void {
 		const domPosition = position.sub(symbol.getPivot()).toAttributes();
 		const transformPivot = position.toAttributes();

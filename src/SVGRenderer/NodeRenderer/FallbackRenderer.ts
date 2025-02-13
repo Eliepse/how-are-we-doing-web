@@ -1,11 +1,11 @@
 import { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { Color } from "../../Engine2D/ValueObject/Color";
-import { FillAndStroke } from "../FillAndStroke";
+import { SVGStyle } from "../ValueObject/SVGStyle";
 import { CirclePainter } from "../Painter/CirclePainter";
-import { Stroke } from "../Painter/Stroke";
+import { Stroke } from "../ValueObject/Stroke";
 import { SVGNodeRenderer } from "./SVGNodeRenderer";
 
-const style = new FillAndStroke({ fill: Color.White, stroke: new Stroke(1, Color.Red) });
+const style = new SVGStyle({ fill: Color.White, stroke: new Stroke(1, Color.Red) });
 
 export class FallbackRenderer extends SVGNodeRenderer {
 	render(node: VirtualNode): void {

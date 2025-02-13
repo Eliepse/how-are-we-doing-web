@@ -1,9 +1,9 @@
 import type { Vector } from "../../Engine2D/ValueObject/Vector";
-import { SVGShape } from "../Shape/SVGShape";
-import type { FillAndStroke } from "../FillAndStroke";
+import { SVGShape } from "./SVGShape";
+import type { SVGStyle } from "../ValueObject/SVGStyle";
 
 export class Line extends SVGShape {
-	private dom: SVGLineElement;
+	private readonly dom: SVGLineElement;
 
 	constructor() {
 		super();
@@ -20,7 +20,7 @@ export class Line extends SVGShape {
 		this.dom.setAttribute("y2", b.y);
 	}
 
-	updateStyle(style: FillAndStroke): void {
+	updateStyle(style: SVGStyle): void {
 		style.updateElement(this.dom);
 	}
 

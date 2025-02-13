@@ -2,9 +2,9 @@ import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
 import { Node2D } from "../../Engine2D/Node/Node2D";
 import { Color } from "../../Engine2D/ValueObject/Color";
-import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
+import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { CirclePainter } from "../../SVGRenderer/Painter/CirclePainter";
-import { Stroke } from "../../SVGRenderer/Painter/Stroke";
+import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { SymbolPainter } from "../../SVGRenderer/Painter/SymbolPainter";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
@@ -14,18 +14,18 @@ import { Determinant } from "../Items/Determinant/Determinant";
 import type { Engine } from "../../Engine2D/Engine";
 
 const shapeStyle = {
-	default: new FillAndStroke({ fill: colors.defaultWhite }),
-	selected: new FillAndStroke({ fill: colors.selected }),
-	dimmed: new FillAndStroke({ fill: colors.dimmedWhite }),
+	default: new SVGStyle({ fill: colors.defaultWhite }),
+	selected: new SVGStyle({ fill: colors.selected }),
+	dimmed: new SVGStyle({ fill: colors.dimmedWhite }),
 } as const;
 
 const anchorStyle = {
-	default: new FillAndStroke({ stroke: new Stroke(2, Color.White.alpha(0.67)) }),
-	selected: new FillAndStroke({ stroke: new Stroke(2, colors.selected) }),
-	dimmed: new FillAndStroke({ stroke: new Stroke(2, colors.dimmedWhite) }),
+	default: new SVGStyle({ stroke: new Stroke(2, Color.White.alpha(0.67)) }),
+	selected: new SVGStyle({ stroke: new Stroke(2, colors.selected) }),
+	dimmed: new SVGStyle({ stroke: new Stroke(2, colors.dimmedWhite) }),
 } as const;
 
-const anchorCoreStyle = new FillAndStroke({ fill: colors.selected });
+const anchorCoreStyle = new SVGStyle({ fill: colors.selected });
 
 export const determinantAnchorOffset = new Vector(-128, 0);
 

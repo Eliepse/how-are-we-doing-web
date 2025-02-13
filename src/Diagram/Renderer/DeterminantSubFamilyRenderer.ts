@@ -1,10 +1,10 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import { Line } from "../../SVGRenderer/Painter/Line";
+import { Line } from "../../SVGRenderer/Shape/Line";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
-import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
-import { Stroke } from "../../SVGRenderer/Painter/Stroke";
+import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
+import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { colors } from "../colors";
 
 export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {
@@ -19,7 +19,7 @@ export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {
 		const end = position.add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
 
 		separator.updateMesh(start, end);
-		separator.updateStyle(new FillAndStroke({ stroke: new Stroke(1, colors.defaultWhite) }));
+		separator.updateStyle(new SVGStyle({ stroke: new Stroke(1, colors.defaultWhite) }));
 	}
 
 	override accepts(node: VirtualNode): boolean {

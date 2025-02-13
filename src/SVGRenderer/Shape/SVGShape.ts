@@ -1,4 +1,5 @@
-import { Shape } from "./Shape";
+export abstract class SVGShape {
+	abstract mount(container: Element): void;
 
-export abstract class SVGShape extends Shape {
+	abstract unmount(): void;
 }

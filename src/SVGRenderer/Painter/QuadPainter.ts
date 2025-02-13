@@ -1,6 +1,6 @@
 import type { Vector } from "../../Engine2D/ValueObject/Vector";
 import type { Painter } from "./Painter";
-import type { FillAndStroke } from "../FillAndStroke";
+import type { SVGStyle } from "../ValueObject/SVGStyle";
 
 export class QuadPainter implements Painter {
 	static make(): SVGPathElement {
@@ -10,7 +10,7 @@ export class QuadPainter implements Painter {
 	static update(
 		path: SVGPathElement,
 		points: [Vector, Vector, Vector, Vector],
-		style: FillAndStroke,
+		style: SVGStyle,
 	): void {
 		const formattedPoints = [
 			points[0].toString(),

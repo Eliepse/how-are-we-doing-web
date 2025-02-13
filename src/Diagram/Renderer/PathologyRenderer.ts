@@ -1,19 +1,19 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
-import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
+import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { CirclePainter } from "../../SVGRenderer/Painter/CirclePainter";
-import { Stroke } from "../../SVGRenderer/Painter/Stroke";
+import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Pathology } from "../Items/Pathology/Pathology";
 import type { Engine } from "../../Engine2D/Engine";
 
-const defaultStyle = new FillAndStroke({ stroke: new Stroke(3, colors.defaultWhite) });
-const hoveredStyle = new FillAndStroke({ stroke: new Stroke(3, colors.defaultWhite) });
-const activeStyle = new FillAndStroke({ stroke: new Stroke(3, colors.selected) });
-const dimmedStyle = new FillAndStroke({ stroke: new Stroke(3, colors.dimmedWhite) });
-const coreStyle = new FillAndStroke({ fill: colors.selected });
+const defaultStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
+const hoveredStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
+const activeStyle = new SVGStyle({ stroke: new Stroke(3, colors.selected) });
+const dimmedStyle = new SVGStyle({ stroke: new Stroke(3, colors.dimmedWhite) });
+const coreStyle = new SVGStyle({ fill: colors.selected });
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	private radius = 8;

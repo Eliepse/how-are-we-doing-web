@@ -1,8 +1,8 @@
-import { Config } from "../config";
-import type { Color } from "../Engine2D/ValueObject/Color";
-import type { Stroke } from "./Painter/Stroke";
+import { Config } from "../../config";
+import type { Color } from "../../Engine2D/ValueObject/Color";
+import type { Stroke } from "./Stroke";
 
-export class FillAndStroke {
+export class SVGStyle {
 	public readonly fill?: Color;
 	public readonly stroke?: Stroke;
 	public readonly opacity: number = 1;

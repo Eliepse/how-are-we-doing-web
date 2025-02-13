@@ -1,22 +1,21 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
 import { Node2D } from "../../Engine2D/Node/Node2D";
 import { Angle } from "../../Engine2D/ValueObject/Angle";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
-import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
 import { Diagram } from "../Diagram";
 import type { Determinant } from "../Items/Determinant/Determinant";
 import type { Pathology } from "../Items/Pathology/Pathology";
 import { determinantAnchorOffset } from "./DeterminantRenderer";
+import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 
 const pathStyle = new SVGStyle({ stroke: new Stroke(3, colors.selected.alpha(0.75)) });
 
-export class PathologyLinkRenderer extends NodeRenderer<SVGRenderer> {
-	override render(engineNode: VirtualNode): void {
-		const node = engineNode.node as Diagram;
+export class PathologyLinkRenderer extends SVGNodeRenderer {
+	override render(vnode: VirtualNode): void {
+		const node = vnode.node as Diagram;
 		const determinants = node.getDeterminants();
 
 		node.getPathologies().forEach((pathology) => {
@@ -31,11 +30,11 @@ export class PathologyLinkRenderer extends NodeRenderer<SVGRenderer> {
 				}
 
 				if (false === linkeActive) {
-					this._renderer.removeDOM(engineNode, this.makeDomRendererId(pathology, determinant));
+					this._renderer.removeDOM(vnode, this.makeDomRendererId(pathology, determinant));
 					return;
 				}
 
-				const path = this.getPath(engineNode, pathology, determinant);
+				const path = this.getPath(vnode, pathology, determinant);
 
 				// Create a temporary node to compute the position
 				const tempNode = new Node2D();

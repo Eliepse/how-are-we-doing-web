@@ -4,7 +4,7 @@ import { Color } from "../../Engine2D/ValueObject/Color";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Circle } from "../../SVGRenderer/Shape/Circle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
-import { SymbolPainter } from "../../SVGRenderer/Painter/SymbolPainter";
+import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
@@ -37,11 +37,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Determinant>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const symbol = node.getShape();
-		const isActive = node.isActive();
 		const selectedNode = this.diagram.getSelectedNode();
-		const position = node.getGlobalPosition();
-		const rotation = node.getGlobalRotation();
 
 		// Create a temporary node to compute the position
 		const anchor = new Node2D();
@@ -52,28 +48,23 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 
 		const circle = shapes.get("anchor", () => new Circle(5));
 		const circleCore = shapes.get("anchor:core", () => new Circle(3));
+		const element = shapes.get("virtualShape", () => new SVGSymbol(node.getShape()));
 
-		const element = this._renderer.getDOM(
-			vnode,
-			"virtualShape",
-			() => SymbolPainter.make(symbol),
-			true,
-		);
-
+		element.updateMesh(node.getGlobalPosition(), node.getGlobalRotation());
 		circle.updateMesh(anchorPosition);
 		circleCore.hide();
 
-		if (isActive) {
-			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.selected);
+		if (node.isActive()) {
+			element.updateStyle(shapeStyle.selected);
 			circle.updateStyle(anchorStyle.selected);
 			circleCore.updateMesh(anchorPosition);
 			circleCore.updateStyle(anchorCoreStyle);
 			circleCore.show();
 		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
-			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.dimmed);
+			element.updateStyle(shapeStyle.dimmed);
 			circle.updateStyle(anchorStyle.dimmed);
 		} else {
-			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.default);
+			element.updateStyle(shapeStyle.default);
 			circle.updateStyle(anchorStyle.default);
 		}
 	}

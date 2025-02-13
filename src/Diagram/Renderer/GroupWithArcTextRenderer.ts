@@ -12,8 +12,8 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 		super(renderer, engine);
 	}
 
-	override render(engineNode: VirtualNode): void {
-		const node = engineNode.node as unknown as FacilityFamily | DeterminantSubFamily;
+	override render(engineNode: VirtualNode<FacilityFamily | DeterminantSubFamily>): void {
+		const node = engineNode.node;
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
 		const angleShift = node.getItemArc().div(2);

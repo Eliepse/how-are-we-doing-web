@@ -51,12 +51,12 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 	}
 
 	private getPath(
-		engineNode: VirtualNode,
+		vnode: VirtualNode,
 		pathology: Pathology,
 		determinant: Determinant,
 	): SVGPathElement {
 		return this._renderer.getDOM(
-			engineNode,
+			vnode,
 			this.makeDomRendererId(pathology, determinant),
 			() => {
 				const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -79,7 +79,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 		);
 	}
 
-	override accepts(engineNode: VirtualNode): boolean {
-		return engineNode.node instanceof Diagram;
+	override accepts(vnode: VirtualNode): boolean {
+		return vnode.node instanceof Diagram;
 	}
 }

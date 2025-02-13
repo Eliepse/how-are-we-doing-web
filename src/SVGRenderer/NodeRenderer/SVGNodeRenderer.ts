@@ -21,7 +21,7 @@ export abstract class SVGNodeRenderer {
 		return collection;
 	}
 
-	abstract render(engineNode: VirtualNode): void;
+	abstract render(vnode: VirtualNode): void;
 
-	abstract accepts(engineNode: VirtualNode): boolean;
+	abstract accepts(vnode: VirtualNode): boolean;
 }

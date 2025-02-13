@@ -52,7 +52,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		}
 	}
 
-	override accepts(engineNode: VirtualNode): boolean {
-		return engineNode.node instanceof Pathology;
+	override accepts(vnode: VirtualNode): boolean {
+		return vnode.node instanceof Pathology;
 	}
 }

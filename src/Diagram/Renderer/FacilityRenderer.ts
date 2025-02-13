@@ -38,7 +38,7 @@ export class FacilityRenderer extends SVGNodeRenderer {
 		}
 	}
 
-	override accepts(engineNode: VirtualNode): boolean {
-		return engineNode.node instanceof Facility;
+	override accepts(vnode: VirtualNode): boolean {
+		return vnode.node instanceof Facility;
 	}
 }

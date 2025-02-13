@@ -15,4 +15,15 @@ export class ShapeCollection {
 
 		return shape;
 	}
+
+	remove(key: string): void {
+		const shape = this.shapes.get(key);
+
+		if (undefined === shape) {
+			return;
+		}
+
+		shape.unmount();
+		this.shapes.delete(key);
+	}
 }

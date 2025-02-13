@@ -14,6 +14,7 @@ export abstract class SVGNodeRenderer {
 
 		if (undefined === collection) {
 			collection = new ShapeCollection();
+			collection.mountShape = (shape) => shape.mount(this._renderer.dom);
 			this.shapesByVNode.set(vnode, collection);
 		}
 

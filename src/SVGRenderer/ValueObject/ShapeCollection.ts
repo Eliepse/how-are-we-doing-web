@@ -1,6 +1,7 @@
 import type { SVGShape } from "../Shape/SVGShape";
 
 export class ShapeCollection {
+	public mountShape?: (shape: SVGShape) => void;
 	private shapes = new Map<string, SVGShape>();
 
 	get<TShape extends SVGShape>(key: string, fallbackMaker: () => TShape): TShape {
@@ -8,6 +9,7 @@ export class ShapeCollection {
 
 		if (undefined === shape) {
 			shape = fallbackMaker();
+			this.mountShape && this.mountShape(shape);
 			this.shapes.set(key, shape);
 		}
 

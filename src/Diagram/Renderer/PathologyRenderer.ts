@@ -1,13 +1,13 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
-import { CirclePainter } from "../../SVGRenderer/Painter/CirclePainter";
+import { Circle } from "../../SVGRenderer/Shape/Circle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Pathology } from "../Items/Pathology/Pathology";
 import type { Engine } from "../../Engine2D/Engine";
+import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 
 const defaultStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
 const hoveredStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
@@ -15,49 +15,40 @@ const activeStyle = new SVGStyle({ stroke: new Stroke(3, colors.selected) });
 const dimmedStyle = new SVGStyle({ stroke: new Stroke(3, colors.dimmedWhite) });
 const coreStyle = new SVGStyle({ fill: colors.selected });
 
-export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
-	private radius = 8;
-
+export class PathologyRenderer extends SVGNodeRenderer {
 	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
 		super(renderer, engine);
 	}
 
-	override render(engineNode: VirtualNode<Pathology>): void {
-		const node = engineNode.node;
+	override render(vnode: VirtualNode<Pathology>): void {
+		const node = vnode.node;
+		const shapes = this.getShapes(vnode);
 		const isActive = node.isActive();
 		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
 		const isHovered = this.engine.isHovering(node);
 
-		const edge = this._renderer.getDOM(
-			engineNode,
-			"circle:edge",
-			() => CirclePainter.make(),
-			true,
-		);
+		const edge = shapes.get("edge", () => new Circle(8));
+		const core = shapes.get("core", () => new Circle(5));
 
-		const core = this._renderer.getDOM(
-			engineNode,
-			"circle:core",
-			() => CirclePainter.make(),
-			true,
-		);
+		edge.updateMesh(position);
+		core.updateMesh(position);
 
 		if (isActive) {
-			CirclePainter.update(edge, position, this.radius, activeStyle);
+			edge.updateStyle(activeStyle);
 		} else if (isHovered) {
-			CirclePainter.update(edge, position, this.radius, hoveredStyle);
+			edge.updateStyle(hoveredStyle);
 		} else if (undefined !== selectedNode && node !== selectedNode) {
-			CirclePainter.update(edge, position, this.radius, dimmedStyle);
+			edge.updateStyle(dimmedStyle);
 		} else {
-			CirclePainter.update(edge, position, this.radius, defaultStyle);
+			edge.updateStyle(defaultStyle);
 		}
 
 		if (isActive) {
-			core.style.display = "";
-			CirclePainter.update(core, position, this.radius - 3, coreStyle);
+			core.updateStyle(coreStyle);
+			core.show();
 		} else {
-			core.style.display = "none";
+			core.hide();
 		}
 	}
 

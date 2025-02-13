@@ -1,9 +1,8 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
 import { Node2D } from "../../Engine2D/Node/Node2D";
 import { Color } from "../../Engine2D/ValueObject/Color";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
-import { CirclePainter } from "../../SVGRenderer/Painter/CirclePainter";
+import { Circle } from "../../SVGRenderer/Shape/Circle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { SymbolPainter } from "../../SVGRenderer/Painter/SymbolPainter";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
@@ -12,6 +11,7 @@ import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Determinant } from "../Items/Determinant/Determinant";
 import type { Engine } from "../../Engine2D/Engine";
+import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 
 const shapeStyle = {
 	default: new SVGStyle({ fill: colors.defaultWhite }),
@@ -29,18 +29,20 @@ const anchorCoreStyle = new SVGStyle({ fill: colors.selected });
 
 export const determinantAnchorOffset = new Vector(-128, 0);
 
-export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
+export class DeterminantRenderer extends SVGNodeRenderer {
 	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
 		super(renderer, engine);
 	}
 
-	override render(engineNode: VirtualNode): void {
-		const node = engineNode.node as unknown as Determinant;
+	override render(vnode: VirtualNode<Determinant>): void {
+		const node = vnode.node;
+		const shapes = this.getShapes(vnode);
 		const symbol = node.getShape();
 		const isActive = node.isActive();
 		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
+
 		// Create a temporary node to compute the position
 		const anchor = new Node2D();
 		anchor.setParent(node);
@@ -48,40 +50,31 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 		const anchorPosition = anchor.getGlobalPosition();
 		const isHovering = this.engine.isHovering(node);
 
-		const circle = this._renderer.getDOM(
-			engineNode,
-			"anchor:circle",
-			() => CirclePainter.make(),
-			true,
-		);
-
-		const circleCore = this._renderer.getDOM(
-			engineNode,
-			"anchor:circle:core",
-			() => CirclePainter.make(),
-			true,
-		);
+		const circle = shapes.get("anchor", () => new Circle(5));
+		const circleCore = shapes.get("anchor:core", () => new Circle(3));
 
 		const element = this._renderer.getDOM(
-			engineNode,
+			vnode,
 			"virtualShape",
 			() => SymbolPainter.make(symbol),
 			true,
 		);
 
+		circle.updateMesh(anchorPosition);
+		circleCore.hide();
+
 		if (isActive) {
 			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.selected);
-			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.selected);
-			circleCore.style.display = "";
-			CirclePainter.update(circleCore, anchorPosition, 3, anchorCoreStyle);
+			circle.updateStyle(anchorStyle.selected);
+			circleCore.updateMesh(anchorPosition);
+			circleCore.updateStyle(anchorCoreStyle);
+			circleCore.show();
 		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
 			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.dimmed);
-			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.dimmed);
-			circleCore.style.display = "none";
+			circle.updateStyle(anchorStyle.dimmed);
 		} else {
 			SymbolPainter.update(element, symbol, position, rotation, shapeStyle.default);
-			CirclePainter.update(circle, anchorPosition, 5, anchorStyle.default);
-			circleCore.style.display = "none";
+			circle.updateStyle(anchorStyle.default);
 		}
 	}
 

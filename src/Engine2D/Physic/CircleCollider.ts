@@ -1,5 +1,5 @@
 import type { Collider } from "./Collider";
-import type { Vector } from "../Vector";
+import type { Vector } from "../ValueObject/Vector";
 
 export class CircleCollider implements Collider {
 	constructor(private _position: Vector, private _radius: number) {}

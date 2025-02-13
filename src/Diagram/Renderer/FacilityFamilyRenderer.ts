@@ -1,19 +1,16 @@
-import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
-import { LinePainter } from "../../Engine2D/Renderer/SVG/Painter/LinePainter";
-import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
-import { Vector } from "../../Engine2D/Vector";
+import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
+import { Line } from "../../SVGRenderer/Painter/Line";
+import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { FacilityFamily } from "../Items/Facility/FacilityFamily";
+import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
+import { Stroke } from "../../SVGRenderer/Painter/Stroke";
+import { colors } from "../colors";
+import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 
-export class FacilityFamilyRenderer extends NodeRenderer<SVGRenderer> {
-	override render(engineNode: EngineNode): void {
-		const node = engineNode.node as unknown as FacilityFamily;
-		const separator = this._renderer.getDOM(
-			engineNode,
-			"separator",
-			() => LinePainter.make(),
-			true,
-		);
+export class FacilityFamilyRenderer extends SVGNodeRenderer {
+	override render(vnode: VirtualNode<FacilityFamily>): void {
+		const node = vnode.node;
+		const separator = this.getShapes(vnode).get("separator", () => new Line());
 
 		const position = node.getGlobalPosition();
 		const angleShift = node.getItemArc().div(2);
@@ -21,10 +18,11 @@ export class FacilityFamilyRenderer extends NodeRenderer<SVGRenderer> {
 		const start = position.add(Vector.Right.mul(node.getRadius() - 12).rot(endAngle));
 		const end = position.add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
 
-		LinePainter.update(separator, start, end, "#fff");
+		separator.updateMesh(start, end);
+		separator.updateStyle(new FillAndStroke({ stroke: new Stroke(1, colors.defaultWhite) }));
 	}
 
-	override accepts(node: EngineNode): boolean {
+	override accepts(node: VirtualNode): boolean {
 		return node.node instanceof FacilityFamily;
 	}
 }

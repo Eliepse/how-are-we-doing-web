@@ -1,10 +1,10 @@
 import type db from "../../database.json";
 import type { WithLifecycle } from "../Engine2D/Contract/WithLifecycle";
-import type { Engine } from "../Engine2D/Core/Engine";
+import type { Engine } from "../Engine2D/Engine";
 import { NodeEvent } from "../Engine2D/Core/NodeEvent";
 import { Node2D } from "../Engine2D/Node/Node2D";
-import { Angle } from "../Engine2D/Parameters/Angle";
-import { Vector } from "../Engine2D/Vector";
+import { Angle } from "../Engine2D/ValueObject/Angle";
+import { Vector } from "../Engine2D/ValueObject/Vector";
 import { ArcGroup } from "./ArcGroup";
 import { Determinant } from "./Items/Determinant/Determinant";
 import { DeterminantFamily } from "./Items/Determinant/DeterminantFamily";

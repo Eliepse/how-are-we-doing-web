@@ -1,4 +1,4 @@
-import { Color } from "../Engine2D/Renderer/Color";
+import { Color } from "../Engine2D/ValueObject/Color";
 
 export const colors = {
 	defaultWhite: Color.White,

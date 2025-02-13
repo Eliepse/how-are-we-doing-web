@@ -1,18 +1,29 @@
-import type { HasEvents, NodeEvents } from "../HasEvents";
-import type { NodeEvent } from "../Core/NodeEvent";
-import { Angle } from "../Parameters/Angle";
-import { Vector } from "../Vector";
+import { Angle } from "../ValueObject/Angle";
+import { Vector } from "../ValueObject/Vector";
+import { Observable } from "./Observable";
 
-type DefaultEvents = { [key: string]: NodeEvent };
-
-export class Node2D<TNodeEvents extends NodeEvents = DefaultEvents>
-	implements HasEvents<TNodeEvents> {
+export class Node2D extends Observable {
 	protected _parent?: Node2D = undefined;
 	protected children: Array<Node2D> = [];
 	protected position = Vector.Zero;
 	protected rotation = Angle.Zero;
-	// protected pivot: Vector = Vector.Zero;
-	protected _listeners = new Map<keyof TNodeEvents, Set<Function>>();
+
+	setParent(element: Node2D): void {
+		this._parent = element;
+	}
+
+	getParent(): Node2D | undefined {
+		return this._parent;
+	}
+
+	addChildren(element: Node2D): void {
+		this.children.push(element);
+		element.setParent(this);
+	}
+
+	getChildren(): Array<Node2D> {
+		return this.children;
+	}
 
 	setPosition(value: Vector): void {
 		this.position = value;
@@ -40,52 +51,5 @@ export class Node2D<TNodeEvents extends NodeEvents = DefaultEvents>
 
 	getGlobalRotation(): Angle {
 		return (this.getParent()?.getGlobalRotation() ?? Angle.Zero).add(this.getRotation());
-	}
-
-	addChildren(element: Node2D): void {
-		this.children.push(element);
-		element.setParent(this);
-	}
-
-	getChildren(): Array<Node2D> {
-		return this.children;
-	}
-
-	setParent(element: Node2D<any>): void {
-		this._parent = element;
-	}
-
-	getParent(): Node2D | undefined {
-		return this._parent;
-	}
-
-	addListener(type: string, callback: Function): void {
-		if (false === this._listeners.has(type)) {
-			this._listeners.set(type, new Set());
-		}
-
-		this._listeners.get(type)?.add(callback);
-	}
-
-	removeListener(type: string, callback: Function): void {
-		this._listeners.get(type)?.delete(callback);
-	}
-
-	dispatchEvent<Type extends keyof TNodeEvents>(event: TNodeEvents[Type]): void {
-		this._listeners.get(event.type)?.forEach((listener) => listener(event));
-		if (event.canPropagate()) {
-			this.getParent()?.dispatchEvent(event);
-		}
-	}
-
-	static findParent(
-		node: Node2D | undefined,
-		callback: (node: Node2D) => boolean,
-	): Node2D | undefined {
-		if (undefined === node || callback(node)) {
-			return node;
-		}
-
-		return Node2D.findParent(node.getParent(), callback);
 	}
 }

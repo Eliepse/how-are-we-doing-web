@@ -1,5 +1,5 @@
 import { Node2D } from "../../../Engine2D/Node/Node2D";
-import { Angle } from "../../../Engine2D/Parameters/Angle";
+import { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { ArcGroup } from "../../ArcGroup";
 import type { Facility } from "./Facility";
 

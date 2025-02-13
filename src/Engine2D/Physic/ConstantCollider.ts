@@ -1,5 +1,5 @@
 import type { Collider } from "./Collider";
-import type { Vector } from "../Vector";
+import type { Vector } from "../ValueObject/Vector";
 
 export class ConstantCollider implements Collider {
 	static collide = new ConstantCollider(true);

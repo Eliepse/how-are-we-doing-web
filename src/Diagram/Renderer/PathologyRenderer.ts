@@ -1,32 +1,33 @@
-import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
-import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
-import { CirclePainter } from "../../Engine2D/Renderer/SVG/Painter/CirclePainter";
-import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
-import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
+import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
+import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
+import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
+import { CirclePainter } from "../../SVGRenderer/Painter/CirclePainter";
+import { Stroke } from "../../SVGRenderer/Painter/Stroke";
+import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Pathology } from "../Items/Pathology/Pathology";
+import type { Engine } from "../../Engine2D/Engine";
 
-const defaultStyle = new FillAndStroke(undefined, new Stroke(3, colors.defaultWhite));
-const hoveredStyle = new FillAndStroke(undefined, new Stroke(3, colors.defaultWhite));
-const activeStyle = new FillAndStroke(undefined, new Stroke(3, colors.selected));
-const dimmedStyle = new FillAndStroke(undefined, new Stroke(3, colors.dimmedWhite));
-const coreStyle = new FillAndStroke(colors.selected);
+const defaultStyle = new FillAndStroke({ stroke: new Stroke(3, colors.defaultWhite) });
+const hoveredStyle = new FillAndStroke({ stroke: new Stroke(3, colors.defaultWhite) });
+const activeStyle = new FillAndStroke({ stroke: new Stroke(3, colors.selected) });
+const dimmedStyle = new FillAndStroke({ stroke: new Stroke(3, colors.dimmedWhite) });
+const coreStyle = new FillAndStroke({ fill: colors.selected });
 
 export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 	private radius = 8;
 
-	constructor(renderer: SVGRenderer, private diagram: Diagram) {
-		super(renderer);
+	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
+		super(renderer, engine);
 	}
 
-	override render(engineNode: EngineNode<Pathology>): void {
+	override render(engineNode: VirtualNode<Pathology>): void {
 		const node = engineNode.node;
 		const isActive = node.isActive();
 		const selectedNode = this.diagram.getSelectedNode();
 		const position = node.getGlobalPosition();
-		const isHovered = this._renderer.getEngine().isHovering(node);
+		const isHovered = this.engine.isHovering(node);
 
 		const edge = this._renderer.getDOM(
 			engineNode,
@@ -60,7 +61,7 @@ export class PathologyRenderer extends NodeRenderer<SVGRenderer> {
 		}
 	}
 
-	override accepts(engineNode: EngineNode): boolean {
+	override accepts(engineNode: VirtualNode): boolean {
 		return engineNode.node instanceof Pathology;
 	}
 }

@@ -1,5 +1,5 @@
-import { Angle } from "../Parameters/Angle";
-import { Vector } from "../Vector";
+import { Angle } from "../ValueObject/Angle";
+import { Vector } from "../ValueObject/Vector";
 
 export interface Element2D {
 	setPosition(value: Vector): void;

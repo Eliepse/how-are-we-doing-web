@@ -1,39 +1,40 @@
-import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
+import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
+import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
 import { Node2D } from "../../Engine2D/Node/Node2D";
-import { Color } from "../../Engine2D/Renderer/Color";
-import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
-import { CirclePainter } from "../../Engine2D/Renderer/SVG/Painter/CirclePainter";
-import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
-import { SymbolPainter } from "../../Engine2D/Renderer/SVG/Painter/SymbolPainter";
-import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
-import { Vector } from "../../Engine2D/Vector";
+import { Color } from "../../Engine2D/ValueObject/Color";
+import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
+import { CirclePainter } from "../../SVGRenderer/Painter/CirclePainter";
+import { Stroke } from "../../SVGRenderer/Painter/Stroke";
+import { SymbolPainter } from "../../SVGRenderer/Painter/SymbolPainter";
+import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
+import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
 import { Determinant } from "../Items/Determinant/Determinant";
+import type { Engine } from "../../Engine2D/Engine";
 
 const shapeStyle = {
-	default: new FillAndStroke(colors.defaultWhite),
-	selected: new FillAndStroke(colors.selected),
-	dimmed: new FillAndStroke(colors.dimmedWhite),
+	default: new FillAndStroke({ fill: colors.defaultWhite }),
+	selected: new FillAndStroke({ fill: colors.selected }),
+	dimmed: new FillAndStroke({ fill: colors.dimmedWhite }),
 } as const;
 
 const anchorStyle = {
-	default: new FillAndStroke(undefined, new Stroke(2, Color.White.alpha(0.67))),
-	selected: new FillAndStroke(undefined, new Stroke(2, colors.selected)),
-	dimmed: new FillAndStroke(undefined, new Stroke(2, colors.dimmedWhite)),
+	default: new FillAndStroke({ stroke: new Stroke(2, Color.White.alpha(0.67)) }),
+	selected: new FillAndStroke({ stroke: new Stroke(2, colors.selected) }),
+	dimmed: new FillAndStroke({ stroke: new Stroke(2, colors.dimmedWhite) }),
 } as const;
 
-const anchorCoreStyle = new FillAndStroke(colors.selected);
+const anchorCoreStyle = new FillAndStroke({ fill: colors.selected });
 
 export const determinantAnchorOffset = new Vector(-128, 0);
 
 export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
-	constructor(renderer: SVGRenderer, private diagram: Diagram) {
-		super(renderer);
+	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
+		super(renderer, engine);
 	}
 
-	override render(engineNode: EngineNode): void {
+	override render(engineNode: VirtualNode): void {
 		const node = engineNode.node as unknown as Determinant;
 		const symbol = node.getShape();
 		const isActive = node.isActive();
@@ -45,7 +46,7 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 		anchor.setParent(node);
 		anchor.setPosition(determinantAnchorOffset);
 		const anchorPosition = anchor.getGlobalPosition();
-		const isHovering = this._renderer.getEngine().isHovering(node);
+		const isHovering = this.engine.isHovering(node);
 
 		const circle = this._renderer.getDOM(
 			engineNode,
@@ -83,7 +84,8 @@ export class DeterminantRenderer extends NodeRenderer<SVGRenderer> {
 			circleCore.style.display = "none";
 		}
 	}
-	override accepts(engineNode: EngineNode): boolean {
+
+	override accepts(engineNode: VirtualNode): boolean {
 		return engineNode.node instanceof Determinant;
 	}
 }

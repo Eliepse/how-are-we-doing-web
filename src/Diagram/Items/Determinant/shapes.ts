@@ -1,6 +1,6 @@
-import { Angle } from "../../../Engine2D/Parameters/Angle";
-import { SymbolShape } from "../../../Engine2D/SymbolShape";
-import { Vector } from "../../../Engine2D/Vector";
+import { Angle } from "../../../Engine2D/ValueObject/Angle";
+import { SymbolShape } from "../../../Engine2D/ValueObject/Symbolic/SymbolShape";
+import { Vector } from "../../../Engine2D/ValueObject/Vector";
 // @ts-ignore
 import lifestyleSVG from "../../../assets/determinants/lifestyles.svg?raw";
 // @ts-ignore

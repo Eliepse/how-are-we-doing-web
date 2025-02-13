@@ -1,6 +1,6 @@
 import type { Collider } from "./Collider";
-import { Angle } from "../Parameters/Angle";
-import { Vector } from "../Vector";
+import { Angle } from "../ValueObject/Angle";
+import { Vector } from "../ValueObject/Vector";
 
 export class TorusCollider implements Collider {
 	private _torusInnerRadiusSq: number;

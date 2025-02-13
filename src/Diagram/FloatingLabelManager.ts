@@ -1,4 +1,4 @@
-import { Vector } from "../Engine2D/Vector";
+import { Vector } from "../Engine2D/ValueObject/Vector";
 
 export class FloatingLabelManager {
 	private _labels = new Map<string, HTMLElement>();

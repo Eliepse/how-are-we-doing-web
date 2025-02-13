@@ -1,21 +1,21 @@
-import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
+import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
+import { NodeRenderer } from "../../SVGRenderer/NodeRenderer/NodeRenderer";
 import { Node2D } from "../../Engine2D/Node/Node2D";
-import { Angle } from "../../Engine2D/Parameters/Angle";
-import { FillAndStroke } from "../../Engine2D/Renderer/SVG/FillAndStroke";
-import { Stroke } from "../../Engine2D/Renderer/SVG/Painter/Stroke";
-import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
-import { Vector } from "../../Engine2D/Vector";
+import { Angle } from "../../Engine2D/ValueObject/Angle";
+import { FillAndStroke } from "../../SVGRenderer/FillAndStroke";
+import { Stroke } from "../../SVGRenderer/Painter/Stroke";
+import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
+import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
 import { Diagram } from "../Diagram";
 import type { Determinant } from "../Items/Determinant/Determinant";
 import type { Pathology } from "../Items/Pathology/Pathology";
 import { determinantAnchorOffset } from "./DeterminantRenderer";
 
-const pathStyle = new FillAndStroke(undefined, new Stroke(3, colors.selected.alpha(0.75)));
+const pathStyle = new FillAndStroke({ stroke: new Stroke(3, colors.selected.alpha(0.75)) });
 
 export class PathologyLinkRenderer extends NodeRenderer<SVGRenderer> {
-	override render(engineNode: EngineNode): void {
+	override render(engineNode: VirtualNode): void {
 		const node = engineNode.node as Diagram;
 		const determinants = node.getDeterminants();
 
@@ -52,7 +52,7 @@ export class PathologyLinkRenderer extends NodeRenderer<SVGRenderer> {
 	}
 
 	private getPath(
-		engineNode: EngineNode,
+		engineNode: VirtualNode,
 		pathology: Pathology,
 		determinant: Determinant,
 	): SVGPathElement {
@@ -80,7 +80,7 @@ export class PathologyLinkRenderer extends NodeRenderer<SVGRenderer> {
 		);
 	}
 
-	override accepts(engineNode: EngineNode): boolean {
+	override accepts(engineNode: VirtualNode): boolean {
 		return engineNode.node instanceof Diagram;
 	}
 }

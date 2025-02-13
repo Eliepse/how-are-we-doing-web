@@ -1,4 +1,4 @@
-import { Vector } from "../Engine2D/Vector";
+import { Vector } from "../Engine2D/ValueObject/Vector";
 
 export class BoundingBox {
 	public start: Vector = Vector.Zero;

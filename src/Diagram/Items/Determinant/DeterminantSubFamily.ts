@@ -1,4 +1,4 @@
-import type { Angle } from "../../../Engine2D/Parameters/Angle";
+import type { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { ArcGroup } from "../../ArcGroup";
 import type { Determinant } from "./Determinant";
 

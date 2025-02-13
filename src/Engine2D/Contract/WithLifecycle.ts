@@ -1,4 +1,4 @@
-import type { Engine } from "../Core/Engine";
+import type { Engine } from "../Engine";
 
 export interface WithLifecycle {
 	/**

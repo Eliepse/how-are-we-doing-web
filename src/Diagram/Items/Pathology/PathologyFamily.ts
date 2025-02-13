@@ -1,10 +1,10 @@
 // @ts-ignore
 import { Noise } from "noisejs";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
-import type { Engine } from "../../../Engine2D/Core/Engine";
+import type { Engine } from "../../../Engine2D/Engine";
 import { Node2D } from "../../../Engine2D/Node/Node2D";
-import { Angle } from "../../../Engine2D/Parameters/Angle";
-import { Vector } from "../../../Engine2D/Vector";
+import { Angle } from "../../../Engine2D/ValueObject/Angle";
+import { Vector } from "../../../Engine2D/ValueObject/Vector";
 import type { Pathology } from "./Pathology";
 
 export class PathologyFamily extends Node2D implements WithLifecycle {

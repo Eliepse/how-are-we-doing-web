@@ -1,7 +1,7 @@
 import type { Element2D } from "../Engine2D/Contract/renderable";
 import { Node2D } from "../Engine2D/Node/Node2D";
-import { Angle } from "../Engine2D/Parameters/Angle";
-import { Vector } from "../Engine2D/Vector";
+import { Angle } from "../Engine2D/ValueObject/Angle";
+import { Vector } from "../Engine2D/ValueObject/Vector";
 
 export class ArcGroup<T extends Element2D = Element2D> extends Node2D {
 	constructor(

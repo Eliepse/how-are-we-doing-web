@@ -1,24 +1,14 @@
-import type { Node2D } from "../Node/Node2D";
-import { Engine } from "../Core/Engine";
-import type { EngineNode } from "../Core/EngineNode";
+import type { VirtualNode } from "../Core/VirtualNode";
+import type { Vector } from "../ValueObject/Vector";
 
 export abstract class Renderer {
-	protected _engine: Engine;
+	abstract mountNode(vnode: VirtualNode): void;
 
-	constructor(root: Node2D) {
-		this._engine = new Engine(
-			root,
-			(node) => this.mountNode(node),
-			(node) => this.unmountNode(node),
-			(node) => this.renderNode(node)
-		);
-	}
+	abstract renderNode(vnode: VirtualNode, deltaTime: number, frames: number): void;
 
-	abstract mountNode(node: EngineNode): void;
-	abstract renderNode(node: EngineNode): void;
-	abstract unmountNode(node: EngineNode): void;
+	abstract unmountNode(vnode: VirtualNode): void;
 
-	render() {
-		this._engine.updateTree();
-	}
+	abstract windowToLocalPoint(point: Vector): Vector;
+
+	abstract localPointToWindow(point: Vector): Vector;
 }

@@ -11,8 +11,10 @@ import { PathologyLinkRenderer } from "./Diagram/Renderer/PathologyLinksRenderer
 import { PathologyRenderer } from "./Diagram/Renderer/PathologyRenderer";
 import { Translator } from "./Diagram/Translation/Translator";
 import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
-import { SVGRenderer } from "./Engine2D/Renderer/SVG/SVGRenderer";
-import { Vector } from "./Engine2D/Vector";
+import { SVGRenderer } from "./SVGRenderer/SVGRenderer";
+import { Vector } from "./Engine2D/ValueObject/Vector";
+import { Engine } from "./Engine2D/Engine";
+import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
 
 const container = document.querySelector("#diagramContainer");
 const labelContainer = document.querySelector("#labels") as HTMLDivElement;
@@ -34,25 +36,20 @@ const translator = new Translator(
 
 const labelManager = new FloatingLabelManager(labelContainer);
 const diagram = new Diagram(db.pathologies, db.facilities, db.determinants);
-const renderer = new SVGRenderer(
-	"diagram",
-	container,
-	diagram,
-	new Vector(1000, 1000),
-	Config.Render.debug,
-);
+
+const renderer = new SVGRenderer("diagram", container, new Vector(1000, 1000), Config.Render.debug);
+const engine = new Engine(diagram, renderer);
 
 diagram.setPosition(renderer.size.div(2));
 
-renderer.addNodeRenderer(new FacilityRenderer(renderer, diagram));
-renderer.addNodeRenderer(new DeterminantRenderer(renderer, diagram));
-renderer.addNodeRenderer(new PathologyRenderer(renderer, diagram));
-renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, translator));
-renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
-renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
-renderer.addNodeRenderer(new PathologyLinkRenderer(renderer));
-
-const engine = renderer.getEngine();
+renderer.addNodeRenderer(new FacilityRenderer(renderer, engine, diagram));
+renderer.addNodeRenderer(new DeterminantRenderer(renderer, engine, diagram));
+renderer.addNodeRenderer(new PathologyRenderer(renderer, engine, diagram));
+renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, engine, translator));
+renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer, engine));
+renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer, engine));
+renderer.addNodeRenderer(new PathologyLinkRenderer(renderer, engine));
+renderer.addNodeRenderer(new FallbackRenderer(renderer, engine));
 
 diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 	if (undefined === event.target) {
@@ -147,7 +144,7 @@ diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined
 });
 
 translator.loadContexts().then(() => {
-	renderer.render();
+	engine.render();
 	engine.start();
 });
 
@@ -155,10 +152,14 @@ translator.loadContexts().then(() => {
  * Debugger
  */
 /*
+const channel = new BroadcastChannel("diagram");
 document.addEventListener("mousemove", (e) => {
   const cursor = new Vector(e.clientX, e.clientY);
   // determinantsGroup.setSize(cursor.x);
   // determinantsGroup.refresh()
   // console.debug(cursor.x)
 });
+
+channel.addEventListener("message", (m) => diagram.selectNode(m.data));
 */
+

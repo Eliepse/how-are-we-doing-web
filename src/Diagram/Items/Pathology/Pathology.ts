@@ -2,7 +2,7 @@ import type { Collider } from "../../../Engine2D/Physic/Collider";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { CircleCollider } from "../../../Engine2D/Physic/CircleCollider";
-import type { Engine } from "../../../Engine2D/Core/Engine";
+import type { Engine } from "../../../Engine2D/Engine";
 import { NodeEvent } from "../../../Engine2D/Core/NodeEvent";
 import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Diagram } from "../../Diagram";
@@ -13,9 +13,8 @@ export type PathologyEvents = { click: NodeEvent<Pathology> };
 type Associations = { determinants: number[] };
 
 export class Pathology
-	extends Node2D<PathologyEvents>
-	implements WithLifecycle, WithPointerEvents
-{
+	extends Node2D
+	implements WithLifecycle, WithPointerEvents {
 	private _diagram?: Diagram;
 
 	constructor(

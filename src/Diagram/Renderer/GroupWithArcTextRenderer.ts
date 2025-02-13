@@ -1,17 +1,18 @@
-import type { EngineNode } from "../../Engine2D/Core/EngineNode";
-import { NodeRenderer } from "../../Engine2D/Renderer/NodeRenderer";
-import { ArcTextPainter } from "../../Engine2D/Renderer/SVG/Painter/ArcTextPainter";
-import type { SVGRenderer } from "../../Engine2D/Renderer/SVG/SVGRenderer";
+import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
+import { ArcTextPainter } from "../../SVGRenderer/Painter/ArcTextPainter";
+import { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily";
 import { FacilityFamily } from "../Items/Facility/FacilityFamily";
 import type { Translator } from "../Translation/Translator";
+import type { Engine } from "../../Engine2D/Engine";
+import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 
-export class GroupWithArcTextRenderer extends NodeRenderer<SVGRenderer> {
-	constructor(renderer: SVGRenderer, private translator: Translator) {
-		super(renderer);
+export class GroupWithArcTextRenderer extends SVGNodeRenderer {
+	constructor(renderer: SVGRenderer, engine: Engine, private translator: Translator) {
+		super(renderer, engine);
 	}
 
-	override render(engineNode: EngineNode): void {
+	override render(engineNode: VirtualNode): void {
 		const node = engineNode.node as unknown as FacilityFamily | DeterminantSubFamily;
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
@@ -42,7 +43,7 @@ export class GroupWithArcTextRenderer extends NodeRenderer<SVGRenderer> {
 		);
 	}
 
-	override accepts(node: EngineNode): boolean {
+	override accepts(node: VirtualNode): boolean {
 		return node.node instanceof FacilityFamily || node.node instanceof DeterminantSubFamily;
 	}
 }

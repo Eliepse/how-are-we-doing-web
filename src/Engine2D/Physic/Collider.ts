@@ -1,4 +1,4 @@
-import type { Vector } from "../Vector";
+import type { Vector } from "../ValueObject/Vector";
 
 export interface Collider {
 	isInside(point: Vector): boolean;

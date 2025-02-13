@@ -69,7 +69,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		}
 	}
 
-	override accepts(engineNode: VirtualNode): boolean {
-		return engineNode.node instanceof Determinant;
+	override accepts(vnode: VirtualNode): boolean {
+		return vnode.node instanceof Determinant;
 	}
 }

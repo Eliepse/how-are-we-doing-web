@@ -1,5 +1,5 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import { ArcTextPainter } from "../../SVGRenderer/Painter/ArcTextPainter";
+import { ArcText } from "../../SVGRenderer/Shape/ArcText";
 import { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily";
 import { FacilityFamily } from "../Items/Facility/FacilityFamily";
@@ -12,31 +12,19 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 		super(renderer, engine);
 	}
 
-	override render(engineNode: VirtualNode<FacilityFamily | DeterminantSubFamily>): void {
-		const node = engineNode.node;
-		const position = node.getGlobalPosition();
+	override render(vnode: VirtualNode<FacilityFamily | DeterminantSubFamily>): void {
+		const node = vnode.node;
+		const shapes = this.getShapes(vnode);
 		const rotation = node.getGlobalRotation();
 		const angleShift = node.getItemArc().div(2);
 
-		let arc: SVGPathElement;
-		let textPath: SVGTextPathElement;
-		let text: SVGTextElement;
+		const arcText = shapes.get(
+			"arcText",
+			() => new ArcText(this.translator.translate(node.getName(), "nodes")),
+		);
 
-		if (false === this._renderer.hasDOM(engineNode, "arcText:path")) {
-			const freshElements = ArcTextPainter.make();
-			arc = freshElements.path;
-			textPath = freshElements.textPath;
-			text = freshElements.text;
-		}
-
-		text = this._renderer.getDOM(engineNode, "arcText:text", () => text, true);
-		textPath = this._renderer.getDOM(engineNode, "arcText:textPath", () => textPath);
-		arc = this._renderer.getDOM(engineNode, "arcText:path", () => arc, true);
-
-		ArcTextPainter.updateText(textPath, this.translator.translate(node.getName(), "nodes"));
-		ArcTextPainter.updateArc(
-			arc,
-			position,
+		arcText.updateMesh(
+			node.getGlobalPosition(),
 			node.getRadius() + 32,
 			rotation.sub(angleShift),
 			rotation.sub(angleShift).add(node.getArc()),

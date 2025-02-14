@@ -1,21 +1,26 @@
 import { Config } from "../../config";
-import type { Color } from "../../Engine2D/ValueObject/Color";
+import { Color } from "../../Engine2D/ValueObject/Color";
 import type { Stroke } from "./Stroke";
+import type { Referencable } from "../Shape/Referencable";
 
 export class SVGStyle {
-	public readonly fill?: Color;
+	public readonly fill?: Color | Referencable | string;
 	public readonly stroke?: Stroke;
 	public readonly opacity: number = 1;
 
-	constructor(config: { fill?: Color, stroke?: Stroke, opacity?: number }) {
+	constructor(config: { fill?: Color | Referencable | string, stroke?: Stroke, opacity?: number }) {
 		this.fill = config.fill;
 		this.stroke = config.stroke;
 		this.opacity = config.opacity ?? 1;
 	}
 
 	updateElement(element: SVGElement): void {
-		if (this.fill) {
+		if (this.fill instanceof Color) {
 			element.setAttribute("fill", this.fill.toHexAlpha());
+		} else if (typeof this.fill === "string") {
+			element.setAttribute("fill", this.fill);
+		} else if (this.fill && "getRefID" in this.fill) {
+			element.setAttribute("fill", `url(#${this.fill.getRefID()})`);
 		} else {
 			element.setAttribute("fill", "none");
 		}

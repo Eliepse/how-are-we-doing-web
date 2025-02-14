@@ -6,6 +6,7 @@ import { SymbolShape } from "../Engine2D/ValueObject/Symbolic/SymbolShape";
 import { Vector } from "../Engine2D/ValueObject/Vector";
 import { VirtualShape } from "../Engine2D/Node/VirtualShape";
 import type { SVGNodeRenderer } from "./NodeRenderer/SVGNodeRenderer";
+import type { Referencable } from "./Shape/Referencable";
 
 type NodeDOMStore = Map<string, Element>;
 
@@ -14,6 +15,8 @@ export class SVGRenderer extends Renderer {
 	private _nodesStore = new WeakMap<Node2D, NodeDOMStore>();
 	private _stats = { lastFrameTime: 0 };
 	private _shapes = new Map<SymbolShape, Element>();
+	private references = new Map<string, [Referencable, SVGElement]>();
+	private defsDom: SVGDefsElement;
 	private renderers = new Set<SVGNodeRenderer>();
 	public onRender = (renderer: SVGRenderer) => undefined;
 	private renderersByNode = new WeakMap<VirtualNode, SVGNodeRenderer[]>();
@@ -31,6 +34,12 @@ export class SVGRenderer extends Renderer {
 		const h = this.size.y.toFixed();
 		this.dom.setAttribute("viewBox", `0 0 ${w} ${h}`);
 		this.dom.id = this.key;
+
+		// Setup defs container
+		this.defsDom = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+		this.dom.append(this.defsDom);
+
+		// Add the canvas into the DOM
 		this._container.append(this.dom);
 	}
 
@@ -66,14 +75,24 @@ export class SVGRenderer extends Renderer {
 		this.renderersByNode.delete(vnode);
 	}
 
-	private registerSymbolic(shape: Symbolic): void {
-		if (!(shape instanceof SymbolShape) || this._shapes.has(shape)) {
+	public registerSymbolic(symbol: Symbolic): void {
+		if (!(symbol instanceof SymbolShape) || this._shapes.has(symbol)) {
 			return;
 		}
 
-		const element = shape.getDOM();
-		this.dom?.append(element);
-		this._shapes.set(shape, element);
+		const element = symbol.getDOM();
+		this.dom.append(element);
+		this._shapes.set(symbol, element);
+	}
+
+	registerReferencable(reference: Referencable) {
+		if (this.references.has(reference.getRefID())) {
+			return;
+		}
+
+		const element = reference.getRefDOM();
+		this.defsDom.append(element);
+		this.references.set(reference.getRefID(), [reference, element]);
 	}
 
 	hasDOM(node: VirtualNode, key: string): boolean {

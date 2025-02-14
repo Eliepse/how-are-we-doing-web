@@ -20,10 +20,10 @@ import outdoorSVG from "../../../assets/determinants/outdoor-usages.svg?raw";
 // @ts-ignore
 import intermodalitySVG from "../../../assets/determinants/intermodality.svg?raw";
 
-function extractSVGContent(raw: string): Array<Element> {
+export function extractSVGContent(raw: string): Array<SVGElement> {
 	const container = document.createElement("div");
 	container.innerHTML = raw;
-	return Array.from((container.querySelector("svg") as SVGElement).children);
+	return Array.from((container.querySelector("svg") as SVGSVGElement).children) as SVGElement[];
 }
 
 const viewBox = new Vector(159, 256);

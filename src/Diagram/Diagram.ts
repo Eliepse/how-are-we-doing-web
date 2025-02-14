@@ -35,6 +35,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 		Determinant["id"],
 		{ pathologies: SourceList; facilities: SourceList }
 	>();
+	public backgroundBlobClock: number = 0;
 
 	constructor(
 		pathologiesData: PathologiesData,
@@ -105,7 +106,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 	}
 
 	onRender(deltaTime: number): void {
-		//
+		this.backgroundBlobClock += deltaTime;
 	}
 
 	onUnmount(engine: Engine): void {

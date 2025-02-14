@@ -15,6 +15,8 @@ import { SVGRenderer } from "./SVGRenderer/SVGRenderer";
 import { Vector } from "./Engine2D/ValueObject/Vector";
 import { Engine } from "./Engine2D/Engine";
 import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
+import { DiagramBackgroundRenderer } from "./Diagram/Renderer/DiagramBackgroundRenderer";
+import { blobPattern } from "./Diagram/Shape/BlobPattern";
 
 const container = document.querySelector("#diagramContainer");
 const labelContainer = document.querySelector("#labels") as HTMLDivElement;
@@ -42,6 +44,8 @@ const engine = new Engine(diagram, renderer);
 
 diagram.setPosition(renderer.size.div(2));
 
+renderer.registerReferencable(blobPattern);
+
 renderer.addNodeRenderer(new FacilityRenderer(renderer, engine, diagram));
 renderer.addNodeRenderer(new DeterminantRenderer(renderer, engine, diagram));
 renderer.addNodeRenderer(new PathologyRenderer(renderer, engine, diagram));
@@ -49,6 +53,7 @@ renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, engine, translat
 renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer, engine));
 renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer, engine));
 renderer.addNodeRenderer(new PathologyLinkRenderer(renderer, engine));
+renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer, engine));
 renderer.addNodeRenderer(new FallbackRenderer(renderer, engine));
 
 diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {

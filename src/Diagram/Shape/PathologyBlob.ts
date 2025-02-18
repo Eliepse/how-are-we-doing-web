@@ -7,13 +7,10 @@ import {
 	PerspectiveCamera,
 	Scene,
 	ShaderMaterial,
-	Shape,
 	SphereGeometry,
 	WebGLRenderer,
 } from "three";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
-// @ts-ignore
-import { Noise } from "noisejs";
 
 export class PathologyBlob extends SVGShape {
 	private readonly canvas: HTMLCanvasElement;
@@ -22,14 +19,10 @@ export class PathologyBlob extends SVGShape {
 	private readonly canvasRenderer: WebGLRenderer;
 	private readonly scene: Scene;
 	private readonly camera: Camera;
-	private readonly mesh: Mesh;
-	private readonly noise: Noise;
 	private readonly material: ShaderMaterial;
 
 	constructor(private readonly radius: number) {
 		super();
-
-		this.noise = new Noise(Math.random() * 6688);
 
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
 		this.dom.setAttribute("width", (this.radius * 2).toFixed());
@@ -37,9 +30,10 @@ export class PathologyBlob extends SVGShape {
 
 		this.scene = new Scene();
 		this.camera = new PerspectiveCamera(75, 1);
-		this.camera.position.z = 200;
+		this.camera.position.z = this.radius * 2;
 
-		this.canvasRenderer = new WebGLRenderer();
+		this.canvasRenderer = new WebGLRenderer({ antialias: false, });
+		// this.canvasRenderer.setPixelRatio( window.devicePixelRatio * 1.5 );
 		this.canvasRenderer.setSize(this.radius * 2, this.radius * 2);
 		this.canvasRenderer.setClearAlpha(0);
 		this.canvas = this.canvasRenderer.domElement;
@@ -47,14 +41,12 @@ export class PathologyBlob extends SVGShape {
 		this.material = new ShaderMaterial({
 			transparent: true,
 			uniforms: {
-				color: { value: new Color(0.95, 0.59, 0.61) }, // Couleur du bord (rouge ici)
+				color: { value: new Color(0.95, 0.59, 0.61) },
 				rimAlpha: { value: 0.8 },
 				rimOuterFactor: { value: 5.0 },
 				rimBaseFactor: { value: 2.0 },
 				noiseFactor: { value: 1.8 },
 				noiseAlpha: { value: 0.7 },
-
-				lightIntensity: { value: 1.0 }, // Intensity de l'effet
 				time: { value: Math.random() * 10 },
 				noiseStrength: { value: 10 },
 				noiseSpeed: { value: 0.12 },
@@ -140,7 +132,7 @@ export class PathologyBlob extends SVGShape {
 			`,
 		});
 
-		this.scene.add(this.mesh = this.makeShape());
+		this.scene.add(this.makeShape());
 
 		this.dom.append(this.canvas);
 
@@ -157,21 +149,7 @@ export class PathologyBlob extends SVGShape {
 	}
 
 	private makeShape(): Mesh {
-		const radius = this.radius / 2;
-		const center = new Vector(this.radius, this.radius);
-		const steps = 24;
-		const step = (Math.PI * 2) / steps;
-
-		const shape = new Shape();
-		shape.moveTo(radius, 0);
-
-		for (let i = 1; i < steps; i++) {
-			const a = i * step;
-			const p = new Vector(Math.cos(a) * radius, Math.sin(a) * radius);
-			shape.lineTo(p.x, p.y);
-		}
-
-		const mesh = new Mesh(new SphereGeometry(this.radius / 2), this.material);
+		const mesh = new Mesh(new SphereGeometry(this.radius), this.material);
 		mesh.rotation.x = Math.PI;
 		return mesh;
 	}

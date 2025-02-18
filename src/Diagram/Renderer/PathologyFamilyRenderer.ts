@@ -3,8 +3,8 @@ import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer"
 import { PathologyFamily } from "../Items/Pathology/PathologyFamily";
 import { PathologyBlob } from "../Shape/PathologyBlob";
 
-const min = 100;
-const max = 170;
+const min = 64;
+const max = 148;
 
 function blobSize(percent: number): number {
 	return min + ((max - min) * percent);
@@ -17,6 +17,7 @@ export class PathologyFamilyRenderer extends SVGNodeRenderer {
 
 		const blob = shapes.get("blob", () => new PathologyBlob(blobSize(size / 25)));
 
+		// TODO: add time
 		blob.updateMesh(0, vnode.node.getGlobalPosition());
 	}
 

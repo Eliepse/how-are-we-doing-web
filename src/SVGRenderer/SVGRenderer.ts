@@ -7,6 +7,7 @@ import { Vector } from "../Engine2D/ValueObject/Vector";
 import { VirtualShape } from "../Engine2D/Node/VirtualShape";
 import type { SVGNodeRenderer } from "./NodeRenderer/SVGNodeRenderer";
 import type { Referencable } from "./Shape/Referencable";
+import { SVGLayer } from "./SVGLayer";
 
 type NodeDOMStore = Map<string, Element>;
 
@@ -20,6 +21,7 @@ export class SVGRenderer extends Renderer {
 	private renderers = new Set<SVGNodeRenderer>();
 	public onRender = (renderer: SVGRenderer) => undefined;
 	private renderersByNode = new WeakMap<VirtualNode, SVGNodeRenderer[]>();
+	private layers = new Map<number, SVGLayer>();
 
 	constructor(
 		public readonly key: string,
@@ -95,45 +97,36 @@ export class SVGRenderer extends Renderer {
 		this.references.set(reference.getRefID(), [reference, element]);
 	}
 
-	hasDOM(node: VirtualNode, key: string): boolean {
-		return Boolean(this._nodesStore.get(node.node)?.has(key));
-	}
-
-	getDOM<TElement extends Element>(
-		node: VirtualNode,
-		key: string,
-		fallback: (dom: SVGElement) => TElement,
-		appendToDOM = false,
-	): TElement {
-		let nodeStore: NodeDOMStore | undefined = this._nodesStore.get(node.node);
-		let value = nodeStore?.get(key) as TElement | undefined;
-
-		if (undefined !== value) {
-			return value;
+	getLayer(position: number): SVGLayer {
+		if (this.layers.has(position)) {
+			return this.layers.get(position) as SVGLayer;
 		}
 
-		if (undefined === nodeStore) {
-			nodeStore = new Map<string, Element>();
-			this._nodesStore.set(node.node, nodeStore);
+
+		// Look for the closest layer
+		let closestDelta: number | null = null, closestLayer = null;
+		for (const [key, value] of this.layers.entries()) {
+			const delta = position - key;
+
+			if (null === closestDelta || Math.abs(delta) < Math.abs(closestDelta)) {
+				closestLayer = value;
+				closestDelta = delta;
+			}
 		}
 
-		value = fallback(this.dom);
-		nodeStore.set(key, value);
+		const layer = new SVGLayer();
 
-		if (appendToDOM) {
-			this.dom.append(value);
+		if (null === closestLayer || null === closestDelta) {
+			// First layer inserted
+			this.dom.append(layer.dom);
+		} else if (closestDelta < 0) {
+			closestLayer.dom.before(layer.dom);
+		} else {
+			closestLayer.dom.after(layer.dom);
 		}
 
-		return value;
-	}
-
-	removeDOM(node: VirtualNode, key: string): void {
-		this.getDOMUnsafe(node, key)?.remove();
-		this._nodesStore.get(node.node)?.delete(key);
-	}
-
-	getDOMUnsafe<TElement extends Element>(node: VirtualNode, key: string): TElement | undefined {
-		return this._nodesStore.get(node.node)?.get(key) as TElement | undefined;
+		this.layers.set(position, layer);
+		return layer;
 	}
 
 	localPointToWindow(point: Vector): Vector {

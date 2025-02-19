@@ -22,7 +22,7 @@ export class PathologyBlob extends SVGShape {
 	private readonly material: ShaderMaterial;
 
 	constructor(private readonly radius: number) {
-		super();
+		super(0);
 
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
 		this.dom.setAttribute("width", (this.radius * 2).toFixed());
@@ -32,7 +32,7 @@ export class PathologyBlob extends SVGShape {
 		this.camera = new PerspectiveCamera(75, 1);
 		this.camera.position.z = this.radius * 2;
 
-		this.canvasRenderer = new WebGLRenderer({ antialias: false, });
+		this.canvasRenderer = new WebGLRenderer({ antialias: false });
 		// this.canvasRenderer.setPixelRatio( window.devicePixelRatio * 1.5 );
 		this.canvasRenderer.setSize(this.radius * 2, this.radius * 2);
 		this.canvasRenderer.setClearAlpha(0);

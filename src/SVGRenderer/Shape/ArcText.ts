@@ -16,7 +16,7 @@ export class ArcText extends SVGShape {
 	private readonly textDom: SVGTextElement;
 
 	constructor(private text: string) {
-		super();
+		super(1);
 
 		const id = arcIndexGenerator.next().value;
 

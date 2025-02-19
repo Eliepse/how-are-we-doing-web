@@ -6,7 +6,7 @@ export class Quad extends SVGShape {
 	private readonly dom: SVGPathElement;
 
 	constructor() {
-		super();
+		super(1);
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "path");
 	}
 

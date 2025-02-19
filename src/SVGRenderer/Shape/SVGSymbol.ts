@@ -9,7 +9,7 @@ export class SVGSymbol extends SVGShape {
 	private readonly dom: SVGUseElement;
 
 	constructor(private readonly symbol: Symbolic) {
-		super();
+		super(1);
 
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "use");
 		this.dom.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", symbol.getHref());

@@ -7,7 +7,7 @@ import { blobPattern } from "./BlobPattern";
 
 const style = new SVGStyle({ fill: blobPattern });
 
-export class DiagramBlob extends SVGShape {
+export class DiagramBlobBackground extends SVGShape {
 	private readonly dom: SVGPathElement;
 	private noise: Noise;
 
@@ -18,7 +18,7 @@ export class DiagramBlob extends SVGShape {
 		public speed: number = .2,
 		public noiseScale: number = 1.25,
 	) {
-		super();
+		super(-1);
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "path");
 		this.noise = new Noise(Math.random() * 4321);
 		this.updateStyle(style);

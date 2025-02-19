@@ -6,7 +6,7 @@ import type { SVGRenderer } from "../SVGRenderer";
 export abstract class SVGNodeRenderer {
 	private shapesByVNode = new WeakMap<VirtualNode, ShapeCollection>();
 
-	constructor(protected _renderer: SVGRenderer, protected engine: Engine) {
+	constructor(protected renderer: SVGRenderer, protected engine: Engine) {
 	}
 
 	getShapes(vnode: VirtualNode): ShapeCollection {
@@ -14,7 +14,10 @@ export abstract class SVGNodeRenderer {
 
 		if (undefined === collection) {
 			collection = new ShapeCollection();
-			collection.mountShape = (shape) => shape.mount(this._renderer.dom);
+			collection.mountShape = (shape) => {
+				const layer = this.renderer.getLayer(shape.layer);
+				shape.mount(layer.dom);
+			};
 			this.shapesByVNode.set(vnode, collection);
 		}
 

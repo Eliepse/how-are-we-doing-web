@@ -9,7 +9,7 @@ const style = new SVGStyle({ fill: Color.White, stroke: new Stroke(1, Color.Red)
 
 export class FallbackRenderer extends SVGNodeRenderer {
 	render(vnode: VirtualNode): void {
-		if (false === this._renderer.isDebug()) {
+		if (false === this.renderer.isDebug()) {
 			return;
 		}
 

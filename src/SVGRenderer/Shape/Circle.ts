@@ -6,7 +6,7 @@ export class Circle extends SVGShape {
 	private readonly dom: SVGCircleElement;
 
 	constructor(private radius: number) {
-		super();
+		super(1);
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 		this.updateRadius();
 	}

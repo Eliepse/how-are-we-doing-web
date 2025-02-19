@@ -10,7 +10,7 @@ export class LinkPath extends SVGShape {
 	private readonly dom: SVGPathElement;
 
 	constructor() {
-		super();
+		super(50);
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "path");
 		this.updateStyle(pathStyle);
 	}

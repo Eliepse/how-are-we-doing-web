@@ -32,7 +32,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 
 				const path = shapes.get(shapeKey, () => new LinkPath());
 
-				const center = this._renderer.size.div(2);
+				const center = this.renderer.size.div(2);
 				const from = pathology.getGlobalPosition();
 
 				// Create a temporary node to compute the position

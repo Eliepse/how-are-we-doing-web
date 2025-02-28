@@ -6,7 +6,7 @@ import { Node2D } from "../Engine2D/Node/Node2D";
 import { Angle } from "../Engine2D/ValueObject/Angle";
 import { Vector } from "../Engine2D/ValueObject/Vector";
 import { ArcGroup } from "./ArcGroup";
-import { Determinant } from "./Items/Determinant/Determinant";
+import { Determinant, type Steps } from "./Items/Determinant/Determinant";
 import { DeterminantFamily } from "./Items/Determinant/DeterminantFamily";
 import { DeterminantsRing } from "./Items/Determinant/DeterminantsRing";
 import { DeterminantSubFamily } from "./Items/Determinant/DeterminantSubFamily";
@@ -311,5 +311,12 @@ export class Diagram extends Node2D implements WithLifecycle {
 		});
 
 		return sources;
+	}
+
+	contextualizeDeterminants(values: { [key: number]: Steps }): void {
+		Object.entries(values).forEach(([key, value]) => {
+			const determinant = this._determinants.get(parseInt(key));
+			determinant?.setStep(value);
+		});
 	}
 }

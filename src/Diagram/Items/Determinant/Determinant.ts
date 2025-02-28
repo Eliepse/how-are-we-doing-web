@@ -7,33 +7,22 @@ import type { Engine } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
 import { Node2D } from "../../../Engine2D/Node/Node2D";
 import type { Angle } from "../../../Engine2D/ValueObject/Angle";
-import { ClipPath } from "../../../Engine2D/ValueObject/Clip";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
 import { Diagram } from "../../Diagram";
 import { Facility } from "../Facility/Facility";
 import { Pathology } from "../Pathology/Pathology";
 import { DeterminantSubFamily } from "./DeterminantSubFamily";
+import { CustomTransition } from "../../../Engine2D/Util/CustomTransition";
+import { interpolate } from "../../../helpers";
 
-const stepClips = [
-	ClipPath.rect("0", "100%", "25%", "0"),
-	ClipPath.rect("25%", "100%", "50%", "0"),
-	ClipPath.rect("50%", "100%", "75%", "0"),
-	ClipPath.rect("75%", "100%", "100%", "0"),
-];
-
-const stepClipsOptimized = [
-	ClipPath.rect("0", "100%", "25%", "0"),
-	ClipPath.rect("0", "100%", "50%", "0"),
-	ClipPath.rect("0", "100%", "75%", "0"),
-	ClipPath.rect("0", "100%", "100%", "0"),
-];
-
+export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[] };
 
 export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
-	private step: number = 2;
+	private step: Steps = 2;
 	private _collider?: TorusCollider;
 	private _diagram?: Diagram;
+	private stepsTransition ?: CustomTransition<Steps>;
 
 	constructor(
 		public readonly id: number,
@@ -43,19 +32,6 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		public readonly associations: Associations,
 	) {
 		super(asset);
-
-		// if (this.optimized) {
-		//   const size = new Vector(159, 256).div(2);
-		//   const shape = new VirtualShape(size, asset, stepClipsOptimized[this.step - 1]);
-		//   this.elements.push(shape);
-		//   return;
-		// }
-
-		// for (var i = 0; i < 4; i++) {
-		//   const size = new Vector(159, 256).div(2);
-		//   const shape = new VirtualShape(size, asset, stepClips[i]);
-		//   this.elements.push(shape);
-		// }
 	}
 
 	onMount(engine: Engine): void | (() => void) {
@@ -82,7 +58,9 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	}
 
 	onRender(deltaTime: number): void {
-		//
+		if (this.stepsTransition) {
+			this.step = this.stepsTransition.value;
+		}
 	}
 
 	onUnmount(engine: Engine): void {
@@ -103,12 +81,15 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		return this._collider;
 	}
 
-	getStep(): number {
+	getStep(): Steps {
 		return this.step;
 	}
 
-	setStep(step: number): void {
-		this.step = Math.min(4, Math.max(1, step));
+	setStep(step: Steps): void {
+		this.stepsTransition = new CustomTransition(
+			{ durationMs: 350, from: this.step, to: step, completed: () => this.stepsTransition = undefined },
+			(percent, from, to) => Math.round(interpolate(from, to, percent)) as Steps,
+		);
 	}
 
 	isActive(): boolean {

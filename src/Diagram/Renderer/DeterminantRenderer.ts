@@ -9,9 +9,10 @@ import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
 import type { Diagram } from "../Diagram";
-import { Determinant } from "../Items/Determinant/Determinant";
+import { Determinant, type Steps } from "../Items/Determinant/Determinant";
 import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
+import { ClipPath } from "../../Engine2D/ValueObject/Clip";
 
 const shapeStyle = {
 	default: new SVGStyle({ fill: colors.defaultWhite }),
@@ -28,6 +29,13 @@ const anchorStyle = {
 const anchorCoreStyle = new SVGStyle({ fill: colors.selected });
 
 export const determinantAnchorOffset = new Vector(-128, 0);
+
+const stepClipsOptimized: { [k in Steps]: ClipPath } = {
+	1: ClipPath.rect("0", "100%", "25%", "0"),
+	2: ClipPath.rect("0", "100%", "50%", "0"),
+	3: ClipPath.rect("0", "100%", "75%", "0"),
+	4: ClipPath.rect("0", "100%", "100%", "0"),
+};
 
 export class DeterminantRenderer extends SVGNodeRenderer {
 	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
@@ -55,16 +63,16 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		circleCore.hide();
 
 		if (node.isActive()) {
-			element.updateStyle(shapeStyle.selected);
+			element.updateStyle(shapeStyle.selected, stepClipsOptimized[node.getStep()]);
 			circle.updateStyle(anchorStyle.selected);
 			circleCore.updateMesh(anchorPosition);
 			circleCore.updateStyle(anchorCoreStyle);
 			circleCore.show();
 		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
-			element.updateStyle(shapeStyle.dimmed);
+			element.updateStyle(shapeStyle.dimmed, stepClipsOptimized[node.getStep()]);
 			circle.updateStyle(anchorStyle.dimmed);
 		} else {
-			element.updateStyle(shapeStyle.default);
+			element.updateStyle(shapeStyle.default, stepClipsOptimized[node.getStep()]);
 			circle.updateStyle(anchorStyle.default);
 		}
 	}

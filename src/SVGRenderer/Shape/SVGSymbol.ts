@@ -4,6 +4,7 @@ import type { Angle } from "../../Engine2D/ValueObject/Angle";
 import type { Vector } from "../../Engine2D/ValueObject/Vector";
 import type { SVGStyle } from "../ValueObject/SVGStyle";
 import { SVGShape } from "./SVGShape";
+import type { ClipPath } from "../../Engine2D/ValueObject/Clip";
 
 export class SVGSymbol extends SVGShape {
 	private readonly dom: SVGUseElement;
@@ -25,8 +26,12 @@ export class SVGSymbol extends SVGShape {
 
 	}
 
-	updateStyle(style: SVGStyle): void {
+	updateStyle(style: SVGStyle, clipPath?: ClipPath): void {
 		style.updateElement(this.dom);
+
+		if(clipPath) {
+			this.dom.setAttribute("clip-path",clipPath.toString());
+		}
 	}
 
 	override mount(container: Element): void {

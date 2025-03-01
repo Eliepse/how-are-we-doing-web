@@ -57,13 +57,6 @@ use {
     /* transition: opacity 150ms, fill 150ms, stroke 150ms; */
 }
 
-#fps {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    color: white;
-}
-
 text {
     font-weight: 700;
     text-align: center;
@@ -71,15 +64,6 @@ text {
     text-transform: uppercase;
     user-select: none;
     /* letter-spacing: -.025em; */
-}
-
-#profiling {
-    display: none;
-    position: fixed;
-    top: 8px;
-    left: 8px;
-    font-size: 12px;
-    color: white;
 }
 
 #labels {

@@ -1,0 +1,211 @@
+import { Context } from "./Diagram/Context";
+import { Translator } from "./Diagram/Translation/Translator";
+import { FloatingLabelManager } from "./Diagram/FloatingLabelManager";
+import { Diagram, type SelectableNode } from "./Diagram/Diagram";
+import { Engine } from "./Engine2D/Engine";
+import { SVGRenderer } from "./SVGRenderer/SVGRenderer";
+import { Vector } from "./Engine2D/ValueObject/Vector";
+import { Config } from "./config";
+import { Node2D } from "./Engine2D/Node/Node2D";
+import { blobPattern } from "./Diagram/Shape/BlobPattern";
+import { FacilityRenderer } from "./Diagram/Renderer/FacilityRenderer";
+import { DeterminantRenderer } from "./Diagram/Renderer/DeterminantRenderer";
+import { PathologyRenderer } from "./Diagram/Renderer/PathologyRenderer";
+import { GroupWithArcTextRenderer } from "./Diagram/Renderer/GroupWithArcTextRenderer";
+import { FacilityFamilyRenderer } from "./Diagram/Renderer/FacilityFamilyRenderer";
+import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubFamilyRenderer";
+import { PathologyLinkRenderer } from "./Diagram/Renderer/PathologyLinksRenderer";
+import { PathologyFamilyRenderer } from "./Diagram/Renderer/PathologyFamilyRenderer";
+import { DiagramBackgroundRenderer } from "./Diagram/Renderer/DiagramBackgroundRenderer";
+import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
+import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
+
+export class App {
+	private readonly translator: Translator;
+	private readonly labelManager: FloatingLabelManager;
+	private readonly engine: Engine<SVGRenderer>;
+
+	private contexts: Context[] = [];
+	private database?: any;
+
+	private diagram?: Diagram;
+	private loaded: boolean = false;
+
+	constructor(rootDom: Element) {
+		const labelDom = document.createElement("div");
+		labelDom.id = "labels";
+		const rendererDom = document.createElement("div");
+		rendererDom.id = "diagramContainer";
+
+		rootDom.append(labelDom, rendererDom);
+
+		this.translator = new Translator("/translations/{context}.{lang}.json", "fr", ["en", "fr", "it"], ["nodes"]);
+		this.labelManager = new FloatingLabelManager(labelDom);
+
+		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1000, 1000), Config.Render.debug);
+		this.engine = new Engine(new Node2D(), renderer);
+
+		renderer.registerReferencable(blobPattern);
+		renderer.addNodeRenderer(new FacilityRenderer(renderer, this.engine, this));
+		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this.engine, this));
+		renderer.addNodeRenderer(new PathologyRenderer(renderer, this.engine, this));
+		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.engine, this.translator));
+		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new PathologyLinkRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new FallbackRenderer(renderer, this.engine));
+	}
+
+	getDiagram(): Diagram {
+		if (undefined === this.diagram) {
+			throw new Error("Diagram not initialized");
+		}
+
+		return this.diagram;
+	}
+
+	async load(clb?: (step: number, total: number, title: string) => void) {
+		const steps = 3;
+		let step = 0;
+		clb ??= (() => undefined);
+
+		// Database
+		clb(step++, steps, "Loading diagram elements and links");
+		this.database = await (await fetch("data/database.json")).json();
+
+		// Translations
+		clb(step++, steps, "Loading translations");
+		await this.translator.loadAll();
+
+		// Contexts
+		clb(step++, steps, "Loading contexts");
+		const data = await (await fetch("data/contexts.json")).json();
+		this.contexts = data.contexts.map((context) => new Context(context.id, context.name, context.determinants));
+
+		this.loaded = true;
+	}
+
+	async launch() {
+		if (false === this.loaded) {
+			await this.load();
+		}
+
+		this.diagram = new Diagram(this.database.pathologies, this.database.facilities, this.database.determinants);
+
+		// Center the diagram
+		this.engine.root.setPosition(this.engine.getRenderer().size.div(2));
+		this.engine.root.addChildren(this.diagram);
+
+		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
+			if (undefined === event.target) {
+				return;
+			}
+
+			if (event.target === this.diagram?.getSelectedNode()) {
+				this.labelManager.hide("hover");
+				return;
+			}
+
+			this.labelManager.show(
+				"hover",
+				this.translator.translate(event.target.label, "nodes"),
+				this.engine.getRenderer().localPointToWindow(event.target?.getGlobalPosition()),
+				"left",
+				16,
+			);
+		});
+
+		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
+			if (undefined === event.target) {
+				this.labelManager.hide("selected");
+				return;
+			}
+
+			this.labelManager.hide("hover");
+			this.labelManager.show(
+				"selected",
+				this.translator.translate(event.target.label, "nodes"),
+				this.engine.getRenderer().localPointToWindow(event.target?.getGlobalPosition()),
+				"left",
+				16,
+			);
+		});
+
+		this.diagram.addListener("mouseleave", () => {
+			if (0 !== this.engine.getHovering().length) {
+				return;
+			}
+
+			this.labelManager.hide("hover");
+		});
+
+		const biblio = document.querySelector("#bibliography") as HTMLDivElement;
+
+		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
+			biblio.querySelectorAll(".biblio-nodes").forEach((list) => (list.innerHTML = ""));
+
+			if (undefined === event.target) {
+				biblio.style.display = "none";
+				return;
+			}
+
+			if (undefined === this.diagram) {
+				return;
+			}
+
+			const activeNodes = this.diagram.getActiveNodes();
+
+			biblio.querySelectorAll<HTMLUListElement>(".biblio-nodes[data-type]").forEach((list) => {
+				let nodes: SelectableNode[] = [];
+
+				switch (list.dataset.type) {
+					case "pathology":
+						nodes = activeNodes.pathologies;
+						break;
+					case "determinant":
+						nodes = activeNodes.determinants;
+						break;
+					case "facility":
+						nodes = activeNodes.facilities;
+						break;
+				}
+
+				nodes.forEach((node) => {
+					const entry = document.createElement("li");
+					entry.textContent = this.translator.translate(node.label, "nodes");
+					list.append(entry);
+				});
+			});
+
+			const links = this.diagram.getActiveLinksSources();
+			const facilityLinks = new Set(links?.facilities.map((l) => l.source.toLowerCase()));
+			const pathologiesLinks = new Set(links?.facilities.map((l) => l.source.toLowerCase()));
+
+			biblio.querySelectorAll<HTMLUListElement>("[data-link]").forEach((list) => {
+				if ("facilities" === list.dataset.link) {
+					list.textContent = Array.from(facilityLinks.values()).join(" / ");
+				} else if ("pathologies" === list.dataset.link) {
+					list.textContent = Array.from(pathologiesLinks.values()).join(" / ");
+				}
+			});
+
+			biblio.style.display = "";
+		});
+
+		// Start the engine
+		this.engine.render();
+		this.engine.start();
+	}
+
+	showBibliography() {
+		throw new Error("Not implemented");
+	}
+
+	hideBibliography() {
+		throw new Error("Not implemented");
+	}
+
+
+}

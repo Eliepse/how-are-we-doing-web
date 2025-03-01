@@ -4,10 +4,10 @@ import { Circle } from "../../SVGRenderer/Shape/Circle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
-import type { Diagram } from "../Diagram";
 import { Pathology } from "../Items/Pathology/Pathology";
 import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
+import type { App } from "../../App";
 
 const defaultStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
 const hoveredStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
@@ -16,7 +16,7 @@ const dimmedStyle = new SVGStyle({ stroke: new Stroke(3, colors.dimmedWhite) });
 const coreStyle = new SVGStyle({ fill: colors.selected });
 
 export class PathologyRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
+	constructor(renderer: SVGRenderer, engine: Engine, private app: App) {
 		super(renderer, engine);
 	}
 
@@ -24,7 +24,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
 		const isActive = node.isActive();
-		const selectedNode = this.diagram.getSelectedNode();
+		const selectedNode = this.app.getDiagram().getSelectedNode();
 		const position = node.getGlobalPosition();
 		const isHovered = this.engine.isHovering(node);
 

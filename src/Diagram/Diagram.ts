@@ -1,4 +1,4 @@
-import type db from "../../database.json";
+import type db from "../public/data/database.json";
 import type { WithLifecycle } from "../Engine2D/Contract/WithLifecycle";
 import type { Engine } from "../Engine2D/Engine";
 import { NodeEvent } from "../Engine2D/Core/NodeEvent";

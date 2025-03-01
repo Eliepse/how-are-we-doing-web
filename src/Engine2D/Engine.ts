@@ -15,7 +15,7 @@ type Listeners = {
 	click: Listener<EngineMouseEvent>;
 };
 
-export class Engine {
+export class Engine<TRenderer extends Renderer> {
 	private readonly tree: VirtualTree;
 	private clock: Clock;
 	private _lifecycleCallbacks = new WeakMap<Node2D, () => void>();
@@ -28,7 +28,7 @@ export class Engine {
 
 	constructor(
 		private rootNode: Node2D,
-		private renderer: Renderer,
+		private renderer: TRenderer,
 	) {
 		this.clock = new Clock(60, (delta, frames) => this.clockTick(delta, frames));
 
@@ -48,6 +48,14 @@ export class Engine {
 				cursor: this.renderer.windowToLocalPoint(new Vector(e.clientX, e.clientY)),
 			});
 		});
+	}
+
+	get root(): Node2D {
+		return this.rootNode;
+	}
+
+	getRenderer(): TRenderer {
+		return this.renderer;
 	}
 
 	private handleOnMount(vnode: VirtualNode<Node2D & Partial<WithLifecycle & WithPointerEvents>>): void {

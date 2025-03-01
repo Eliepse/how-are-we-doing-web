@@ -4,10 +4,10 @@ import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
-import type { Diagram } from "../Diagram";
 import { Facility } from "../Items/Facility/Facility";
 import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
+import type { App } from "../../App";
 
 const shapeStyle = {
 	default: new SVGStyle({ fill: Color.White }),
@@ -16,14 +16,14 @@ const shapeStyle = {
 } as const;
 
 export class FacilityRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
+	constructor(renderer: SVGRenderer, engine: Engine, private app: App) {
 		super(renderer, engine);
 	}
 
 	override render(vnode: VirtualNode<Facility>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const selectedNode = this.diagram.getSelectedNode();
+		const selectedNode = this.app.getDiagram().getSelectedNode();
 		const isHovering = this.engine.isHovering(node);
 
 		const element = shapes.get("sprite", () => new SVGSymbol(node.getShape()));

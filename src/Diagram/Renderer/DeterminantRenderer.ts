@@ -8,11 +8,11 @@ import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
-import type { Diagram } from "../Diagram";
 import { Determinant, type Steps } from "../Items/Determinant/Determinant";
 import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import { ClipPath } from "../../Engine2D/ValueObject/Clip";
+import type { App } from "../../App";
 
 const shapeStyle = {
 	default: new SVGStyle({ fill: colors.defaultWhite }),
@@ -38,14 +38,14 @@ const stepClipsOptimized: { [k in Steps]: ClipPath } = {
 };
 
 export class DeterminantRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, engine: Engine, private diagram: Diagram) {
+	constructor(renderer: SVGRenderer, engine: Engine, private app: App) {
 		super(renderer, engine);
 	}
 
 	override render(vnode: VirtualNode<Determinant>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const selectedNode = this.diagram.getSelectedNode();
+		const selectedNode = this.app.getDiagram().getSelectedNode();
 
 		// Create a temporary node to compute the position
 		const anchor = new Node2D();

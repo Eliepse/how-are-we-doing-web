@@ -18,6 +18,7 @@ import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
 import { DiagramBackgroundRenderer } from "./Diagram/Renderer/DiagramBackgroundRenderer";
 import { blobPattern } from "./Diagram/Shape/BlobPattern";
 import { PathologyFamilyRenderer } from "./Diagram/Renderer/PathologyFamilyRenderer";
+import { Context } from "./Diagram/Context";
 
 const container = document.querySelector("#diagramContainer");
 const labelContainer = document.querySelector("#labels") as HTMLDivElement;
@@ -167,6 +168,24 @@ document.addEventListener("mousemove", (e) => {
   // console.debug(cursor.x)
 });
 
+
 channel.addEventListener("message", (m) => diagram.selectNode(m.data));
 */
+
+let i = 0;
+
+const contexts = await (await fetch("data/contexts.json")).json();
+
+document.addEventListener("keydown", (e) => {
+	if (" " !== e.key) {
+		return;
+	}
+
+	i = (i + 1) % contexts.contexts.length;
+
+	const data = contexts.contexts[i];
+	diagram.contextualizeDeterminants(
+		new Context(data.id, data.name, data.determinants),
+	);
+});
 

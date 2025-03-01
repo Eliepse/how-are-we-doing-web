@@ -6,7 +6,7 @@ import { Node2D } from "../Engine2D/Node/Node2D";
 import { Angle } from "../Engine2D/ValueObject/Angle";
 import { Vector } from "../Engine2D/ValueObject/Vector";
 import { ArcGroup } from "./ArcGroup";
-import { Determinant, type Steps } from "./Items/Determinant/Determinant";
+import { Determinant } from "./Items/Determinant/Determinant";
 import { DeterminantFamily } from "./Items/Determinant/DeterminantFamily";
 import { DeterminantsRing } from "./Items/Determinant/DeterminantsRing";
 import { DeterminantSubFamily } from "./Items/Determinant/DeterminantSubFamily";
@@ -16,6 +16,8 @@ import { Facility } from "./Items/Facility/Facility";
 import { FacilityFamily } from "./Items/Facility/FacilityFamily";
 import { Pathology } from "./Items/Pathology/Pathology";
 import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
+import type { DeterminantKey } from "./types";
+import type { Context } from "./Context";
 
 export type SelectableNode = Pathology | Determinant | Facility;
 
@@ -170,6 +172,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 						const assoFacilities = Object.keys(child.facilities).map((v) => parseInt(v));
 						const determinant = new Determinant(
 							child.id,
+							child.name as DeterminantKey,
 							child.name,
 							asset,
 							{ arc: itemArc },
@@ -313,10 +316,15 @@ export class Diagram extends Node2D implements WithLifecycle {
 		return sources;
 	}
 
-	contextualizeDeterminants(values: { [key: number]: Steps }): void {
-		Object.entries(values).forEach(([key, value]) => {
-			const determinant = this._determinants.get(parseInt(key));
-			determinant?.setStep(value);
-		});
+	contextualizeDeterminants(context: Context): void {
+		for (const determinant of this._determinants.values()) {
+			const value = context.getValue(determinant.key);
+
+			if (null === value) {
+				continue;
+			}
+
+			determinant.setStep(value);
+		}
 	}
 }

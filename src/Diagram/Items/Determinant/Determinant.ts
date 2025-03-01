@@ -14,6 +14,7 @@ import { Pathology } from "../Pathology/Pathology";
 import { DeterminantSubFamily } from "./DeterminantSubFamily";
 import { CustomTransition } from "../../../Engine2D/Util/CustomTransition";
 import { interpolate } from "../../../helpers";
+import type { DeterminantKey } from "../../types";
 
 export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[] };
@@ -26,6 +27,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 
 	constructor(
 		public readonly id: number,
+		public readonly key: DeterminantKey,
 		public readonly label: string,
 		asset: Symbolic,
 		private _colliderConfig: { arc: Angle },

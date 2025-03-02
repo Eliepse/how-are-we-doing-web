@@ -166,7 +166,7 @@ text {
     flex: none;
     width: 0;
     opacity: 0;
-    transition: opacity 750ms ease-out, width 750ms ease-out;
+    transition: opacity 875ms ease-out, width 875ms ease-out;
 }
 
 #bibliography {

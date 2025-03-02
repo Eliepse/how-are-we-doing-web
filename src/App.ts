@@ -117,6 +117,10 @@ export class App {
 			);
 		});
 
+		this.engine.root.addListener("click", () => {
+			this.diagram?.selectNode(undefined);
+		})
+
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 			if (undefined === event.target) {
 				this.labelManager.hide("selected");

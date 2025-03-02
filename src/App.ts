@@ -141,13 +141,14 @@ export class App {
 			this.labelManager.hide("hover");
 		});
 
+		const biblioContainer = document.querySelector(".biblioContainer") as HTMLDivElement;
 		const biblio = document.querySelector("#bibliography") as HTMLDivElement;
 
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 			biblio.querySelectorAll(".biblio-nodes").forEach((list) => (list.innerHTML = ""));
 
 			if (undefined === event.target) {
-				biblio.style.display = "none";
+				biblioContainer.classList.remove("open");
 				return;
 			}
 
@@ -191,7 +192,7 @@ export class App {
 				}
 			});
 
-			biblio.style.display = "";
+			biblioContainer.classList.add("open");
 		});
 
 		// Start the engine

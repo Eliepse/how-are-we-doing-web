@@ -15,7 +15,7 @@ type Listeners = {
 	click: Listener<EngineMouseEvent>;
 };
 
-export class Engine<TRenderer extends Renderer> {
+export class Engine<TRenderer extends Renderer = Renderer> {
 	private readonly tree: VirtualTree;
 	private clock: Clock;
 	private _lifecycleCallbacks = new WeakMap<Node2D, () => void>();

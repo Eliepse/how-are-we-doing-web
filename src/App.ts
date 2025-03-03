@@ -19,6 +19,7 @@ import { PathologyFamilyRenderer } from "./Diagram/Renderer/PathologyFamilyRende
 import { DiagramBackgroundRenderer } from "./Diagram/Renderer/DiagramBackgroundRenderer";
 import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
 import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
+import { BiblioManager } from "./Diagram/BiblioManager";
 
 export class App {
 	private readonly translator: Translator;
@@ -29,15 +30,23 @@ export class App {
 	private database?: any;
 
 	private diagram?: Diagram;
+	private biblio: BiblioManager;
 	private loaded: boolean = false;
 
 	constructor(rootDom: Element) {
+		const diagramDom = document.createElement("div");
+		diagramDom.id = "diagramRoot";
+
 		const labelDom = document.createElement("div");
 		labelDom.id = "labels";
+
 		const rendererDom = document.createElement("div");
 		rendererDom.id = "diagramContainer";
 
-		rootDom.append(labelDom, rendererDom);
+		diagramDom.append(labelDom, rendererDom);
+		rootDom.append(diagramDom);
+
+		this.biblio = new BiblioManager(rootDom);
 
 		this.translator = new Translator("/translations/{context}.{lang}.json", "fr", ["en", "fr", "it"], ["nodes"]);
 		this.labelManager = new FloatingLabelManager(labelDom);
@@ -119,7 +128,7 @@ export class App {
 
 		this.engine.root.addListener("click", () => {
 			this.diagram?.selectNode(undefined);
-		})
+		});
 
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 			if (undefined === event.target) {
@@ -145,14 +154,9 @@ export class App {
 			this.labelManager.hide("hover");
 		});
 
-		const biblioContainer = document.querySelector(".biblioContainer") as HTMLDivElement;
-		const biblio = document.querySelector("#bibliography") as HTMLDivElement;
-
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
-			biblio.querySelectorAll(".biblio-nodes").forEach((list) => (list.innerHTML = ""));
-
 			if (undefined === event.target) {
-				biblioContainer.classList.remove("open");
+				this.biblio.close();
 				return;
 			}
 
@@ -160,43 +164,28 @@ export class App {
 				return;
 			}
 
+			this.biblio.clear();
+
 			const activeNodes = this.diagram.getActiveNodes();
+			activeNodes.facilities.forEach((node) => this.biblio.addNode(node));
+			activeNodes.determinants.forEach((node) => this.biblio.addNode(node));
+			activeNodes.pathologies.forEach((node) => this.biblio.addNode(node));
 
-			biblio.querySelectorAll<HTMLUListElement>(".biblio-nodes[data-type]").forEach((list) => {
-				let nodes: SelectableNode[] = [];
-
-				switch (list.dataset.type) {
-					case "pathology":
-						nodes = activeNodes.pathologies;
-						break;
-					case "determinant":
-						nodes = activeNodes.determinants;
-						break;
-					case "facility":
-						nodes = activeNodes.facilities;
-						break;
-				}
-
-				nodes.forEach((node) => {
-					const entry = document.createElement("li");
-					entry.textContent = this.translator.translate(node.label, "nodes");
-					list.append(entry);
-				});
-			});
+			// biblio.querySelectorAll<HTMLUListElement>(".biblio-nodes[data-type]").forEach((list) => {
+			// 	let nodes: SelectableNode[] = [];
+			//
+			// 	nodes.forEach((node) => {
+			// 		const entry = document.createElement("li");
+			// 		entry.textContent = this.translator.translate(node.label, "nodes");
+			// 		list.append(entry);
+			// 	});
+			// });
 
 			const links = this.diagram.getActiveLinksSources();
-			const facilityLinks = new Set(links?.facilities.map((l) => l.source.toLowerCase()));
-			const pathologiesLinks = new Set(links?.facilities.map((l) => l.source.toLowerCase()));
+			links.pathologies.forEach((l) => this.biblio.addLink("pathology", l.source.toLowerCase()));
+			links.facilities.forEach((l) => this.biblio.addLink("facility", l.source.toLowerCase()));
 
-			biblio.querySelectorAll<HTMLUListElement>("[data-link]").forEach((list) => {
-				if ("facilities" === list.dataset.link) {
-					list.textContent = Array.from(facilityLinks.values()).join(" / ");
-				} else if ("pathologies" === list.dataset.link) {
-					list.textContent = Array.from(pathologiesLinks.values()).join(" / ");
-				}
-			});
-
-			biblioContainer.classList.add("open");
+			this.biblio.open();
 		});
 
 		// Start the engine

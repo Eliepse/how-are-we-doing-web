@@ -136,10 +136,6 @@ button:hover {
     color: var(--dark-blue);
 }
 
-#diagram {
-    flex: 1;
-}
-
 #diagramContainer {
     display: flex;
     align-items: center;

@@ -3,8 +3,6 @@ import { wait } from "./helpers";
 
 /*
 	TODO list:
-		- biblio toggle
-		- fix SVGRender global <-> local conversion
 		- credits
 		- language selector + dynamic language
 		- context selection

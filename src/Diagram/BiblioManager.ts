@@ -13,22 +13,24 @@ export class BiblioManager {
 	private readonly pathologySources: SourceBox;
 
 	constructor(container: Element, private readonly translator: Translator) {
-		this.root = document.createElement("div");
-		this.root.id = "biblioRoot";
+		const root = document.querySelector<HTMLDivElement>("#biblioRoot");
+
+		if (null === root) {
+			throw new Error("Missing bibliography root DOM element");
+		}
+
+		this.root = root;
 
 		const content = document.createElement("div");
 		content.id = "biblioContent";
 
-		this.pathologies = new NodeBox(content, "A");
+		this.pathologies = new NodeBox(content, this.translator.t("general.diseases and health issues"));
 		this.pathologySources = new SourceBox(content);
-		this.determinants = new NodeBox(content, "B");
+		this.determinants = new NodeBox(content, this.translator.t("general.health determinants"));
 		this.facilitySources = new SourceBox(content);
-		this.facilities = new NodeBox(content, "C");
+		this.facilities = new NodeBox(content, this.translator.t("general.urban context and planning"));
 
 		this.root.append(content);
-		container.append(this.root);
-
-		this.open();
 	}
 
 	addNode(node: Facility | Determinant | Pathology) {
@@ -42,7 +44,7 @@ export class BiblioManager {
 	}
 
 	addLink(side: "pathology" | "facility", text: string): void {
-		if("pathology" === side) {
+		if ("pathology" === side) {
 			this.pathologySources.add(text);
 			return;
 		}
@@ -60,20 +62,29 @@ export class BiblioManager {
 
 	clear(): void {
 		this.facilities.clear();
+		this.facilitySources.clear();
 		this.determinants.clear();
+		this.pathologySources.clear();
 		this.pathologies.clear();
 	}
-
 }
 
 class NodeBox {
 	private readonly root: HTMLUListElement;
 	private nodes = new WeakMap<Node2D, HTMLLIElement>();
 
-	constructor(container: Element, title: string) {
+	constructor(container: Element, private title: string) {
 		this.root = document.createElement("ul");
 		this.root.classList.add("biblio-nodes");
+		this.renderTitle();
 		container.append(this.root);
+	}
+
+	private renderTitle() {
+		const title = document.createElement("li");
+		title.classList.add("biblio-nodesTitle");
+		title.innerText = this.title;
+		this.root.append(title);
 	}
 
 	addNode(node: Facility | Determinant | Pathology): void {
@@ -90,6 +101,7 @@ class NodeBox {
 	clear(): void {
 		this.root.innerText = "";
 		this.nodes = new WeakMap();
+		this.renderTitle();
 	}
 }
 

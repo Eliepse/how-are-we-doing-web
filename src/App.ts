@@ -33,10 +33,10 @@ export class App {
 	private biblio: BiblioManager;
 	private loaded: boolean = false;
 
-	constructor(rootDom: Element) {
-		const diagramDom = document.createElement("div");
-		diagramDom.id = "diagramRoot";
-
+	constructor(
+		rootDom: Element,
+		diagramDom: Element,
+	) {
 		const labelDom = document.createElement("div");
 		labelDom.id = "labels";
 
@@ -44,12 +44,10 @@ export class App {
 		rendererDom.id = "diagramContainer";
 
 		diagramDom.append(labelDom, rendererDom);
-		rootDom.append(diagramDom);
 
-		this.biblio = new BiblioManager(rootDom);
-
-		this.translator = new Translator("/translations/{context}.{lang}.json", "fr", ["en", "fr", "it"], ["nodes"]);
+		this.translator = new Translator("/translations/{context}.{lang}.json", "en", ["en", "fr", "it"], ["general", "nodes"]);
 		this.labelManager = new FloatingLabelManager(labelDom);
+		this.biblio = new BiblioManager(rootDom, this.translator);
 
 		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1000, 1000), Config.Render.debug);
 		this.engine = new Engine(new Node2D(), renderer);
@@ -156,7 +154,7 @@ export class App {
 
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 			if (undefined === event.target) {
-				this.biblio.close();
+				this.biblio.clear();
 				return;
 			}
 
@@ -171,21 +169,9 @@ export class App {
 			activeNodes.determinants.forEach((node) => this.biblio.addNode(node));
 			activeNodes.pathologies.forEach((node) => this.biblio.addNode(node));
 
-			// biblio.querySelectorAll<HTMLUListElement>(".biblio-nodes[data-type]").forEach((list) => {
-			// 	let nodes: SelectableNode[] = [];
-			//
-			// 	nodes.forEach((node) => {
-			// 		const entry = document.createElement("li");
-			// 		entry.textContent = this.translator.translate(node.label, "nodes");
-			// 		list.append(entry);
-			// 	});
-			// });
-
 			const links = this.diagram.getActiveLinksSources();
 			links.pathologies.forEach((l) => this.biblio.addLink("pathology", l.source.toLowerCase()));
 			links.facilities.forEach((l) => this.biblio.addLink("facility", l.source.toLowerCase()));
-
-			this.biblio.open();
 		});
 
 		// Start the engine
@@ -193,13 +179,15 @@ export class App {
 		this.engine.start();
 	}
 
+	getTranslator(): Translator {
+		return this.translator;
+	}
+
 	showBibliography() {
-		throw new Error("Not implemented");
+		this.biblio.open();
 	}
 
 	hideBibliography() {
-		throw new Error("Not implemented");
+		this.biblio.close();
 	}
-
-
 }

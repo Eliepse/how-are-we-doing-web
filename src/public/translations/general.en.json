@@ -1,0 +1,14 @@
+{
+  "no context": "NO CONTEXTUALISATION",
+  "close": "Close",
+  "credits": "Credits",
+  "show_bibliography": "Show bibliography",
+  "hide_bibliography": "Hide bibliography",
+  "diseases and health issues": "Diseases and health issues",
+  "urban context and planning": "Urban context and planning",
+  "health determinants": "Health determinants",
+  "pathology": "Disease and health issue",
+  "facility": "Facilities",
+  "legend_determinant_missing_data": "No hierarchy due to lack of data",
+  "legend_determinant_normal": "Prioritization of issues by health determinant according to site diagnosis"
+}

@@ -19,7 +19,6 @@ export class SVGRenderer extends Renderer {
 	private references = new Map<string, [Referencable, SVGElement]>();
 	private defsDom: SVGDefsElement;
 	private renderers = new Set<SVGNodeRenderer>();
-	public onRender = (renderer: SVGRenderer) => undefined;
 	private renderersByNode = new WeakMap<VirtualNode, SVGNodeRenderer[]>();
 	private layers = new Map<number, SVGLayer>();
 

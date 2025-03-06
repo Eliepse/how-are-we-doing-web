@@ -24,11 +24,11 @@ export class BiblioManager {
 		const content = document.createElement("div");
 		content.id = "biblioContent";
 
-		this.pathologies = new NodeBox(content, this.translator.t("general.diseases and health issues"));
+		this.pathologies = new NodeBox(content, this.translator.t("general.pathologies"));
 		this.pathologySources = new SourceBox(content);
-		this.determinants = new NodeBox(content, this.translator.t("general.health determinants"));
+		this.determinants = new NodeBox(content, this.translator.t("general.determinants"));
 		this.facilitySources = new SourceBox(content);
-		this.facilities = new NodeBox(content, this.translator.t("general.urban context and planning"));
+		this.facilities = new NodeBox(content, this.translator.t("general.facilities"));
 
 		this.root.append(content);
 	}

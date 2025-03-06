@@ -22,11 +22,69 @@
 
 <div id="app">
 	<div id="navigation">
-		<button id="biblioToggle" style="margin-left: auto">Bibliography</button>
+		<button data-action="credits:open" style="margin-left: auto" data-translate="general.credits">Credits</button>
+		<button id="biblioToggle" style="margin-left: 8px">Bibliography</button>
 	</div>
 	<div id="diagramRoot"></div>
 	<div id="biblioRoot"></div>
 </div>
+
+<aside id="credits" aria-hidden="true">
+	<div class="credit-modal">
+		<h2 data-translate="general.what binds us">What binds us</h2>
+		<p data-translate="general.credits.description" style="margin-bottom: 64px; max-width: 400px">
+			What binds us, a study of the interactions between health determinants and the living environment
+		</p>
+
+		<h3 data-translate="general.credits.scientificTitle">
+			Scientific direction
+		</h3>
+		<p data-translate="general.credits.scientificContent">
+			Olivia Rousseaux, Simon Davies and Fondation AIA
+		</p>
+
+		<h3 data-translate="general.credits.researchTitle">
+			Research and Development of the interactive diagram
+		</h3>
+		<p data-translate="general.credits.researchContent">
+			Olivia Rousseaux
+		</p>
+
+		<h3 data-translate="general.credits.designTitle">
+			Graphic design and development of the interactive diagram
+		</h3>
+		<p data-translate="general.credits.designContent">
+			Sylvia Fredriksson and Elie Meignan
+		</p>
+
+		<h3 data-translate="general.credits.iconographyTitle">
+			Documentary and iconographic research
+		</h3>
+		<p data-translate="general.credits.iconographyContent">
+			Claire Duveau, Léonard Desjardin and Anaëlle Leclercq
+		</p>
+
+		<h3 data-translate="general.credits.thanksTitle">
+			Acknowledgments for the provision of images
+		</h3>
+		<p data-translate="general.credits.thanksContent">
+			City of Grenoble, Department of Town Planning and Development of the City of Grenoble, Department of
+			Communication of the City of Grenoble, Department of Iconography and Geographic Information Systems of the
+			City of Grenoble, Flickr
+		</p>
+
+		<p data-translate="general.credits.context" style="opacity: .6">
+			All contributions are original research, conducted within the framework of the Fondation AIA between 2019
+			and 2023.
+		</p>
+
+		<p>
+			© Fondation AIA, 2025
+		</p>
+
+		<button data-action="credits:close" data-translate="general.close">close</button>
+	</div>
+</aside>
 
 <script type="module" src="/main.ts"></script>
 </body>

@@ -1,5 +1,6 @@
 :root {
     --dark-blue: #191733;
+    --dark-blue-hsl: 244, 38%, 15%;
 }
 
 * {

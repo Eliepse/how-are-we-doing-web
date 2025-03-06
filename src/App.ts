@@ -45,7 +45,7 @@ export class App {
 
 		diagramDom.append(labelDom, rendererDom);
 
-		this.translator = new Translator("/translations/{context}.{lang}.json", "en", ["en", "fr", "it"], ["general", "nodes"]);
+		this.translator = new Translator("/translations/{context}.{lang}.json", "fr", ["en", "fr", "it"], ["general", "nodes"]);
 		this.labelManager = new FloatingLabelManager(labelDom);
 		this.biblio = new BiblioManager(rootDom, this.translator);
 

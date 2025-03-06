@@ -1,10 +1,12 @@
 import { IntlContext } from "./IntlContext";
+import { IntlStr } from "./IntlStr";
 
 type Locale = string;
 
 export class Translator {
 	private _currentLocale: string;
 	private _contextsByLocale = new Map<Locale, Map<string, IntlContext>>();
+	private _intlStr = new Set<IntlStr>();
 
 	constructor(
 		private _urlPattern: string,
@@ -44,6 +46,10 @@ export class Translator {
 
 		this._currentLocale = locale;
 		await this.loadContexts();
+
+		for (const intlStr of this._intlStr.values()) {
+			intlStr.update(this);
+		}
 	}
 
 	async loadContexts(locale?: Locale): Promise<void> {
@@ -54,6 +60,10 @@ export class Translator {
 
 	async loadAll(): Promise<void> {
 		await Promise.allSettled(this.supportedLocales.map((locale) => this.loadContexts(locale)));
+
+		for (const intlStr of this._intlStr.values()) {
+			intlStr.update(this);
+		}
 	}
 
 	private getLocaleContexts(locale: Locale): Map<string, IntlContext> {
@@ -99,5 +109,27 @@ export class Translator {
 		const contextKey = fullkey.slice(0, dotIndex);
 		const key = fullkey.slice(dotIndex + 1);
 		return this.translate(key, contextKey, locale);
+	}
+
+	translateDOM(container?: HTMLElement | null): void {
+		if (null === container || undefined === container) {
+			return;
+		}
+
+		container.querySelectorAll<HTMLElement>("[data-translate]").forEach((element) => {
+			let key = element.dataset.translate?.trim();
+
+			if (undefined === key || 0 === key.length) {
+				key = element.innerText;
+			}
+
+
+			const intlStr = new IntlStr(key, (text) => {
+				console.debug("neh ?");
+				element.innerText = text;
+			});
+
+			this._intlStr.add(intlStr);
+		});
 	}
 }

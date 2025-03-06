@@ -4,6 +4,7 @@ import { wait } from "./helpers";
 /*
 	TODO list:
 		- credits
+		- pathologies background decorations
 		- language selector + dynamic language
 		- context selection
 		- context blur when N/A

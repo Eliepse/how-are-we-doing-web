@@ -1,15 +1,5 @@
 import { SVGShape } from "../../SVGRenderer/Shape/SVGShape";
-import {
-	Camera,
-	Color,
-	DataTexture,
-	Mesh,
-	PerspectiveCamera,
-	Scene,
-	ShaderMaterial,
-	SphereGeometry,
-	WebGLRenderer,
-} from "three";
+import { Camera, Color, Mesh, PerspectiveCamera, Scene, ShaderMaterial, SphereGeometry, WebGLRenderer } from "three";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 
 export class PathologyBlob extends SVGShape {
@@ -34,7 +24,7 @@ export class PathologyBlob extends SVGShape {
 
 		this.canvasRenderer = new WebGLRenderer({ antialias: false });
 		// this.canvasRenderer.setPixelRatio( window.devicePixelRatio * 1.5 );
-		this.canvasRenderer.setSize(this.radius * 2, this.radius * 2);
+		this.canvasRenderer.setSize(Math.ceil(this.radius * 2), Math.ceil(this.radius * 2));
 		this.canvasRenderer.setClearAlpha(0);
 		this.canvas = this.canvasRenderer.domElement;
 
@@ -47,9 +37,9 @@ export class PathologyBlob extends SVGShape {
 				rimBaseFactor: { value: 2.0 },
 				noiseFactor: { value: 1.8 },
 				noiseAlpha: { value: 0.7 },
-				time: { value: Math.random() * 10 },
-				noiseStrength: { value: 10 },
-				noiseSpeed: { value: 0.12 },
+				time: { value: Math.random() * 5000 },
+				noiseStrength: { value: 20 },
+				noiseSpeed: { value: 0.24 },
 			},
 			// language=Glsl
 			vertexShader: `
@@ -138,18 +128,8 @@ export class PathologyBlob extends SVGShape {
 
 	}
 
-	private updateTexture(): DataTexture {
-		const size = this.radius * 2;
-		const area = Math.pow(size, 2);
-		const data = new Uint8Array(area);
-
-		const texture = new DataTexture(data, size, size);
-		texture.needsUpdate = true;
-		return texture;
-	}
-
 	private makeShape(): Mesh {
-		const mesh = new Mesh(new SphereGeometry(this.radius), this.material);
+		const mesh = new Mesh(new SphereGeometry(this.radius, 40, 16), this.material);
 		mesh.rotation.x = Math.PI;
 		return mesh;
 	}

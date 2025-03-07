@@ -4,7 +4,7 @@ import { ArcGroup } from "../../ArcGroup";
 import type { Facility } from "./Facility";
 
 export class FacilitiesRing extends Node2D {
-	constructor(groups: Array<ArcGroup<Facility>>, private radius: number) {
+	constructor(groups: Array<ArcGroup<Facility>>) {
 		super();
 
 		groups.forEach((child) => this.addChildren(child));
@@ -23,8 +23,7 @@ export class FacilitiesRing extends Node2D {
 	}
 
 	setRadius(radius: number): void {
-		this.radius = radius;
 		const children = this.children as unknown as ArcGroup[];
-		children.forEach((child) => child.setRadius(this.radius));
+		children.forEach((child) => child.setRadius(radius));
 	}
 }

@@ -62,7 +62,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 			this.selectNode(undefined);
 		});
 
-		this.addChildren(new FacilitiesRing(this.buildFacilityGroups(facilitiesData), 440));
+		this.addChildren(new FacilitiesRing(this.buildFacilityGroups(facilitiesData)));
 		this.addChildren(new DeterminantsRing(this.buildDeterminantFamilies(determinantsData)));
 
 		determinantsData.forEach((family) =>
@@ -139,7 +139,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 						return facility;
 					}),
 					new Angle(),
-					450,
+					480,
 				),
 		);
 	}

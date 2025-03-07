@@ -1,7 +1,7 @@
 import { Config } from "../../config";
 import { Color } from "../../Engine2D/ValueObject/Color";
 import type { Stroke } from "./Stroke";
-import type { Referencable } from "../Shape/Referencable";
+import type { Referencable } from "../Referencable/Referencable";
 
 export class SVGStyle {
 	public readonly fill?: Color | Referencable | string;

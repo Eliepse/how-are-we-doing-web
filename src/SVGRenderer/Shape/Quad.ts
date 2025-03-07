@@ -5,8 +5,8 @@ import { SVGShape } from "./SVGShape";
 export class Quad extends SVGShape {
 	private readonly dom: SVGPathElement;
 
-	constructor() {
-		super(1);
+	constructor(layer: number = 1) {
+		super(layer);
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "path");
 	}
 

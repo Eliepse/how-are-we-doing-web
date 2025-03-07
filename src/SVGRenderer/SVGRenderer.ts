@@ -6,7 +6,7 @@ import { SymbolShape } from "../Engine2D/ValueObject/Symbolic/SymbolShape";
 import { Vector } from "../Engine2D/ValueObject/Vector";
 import { VirtualShape } from "../Engine2D/Node/VirtualShape";
 import type { SVGNodeRenderer } from "./NodeRenderer/SVGNodeRenderer";
-import type { Referencable } from "./Shape/Referencable";
+import type { Referencable } from "./Referencable/Referencable";
 import { SVGLayer } from "./SVGLayer";
 
 type NodeDOMStore = Map<string, Element>;

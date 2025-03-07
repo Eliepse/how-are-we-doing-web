@@ -1,5 +1,5 @@
 export abstract class SVGShape {
-	protected constructor(public readonly layer: number) {
+	protected constructor(public layer: number) {
 	}
 
 	abstract mount(container: Element): void;

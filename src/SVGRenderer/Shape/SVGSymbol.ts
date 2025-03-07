@@ -7,7 +7,7 @@ import { SVGShape } from "./SVGShape";
 import type { ClipPath } from "../../Engine2D/ValueObject/Clip";
 
 export class SVGSymbol extends SVGShape {
-	private readonly dom: SVGUseElement;
+	protected readonly dom: SVGUseElement;
 
 	constructor(private readonly symbol: Symbolic) {
 		super(1);
@@ -40,30 +40,5 @@ export class SVGSymbol extends SVGShape {
 
 	override unmount(): void {
 		this.dom.remove();
-	}
-
-	static make(shape: Symbolic): SVGUseElement {
-		const element = document.createElementNS("http://www.w3.org/2000/svg", "use");
-		element.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", shape.getHref());
-		return element;
-	}
-
-	static update(
-		element: SVGUseElement,
-		symbol: Symbolic,
-		position: Vector,
-		rotation: Angle,
-		style: SVGStyle,
-	): void {
-		const domPosition = position.sub(symbol.getPivot()).toAttributes();
-		const transformPivot = position.toAttributes();
-		const degrees = rotation.add(symbol.getAngle()).deg.toFixed(Config.Render.precision);
-		const transformAttr = `rotate(${degrees}, ${transformPivot.x}, ${transformPivot.y})`;
-
-		element.setAttribute("x", domPosition.x);
-		element.setAttribute("y", domPosition.y);
-		element.setAttribute("transform", transformAttr);
-
-		style.updateElement(element);
 	}
 }

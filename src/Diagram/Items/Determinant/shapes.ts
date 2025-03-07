@@ -38,7 +38,7 @@ function makeDeterminantShape(id: string, rawSVG: string): SymbolShape {
 export const determinantAssets = {
 	"territory and biodiversity": makeDeterminantShape("det-biodiversity", biodiversitySVG),
 	"buildings quality": makeDeterminantShape("det-building", buildingSVG),
-	"functional mixity": makeDeterminantShape("det-biodiversity", functionalSVG),
+	"functional mixity": makeDeterminantShape("det-functional", functionalSVG),
 	intermodality: makeDeterminantShape("det-intermodality", intermodalitySVG),
 	"landscape and athmosphere": makeDeterminantShape("det-landscape", landscapeSVG),
 	lifestyles: makeDeterminantShape("det-lifestyle", lifestyleSVG),

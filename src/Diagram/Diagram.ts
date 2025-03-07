@@ -62,8 +62,13 @@ export class Diagram extends Node2D implements WithLifecycle {
 			this.selectNode(undefined);
 		});
 
-		this.addChildren(new FacilitiesRing(this.buildFacilityGroups(facilitiesData)));
-		this.addChildren(new DeterminantsRing(this.buildDeterminantFamilies(determinantsData)));
+		const facilities = new FacilitiesRing(this.buildFacilityGroups(facilitiesData));
+		facilities.setRotation(Angle.fromDeg(156));
+		this.addChildren(facilities);
+
+		const determinants = new DeterminantsRing(this.buildDeterminantFamilies(determinantsData));
+		determinants.setRotation(Angle.fromDeg(266));
+		this.addChildren(determinants);
 
 		determinantsData.forEach((family) =>
 			family.children.forEach((subFamily) =>

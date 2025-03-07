@@ -24,6 +24,10 @@ export abstract class SVGNodeRenderer {
 		return collection;
 	}
 
+	unmountShapes(vnode: VirtualNode): void {
+		this.shapesByVNode.get(vnode)?.removeAll();
+	}
+
 	abstract render(vnode: VirtualNode): void;
 
 	abstract accepts(vnode: VirtualNode): boolean;

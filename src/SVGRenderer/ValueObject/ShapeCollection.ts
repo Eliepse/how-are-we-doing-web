@@ -26,4 +26,12 @@ export class ShapeCollection {
 		shape.unmount();
 		this.shapes.delete(key);
 	}
+
+	removeAll(): void {
+		for (const shape of this.shapes.values()) {
+			shape.unmount();
+		}
+
+		this.shapes = new Map();
+	}
 }

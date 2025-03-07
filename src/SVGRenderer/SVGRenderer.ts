@@ -73,6 +73,13 @@ export class SVGRenderer extends Renderer {
 	override unmountNode(vnode: VirtualNode): void {
 		// Remove all associated DOM element from the DOM
 		this._nodesStore.get(vnode.node)?.forEach((element: Element) => element.remove());
+		const renderers = this.renderersByNode.get(vnode);
+
+		if(undefined === renderers) {
+			return;
+		}
+
+		renderers.forEach((renderer) => renderer.unmountShapes(vnode));
 		this.renderersByNode.delete(vnode);
 	}
 

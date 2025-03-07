@@ -2,6 +2,9 @@ import { SVGShape } from "../../SVGRenderer/Shape/SVGShape";
 import { Camera, Color, Mesh, PerspectiveCamera, Scene, ShaderMaterial, SphereGeometry, WebGLRenderer } from "three";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 
+// Slightly darker and saturated than the original color
+const blobColor = new Color().setHSL(357, 0.78, 0.75);
+
 export class PathologyBlob extends SVGShape {
 	private readonly canvas: HTMLCanvasElement;
 	private readonly dom: SVGForeignObjectElement;
@@ -31,12 +34,12 @@ export class PathologyBlob extends SVGShape {
 		this.material = new ShaderMaterial({
 			transparent: true,
 			uniforms: {
-				color: { value: new Color(0.95, 0.59, 0.61) },
-				rimAlpha: { value: 0.8 },
+				color: { value: blobColor },
+				rimAlpha: { value: 0.9 },
 				rimOuterFactor: { value: 5.0 },
 				rimBaseFactor: { value: 2.0 },
 				noiseFactor: { value: 1.8 },
-				noiseAlpha: { value: 0.7 },
+				noiseAlpha: { value: 0.5 },
 				time: { value: Math.random() * 5000 },
 				noiseStrength: { value: 20 },
 				noiseSpeed: { value: 0.24 },

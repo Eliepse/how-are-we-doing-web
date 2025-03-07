@@ -1,4 +1,4 @@
-import { Pattern } from "../../SVGRenderer/Shape/Pattern";
+import { Pattern } from "../../SVGRenderer/Referencable/Pattern";
 import { extractSVGContent } from "../Items/Determinant/shapes";
 // @ts-ignore
 import blobPatternSVG from "../../assets/pattern.svg?raw";

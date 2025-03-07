@@ -124,11 +124,7 @@ export class Translator {
 			}
 
 
-			const intlStr = new IntlStr(key, (text) => {
-				console.debug("neh ?");
-				element.innerText = text;
-			});
-
+			const intlStr = new IntlStr(key, (text) => element.innerText = text);
 			this._intlStr.add(intlStr);
 		});
 	}

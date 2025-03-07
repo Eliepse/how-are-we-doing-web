@@ -49,7 +49,7 @@ export class App {
 		this.labelManager = new FloatingLabelManager(labelDom);
 		this.biblio = new BiblioManager(rootDom, this.translator);
 
-		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1000, 1000), Config.Render.debug);
+		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1100, 1100), Config.Render.debug);
 		this.engine = new Engine(new Node2D(), renderer);
 
 		renderer.registerReferencable(blobPattern);

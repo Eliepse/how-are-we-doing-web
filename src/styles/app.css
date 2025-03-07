@@ -42,8 +42,8 @@
 }
 
 #diagram {
-    max-width: calc(88%);
-    max-height: calc(88%);
+    max-width: calc(92%);
+    max-height: calc(92%);
     aspect-ratio: 1;
 }
 
@@ -53,7 +53,8 @@
     font-size: .875rem;
     text-transform: uppercase;
     user-select: none;
-    /* letter-spacing: -.025em; */
+    opacity: .6;
+    /*letter-spacing: -.015em;*/
 }
 
 /*

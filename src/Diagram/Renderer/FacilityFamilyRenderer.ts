@@ -19,7 +19,7 @@ export class FacilityFamilyRenderer extends SVGNodeRenderer {
 		const end = position.add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
 
 		separator.updateMesh(start, end);
-		separator.updateStyle(new SVGStyle({ stroke: new Stroke(1, colors.defaultWhite) }));
+		separator.updateStyle(new SVGStyle({ stroke: new Stroke(1, colors.defaultWhite.alpha(.6)) }));
 	}
 
 	override accepts(node: VirtualNode): boolean {

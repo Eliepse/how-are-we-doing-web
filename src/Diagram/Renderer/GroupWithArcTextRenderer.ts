@@ -25,7 +25,7 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 
 		arcText.updateMesh(
 			node.getGlobalPosition(),
-			node.getRadius() + 32,
+			node.getRadius() + (node instanceof FacilityFamily ? 32 : 44),
 			rotation.sub(angleShift),
 			rotation.sub(angleShift).add(node.getArc()),
 		);

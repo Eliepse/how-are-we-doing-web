@@ -9,8 +9,8 @@ import type { ClipPath } from "../../Engine2D/ValueObject/Clip";
 export class SVGSymbol extends SVGShape {
 	protected readonly dom: SVGUseElement;
 
-	constructor(private readonly symbol: Symbolic) {
-		super(1);
+	constructor(private readonly symbol: Symbolic, layer: number = 1) {
+		super(layer);
 
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "use");
 		this.dom.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", symbol.getHref());

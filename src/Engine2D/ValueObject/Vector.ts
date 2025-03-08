@@ -9,9 +9,12 @@ export class Vector {
 	public static Bottom = new Vector(0, -1);
 	public static Left = new Vector(-1, 0);
 
-	constructor(public x: number, public y: number) {
+	public readonly x: number;
+	public readonly y: number;
+
+	constructor(x: number, y?: number) {
 		this.x = x;
-		this.y = y;
+		this.y = y ?? x;
 	}
 
 	add(v: Vector): Vector {

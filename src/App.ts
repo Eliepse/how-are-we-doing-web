@@ -20,6 +20,7 @@ import { DiagramBackgroundRenderer } from "./Diagram/Renderer/DiagramBackgroundR
 import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
 import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
+import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 
 export class App {
 	private readonly translator: Translator;
@@ -62,6 +63,7 @@ export class App {
 		renderer.addNodeRenderer(new PathologyLinkRenderer(renderer, this.engine));
 		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer, this.engine));
 		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer, this.engine));
 		renderer.addNodeRenderer(new FallbackRenderer(renderer, this.engine));
 	}
 

@@ -3,17 +3,27 @@ import { Angle } from "../Angle";
 import { Vector } from "../Vector";
 
 export class SymbolAsset implements Symbolic {
-  constructor(private href: string, private pivot: Vector = Vector.Zero) {}
+	private size: Vector;
+	private pivot: Vector;
 
-  getPivot(): Vector {
-    return this.pivot;
-  }
+	constructor(private href: string, size: Vector, pivot?: Vector) {
+		this.pivot = pivot ?? size.div(2);
+		this.size = size;
+	}
 
-  getHref(): string {
-    return this.href;
-  }
+	getPivot(): Vector {
+		return this.pivot;
+	}
 
-  getAngle(): Angle {
-    return Angle.Zero;
-  }
+	getSize(): Vector {
+		return this.size;
+	}
+
+	getHref(): string {
+		return this.href;
+	}
+
+	getAngle(): Angle {
+		return Angle.Zero;
+	}
 }

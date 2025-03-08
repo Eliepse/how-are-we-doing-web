@@ -36,7 +36,7 @@ export class ClipPath {
     return new ClipPath(ClipType.rect, top, right, bottom, left);
   }
 
-  static xywh(top: string, right: string, bottom: string, left: string): ClipPath {
-    return new ClipPath(ClipType.xywh, top, right, bottom, left);
+  static xywh(x: string, y: string, width: string, height: string): ClipPath {
+    return new ClipPath(ClipType.xywh, x, y, width, height);
   }
 }

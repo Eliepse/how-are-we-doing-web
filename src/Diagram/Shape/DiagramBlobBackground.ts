@@ -18,7 +18,7 @@ export class DiagramBlobBackground extends SVGShape {
 		public speed: number = .2,
 		public noiseScale: number = 1.25,
 	) {
-		super(-1);
+		super(-2);
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "path");
 		this.noise = new Noise(Math.random() * 4321);
 		this.updateStyle(style);

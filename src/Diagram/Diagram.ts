@@ -18,6 +18,7 @@ import { Pathology } from "./Items/Pathology/Pathology";
 import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
 import type { DeterminantKey } from "./types";
 import type { Context } from "./Context";
+import { BgDecorationManager } from "./Decoration/BgDecorationManager";
 
 export type SelectableNode = Pathology | Determinant | Facility;
 
@@ -38,6 +39,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 		{ pathologies: SourceList; facilities: SourceList }
 	>();
 	public backgroundBlobClock: number = 0;
+	private decorations: BgDecorationManager;
 
 	constructor(
 		pathologiesData: PathologiesData,
@@ -102,10 +104,12 @@ export class Diagram extends Node2D implements WithLifecycle {
 				return pathology;
 			});
 
-			const family = new PathologyFamily(children, 96);
+			const family = new PathologyFamily(familyData.name, children, 96);
 			family.setPosition(Vector.Right.mul(100).rot(index * Math.PI * (2 / 3)));
 			this.addChildren(family);
 		});
+
+		this.addChildren(this.decorations = new BgDecorationManager());
 	}
 
 	onMount(engine: Engine): void | (() => void) {
@@ -220,6 +224,16 @@ export class Diagram extends Node2D implements WithLifecycle {
 		if (node instanceof Pathology) {
 			const parent = node.getParent() as PathologyFamily;
 			parent.paused = true;
+
+			if("social" === parent.name) {
+				this.decorations.select("social")
+			} else if("mental" === parent.name) {
+				this.decorations.select("mental")
+			} else if("physical" === parent.name) {
+				this.decorations.select("physical")
+			}
+		} else {
+			this.decorations.select(undefined);
 		}
 
 		this._selectedNode = node;

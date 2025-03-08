@@ -14,7 +14,7 @@ export class PathologyFamily extends Node2D implements WithLifecycle {
 	private _noiseClock = 0;
 	private _shiftedPosition: Vector = Vector.Zero;
 
-	constructor(children: Array<Pathology>, private _size: number) {
+	constructor(public readonly name: string, children: Array<Pathology>, private _size: number) {
 		super();
 
 		this._noise = new Noise(Math.random() * 1234);

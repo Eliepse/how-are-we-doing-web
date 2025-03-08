@@ -4,7 +4,6 @@ import type { Context } from "./Diagram/Context";
 
 /*
 	TODO list:
-		- context blur when N/A
 		- language selector + dynamic language
 		- fix ring detection near PI = 0
 		- legend

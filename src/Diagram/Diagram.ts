@@ -340,6 +340,7 @@ export class Diagram extends Node2D implements WithLifecycle {
 			const value = context.getValue(determinant.key);
 
 			if (null === value) {
+				determinant.notApplicable();
 				continue;
 			}
 

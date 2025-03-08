@@ -24,6 +24,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	private _collider?: TorusCollider;
 	private _diagram?: Diagram;
 	private stepsTransition ?: CustomTransition<Steps>;
+	private applicable: boolean = true;
 
 	constructor(
 		public readonly id: number,
@@ -88,10 +89,20 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	}
 
 	setStep(step: Steps): void {
+		this.applicable = true;
 		this.stepsTransition = new CustomTransition(
 			{ durationMs: 350, from: this.step, to: step, completed: () => this.stepsTransition = undefined },
 			(percent, from, to) => Math.round(interpolate(from, to, percent)) as Steps,
 		);
+	}
+
+	notApplicable(): void {
+		this.step = 1;
+		this.applicable = false;
+	}
+
+	isApplicable(): boolean {
+		return this.applicable;
 	}
 
 	isActive(): boolean {

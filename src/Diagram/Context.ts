@@ -5,15 +5,12 @@ export class Context {
 	constructor(
 		public readonly id: string,
 		public readonly name: string,
-		private readonly values: { [key in DeterminantKey]: number },
+		private readonly values: { [key in DeterminantKey]: number | null },
 	) {
 	}
 
 	getValue(key: DeterminantKey): Steps | null {
-		if (key in this.values) {
-			return Math.round(this.values[key] * 4) as Steps;
-		}
-
-		return null;
+		const value = this.values[key] ?? null;
+		return null === value ? null : Math.round(value * 4) as Steps;
 	}
 }

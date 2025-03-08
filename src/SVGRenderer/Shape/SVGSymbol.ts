@@ -29,9 +29,22 @@ export class SVGSymbol extends SVGShape {
 	updateStyle(style: SVGStyle, clipPath?: ClipPath): void {
 		style.updateElement(this.dom);
 
-		if(clipPath) {
-			this.dom.setAttribute("clip-path",clipPath.toString());
+		if (clipPath) {
+			this.dom.setAttribute("clip-path", clipPath.toString());
 		}
+	}
+
+	blur(amount: number): void {
+		if (0 >= amount) {
+			this.dom.style.filter = "";
+			return;
+		}
+
+		this.dom.style.filter = `blur(${amount}px)`;
+	}
+
+	get DOM() {
+		return this.dom;
 	}
 
 	override mount(container: Element): void {

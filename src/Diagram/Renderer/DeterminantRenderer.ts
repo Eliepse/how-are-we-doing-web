@@ -62,6 +62,12 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		circle.updateMesh(anchorPosition);
 		circleCore.hide();
 
+		if(false === node.isApplicable()) {
+			element.blur(4);
+		} else {
+			element.blur(0);
+		}
+
 		if (node.isActive()) {
 			element.updateStyle(shapeStyle.selected, stepClipsOptimized[node.getStep()]);
 			circle.updateStyle(anchorStyle.selected);

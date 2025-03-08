@@ -1,19 +1,23 @@
 import { App } from "./App";
 import { wait } from "./helpers";
+import type { Context } from "./Diagram/Context";
 
 /*
 	TODO list:
-		- pathologies background decorations
-		- language selector + dynamic language
-		- context selection
 		- context blur when N/A
+		- language selector + dynamic language
+		- fix ring detection near PI = 0
 		- legend
 		- image bento wall
-		- fix ring detection near PI = 0
+		- optimize rendering (limit useless renders, opacity = 0, no movements)
  */
 
-async function main() {
+async function main(withLoader = true) {
 	function updateLoader(percent: number, title: string): void {
+		if (false === withLoader) {
+			return;
+		}
+
 		if (!loaderDom.loadingBar || !loaderDom.loadingCounter || !loaderDom.loadingTitle) {
 			return;
 		}
@@ -29,6 +33,10 @@ async function main() {
 		loadingCounter: document.querySelector<HTMLDivElement>(".loader__progressCounter"),
 		loadingTitle: document.querySelector<HTMLDivElement>(".loader__title"),
 	};
+
+	if (false === withLoader) {
+		loaderDom.root?.remove();
+	}
 
 	const appDom = document.querySelector<HTMLElement>("#app");
 	const diagramDom = document.querySelector("#diagramRoot");
@@ -47,15 +55,37 @@ async function main() {
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
 
+	app.onContextChanged = (context: Context) => {
+		document.querySelectorAll("[data-key='context:name']").forEach((node) => {
+			node.textContent = context.name;
+		});
+	};
+
 	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
 
-	await wait(500);
+	withLoader && await wait(500);
 	updateLoader(100, "Ready");
 	void app.launch();
-	await wait(350);
+	withLoader && await wait(350);
 
 	setupBibliography(app);
 	setupCredits();
+
+	document.addEventListener("keydown", (e) => {
+		if("ArrowLeft" === e.key) {
+			app.previousContext();
+		} else if("ArrowRight" === e.key) {
+			app.nextContext();
+		}
+	});
+
+	document.querySelectorAll("[data-action='context:prev']")?.forEach((n) => {
+		n.addEventListener("click", () => app.previousContext());
+	});
+
+	document.querySelectorAll("[data-action='context:next']")?.forEach((n) => {
+		n.addEventListener("click", () => app.nextContext());
+	});
 
 	loaderDom.root && (loaderDom.root.style.opacity = "0");
 	await wait(1000);
@@ -113,4 +143,4 @@ function setupCredits(): void {
 	});
 }
 
-void main();
+void main(false);

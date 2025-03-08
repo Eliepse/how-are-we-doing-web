@@ -21,6 +21,7 @@ import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
 import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
+import type { DeterminantKey } from "./Diagram/types";
 
 export class App {
 	private readonly translator: Translator;
@@ -28,11 +29,14 @@ export class App {
 	private readonly engine: Engine<SVGRenderer>;
 
 	private contexts: Context[] = [];
+	private currentContext?: Context;
 	private database?: any;
 
 	private diagram?: Diagram;
 	private biblio: BiblioManager;
 	private loaded: boolean = false;
+
+	public onContextChanged = (context: Context) => undefined;
 
 	constructor(
 		rootDom: Element,
@@ -91,7 +95,13 @@ export class App {
 		// Contexts
 		clb(step++, steps, "Loading contexts");
 		const data = await (await fetch("data/contexts.json")).json();
-		this.contexts = data.contexts.map((context) => new Context(context.id, context.name, context.determinants));
+		this.contexts = data.contexts.map((context: {
+			id: string,
+			name: string,
+			determinants: { [k in DeterminantKey]: number }
+		}) => {
+			return new Context(context.id, context.name, context.determinants);
+		});
 
 		this.loaded = true;
 	}
@@ -102,6 +112,8 @@ export class App {
 		}
 
 		this.diagram = new Diagram(this.database.pathologies, this.database.facilities, this.database.determinants);
+
+		this.changeContext(this.contexts[0]);
 
 		// Center the diagram
 		this.engine.root.setPosition(this.engine.getRenderer().size.div(2));
@@ -179,6 +191,37 @@ export class App {
 		// Start the engine
 		this.engine.render();
 		this.engine.start();
+	}
+
+	previousContext(): void {
+		if (undefined === this.currentContext) {
+			this.changeContext(this.contexts[0]);
+			return;
+		}
+
+		let i = this.contexts.indexOf(this.currentContext) - 1;
+		i = i < 0 ? this.contexts.length - 1 : i;
+		this.changeContext(this.contexts[i]);
+	}
+
+	nextContext(): void {
+		if (undefined === this.currentContext) {
+			this.changeContext(this.contexts[0]);
+			return;
+		}
+
+		const i = this.contexts.indexOf(this.currentContext) + 1;
+		this.changeContext(this.contexts[i % this.contexts.length]);
+	}
+
+	changeContext(context?: Context): void {
+		if (undefined === context) {
+			return;
+		}
+
+		this.currentContext = context;
+		this.diagram?.contextualizeDeterminants(context);
+		this.onContextChanged(context);
 	}
 
 	getTranslator(): Translator {

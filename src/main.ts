@@ -4,7 +4,6 @@ import type { Context } from "./Diagram/Context";
 
 /*
 	TODO list:
-		- language selector + dynamic language
 		- legend
 		- image bento wall
 		- optimize rendering (limit useless renders, opacity = 0, no movements)

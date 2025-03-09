@@ -51,7 +51,7 @@ export class App {
 		diagramDom.append(labelDom, rendererDom);
 
 		this.translator = new Translator("/translations/{context}.{lang}.json", "fr", ["en", "fr", "it"], ["general", "nodes"]);
-		this.labelManager = new FloatingLabelManager(labelDom);
+		this.labelManager = new FloatingLabelManager(labelDom, this.translator);
 		this.biblio = new BiblioManager(rootDom, this.translator);
 
 		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1100, 1100), Config.Render.debug);
@@ -131,7 +131,7 @@ export class App {
 
 			this.labelManager.show(
 				"hover",
-				this.translator.translate(event.target.label, "nodes"),
+				event.target.label,
 				this.engine.getRenderer().localPointToWindow(event.target?.getGlobalPosition()),
 				"left",
 				16,
@@ -151,7 +151,7 @@ export class App {
 			this.labelManager.hide("hover");
 			this.labelManager.show(
 				"selected",
-				this.translator.translate(event.target.label, "nodes"),
+				event.target.label,
 				this.engine.getRenderer().localPointToWindow(event.target?.getGlobalPosition()),
 				"left",
 				16,

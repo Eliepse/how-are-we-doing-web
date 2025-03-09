@@ -111,6 +111,17 @@ export class Translator {
 		return this.translate(key, contextKey, locale);
 	}
 
+	dyn(fullkey: string, clb: (text: string) => void): IntlStr {
+		const intlStr = new IntlStr(
+			fullkey,
+			clb,
+			(key: string) => this.t(key),
+			(obj) => this._intlStr.delete(obj),
+		);
+		this._intlStr.add(intlStr);
+		return intlStr;
+	}
+
 	translateDOM(container?: HTMLElement | null): void {
 		if (null === container || undefined === container) {
 			return;
@@ -123,9 +134,7 @@ export class Translator {
 				key = element.innerText;
 			}
 
-
-			const intlStr = new IntlStr(key, (text) => element.innerText = text);
-			this._intlStr.add(intlStr);
+			this.dyn(key, (text) => element.innerText = text);
 		});
 	}
 }

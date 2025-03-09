@@ -54,10 +54,15 @@ async function main(withLoader = true) {
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
 
 	app.onContextChanged = (context: Context) => {
-		document.querySelectorAll("[data-key='context:name']").forEach((node) => {
-			node.textContent = context.name;
+		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
+			node.textContent = translator.translate(context.name.toLowerCase(), "general").toUpperCase();
+			node.dataset.tr = context.id;
 		});
 	};
+
+	translator.dyn("general.no context", (txt) => {
+		document.querySelectorAll<HTMLElement>("[data-tr='no-context']").forEach((el) => el.innerHTML = txt);
+	});
 
 	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
 
@@ -66,28 +71,24 @@ async function main(withLoader = true) {
 	void app.launch();
 	withLoader && await wait(350);
 
+	setupLanguageControls(app);
 	setupBibliography(app);
 	setupCredits();
-
-	document.addEventListener("keydown", (e) => {
-		if("ArrowLeft" === e.key) {
-			app.previousContext();
-		} else if("ArrowRight" === e.key) {
-			app.nextContext();
-		}
-	});
-
-	document.querySelectorAll("[data-action='context:prev']")?.forEach((n) => {
-		n.addEventListener("click", () => app.previousContext());
-	});
-
-	document.querySelectorAll("[data-action='context:next']")?.forEach((n) => {
-		n.addEventListener("click", () => app.nextContext());
-	});
+	setupContextControls(app);
 
 	loaderDom.root && (loaderDom.root.style.opacity = "0");
 	await wait(1000);
 	loaderDom.root?.remove();
+}
+
+function setupLanguageControls(app: App): void {
+	const translator = app.getTranslator();
+	document.querySelectorAll<HTMLElement>("button[data-action='locale:change']").forEach((node) => {
+		node.addEventListener("click", (e) => {
+			e.stopPropagation();
+			node.dataset.locale && translator.changeLocale(node.dataset.locale);
+		});
+	});
 }
 
 function setupBibliography(app: App): void {
@@ -98,22 +99,31 @@ function setupBibliography(app: App): void {
 		throw new Error("Bibliography DOM missing");
 	}
 
-	dom.innerText = translator.t("general.show_bibliography");
+	const textShow = translator.dyn(
+		"general.show_bibliography",
+		(txt) => "true" === dom.ariaPressed && (dom.innerText = txt),
+	);
+
+	const textHide = translator.dyn(
+		"general.hide_bibliography",
+		(txt) => "true" !== dom.ariaPressed && (dom.innerText = txt),
+	);
+
+	dom.innerText = textShow.toString();
 
 	dom.addEventListener("click", (e) => {
-		const btn = e.target as HTMLButtonElement;
 		e.stopPropagation();
 
-		if ("true" === btn.ariaPressed) {
+		if ("true" === dom.ariaPressed) {
 			app.hideBibliography();
-			btn.ariaPressed = "false";
-			btn.innerText = translator.t("general.show_bibliography");
+			dom.ariaPressed = "false";
+			dom.innerText = textShow.toString();
 			return;
 		}
 
 		app.showBibliography();
-		btn.ariaPressed = "true";
-		btn.innerText = translator.t("general.hide_bibliography");
+		dom.ariaPressed = "true";
+		dom.innerText = textHide.toString();
 	});
 }
 
@@ -138,6 +148,26 @@ function setupCredits(): void {
 
 	document.querySelectorAll("button[data-action='credits:close']").forEach((btn) => {
 		btn.addEventListener("click", () => dom.ariaHidden = "true");
+	});
+}
+
+function setupContextControls(app: App): void {
+	const translator = app.getTranslator();
+
+	document.addEventListener("keydown", (e) => {
+		if ("ArrowLeft" === e.key) {
+			app.previousContext();
+		} else if ("ArrowRight" === e.key) {
+			app.nextContext();
+		}
+	});
+
+	document.querySelectorAll("[data-action='context:prev']")?.forEach((n) => {
+		n.addEventListener("click", () => app.previousContext());
+	});
+
+	document.querySelectorAll("[data-action='context:next']")?.forEach((n) => {
+		n.addEventListener("click", () => app.nextContext());
 	});
 }
 

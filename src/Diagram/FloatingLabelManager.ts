@@ -1,9 +1,16 @@
 import { Vector } from "../Engine2D/ValueObject/Vector";
+import type { Translator } from "./Translation/Translator";
+import type { IntlStr } from "./Translation/IntlStr";
 
 export class FloatingLabelManager {
 	private _labels = new Map<string, HTMLElement>();
+	private _labelsTranslations = new Map<string, IntlStr>();
 
-	constructor(private _container: HTMLElement) {}
+	constructor(
+		private _container: HTMLElement,
+		private translator: Translator,
+	) {
+	}
 
 	show(
 		key: string,
@@ -13,6 +20,7 @@ export class FloatingLabelManager {
 		margin = 8,
 	): void {
 		let dom = this._labels.get(key);
+		let dynText = this._labelsTranslations.get(key);
 
 		if (undefined === dom) {
 			dom = document.createElement("div");
@@ -22,7 +30,11 @@ export class FloatingLabelManager {
 			this._container.append(dom);
 		}
 
-		dom.textContent = text;
+		dynText?.disconnect();
+		dynText = this.translator.dyn(`nodes.${text}`, (txt) => dom.textContent = txt);
+		this._labelsTranslations.set(key, dynText);
+
+		dom.textContent = dynText.toString();
 		dom.style.display = "";
 		const bbox = dom.getBoundingClientRect();
 		const centerOffset = new Vector(bbox.width, bbox.height);

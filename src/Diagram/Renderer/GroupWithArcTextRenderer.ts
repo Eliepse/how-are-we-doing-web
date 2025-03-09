@@ -20,7 +20,12 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 
 		const arcText = shapes.get(
 			"arcText",
-			() => new ArcText(this.translator.translate(node.getName(), "nodes")),
+			() => {
+				const arc = new ArcText(node.getName());
+				const name = this.translator.dyn(`nodes.${node.getName()}`, (txt) => arc.updateText(txt));
+				arc.updateText(name.toString());
+				return arc;
+			},
 		);
 
 		arcText.updateMesh(

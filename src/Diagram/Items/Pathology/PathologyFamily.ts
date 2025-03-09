@@ -6,6 +6,7 @@ import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { Vector } from "../../../Engine2D/ValueObject/Vector";
 import type { Pathology } from "./Pathology";
+import { PI2 } from "../../../Engine2D/math";
 
 export class PathologyFamily extends Node2D implements WithLifecycle {
 	public paused = false;
@@ -24,7 +25,7 @@ export class PathologyFamily extends Node2D implements WithLifecycle {
 
 		let size = 28;
 		let radius = 24;
-		let angleCursor = Angle.Zero;
+		let angleCursor = 0;
 		let itemArc = new Angle(size / radius);
 
 		children.forEach((child) => {
@@ -36,11 +37,11 @@ export class PathologyFamily extends Node2D implements WithLifecycle {
 
 			this.addChildren(child);
 
-			angleCursor = angleCursor.add(itemArc);
+			angleCursor += itemArc.rad;
 
 			// No more space to place another one, increase radius and start over
-			if (angleCursor.add(itemArc).rad >= 2 * Math.PI) {
-				angleCursor = Angle.Zero;
+			if (itemArc.rad + angleCursor >= PI2) {
+				angleCursor = 0;
 				radius += size;
 				itemArc = new Angle(size / radius);
 			}

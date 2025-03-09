@@ -1,3 +1,4 @@
+import { PI2 } from "../math";
 import type { Parameter } from "./Parameter";
 import { Vector } from "./Vector";
 
@@ -7,9 +8,13 @@ const degToRadRatio = Math.PI / 180;
 export class Angle implements Parameter {
 	static Zero = new Angle(0);
 	static PI = new Angle(Math.PI);
-	static PI2 = new Angle(Math.PI * 2);
+	static PI2 = new Angle(PI2);
 
-	constructor(private radian: number = 0) {}
+	private readonly radian: number;
+
+	constructor(radian: number = 0) {
+		this.radian = radian;
+	}
 
 	get rad() {
 		return this.radian;
@@ -33,18 +38,18 @@ export class Angle implements Parameter {
 
 	add(angle: number | Angle) {
 		if (angle instanceof Angle) {
-			return new Angle(this.radian + angle.rad);
+			return new Angle((this.radian + angle.rad) % PI2);
 		}
 
-		return new Angle(this.radian + angle);
+		return new Angle((this.radian + angle) % PI2);
 	}
 
 	sub(angle: number | Angle) {
 		if (angle instanceof Angle) {
-			return new Angle(this.radian - angle.rad);
+			return new Angle((this.radian - angle.rad) % PI2);
 		}
 
-		return new Angle(this.radian - angle);
+		return new Angle((this.radian - angle) % PI2);
 	}
 
 	div(divider: number) {
@@ -52,7 +57,7 @@ export class Angle implements Parameter {
 	}
 
 	mul(ratio: number) {
-		return new Angle(this.radian * ratio);
+		return new Angle((this.radian * ratio) % PI2);
 	}
 
 	rotate(point: Vector, origin: Vector): Vector {
@@ -74,6 +79,6 @@ export class Angle implements Parameter {
 	}
 
 	static fromDeg(degrees: number) {
-		return new Angle(degToRadRatio * degrees);
+		return new Angle(degToRadRatio * (degrees % 360));
 	}
 }

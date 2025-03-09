@@ -5,7 +5,6 @@ import type { Context } from "./Diagram/Context";
 /*
 	TODO list:
 		- language selector + dynamic language
-		- fix ring detection near PI = 0
 		- legend
 		- image bento wall
 		- optimize rendering (limit useless renders, opacity = 0, no movements)

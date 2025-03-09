@@ -10,3 +10,11 @@ export function rand(a: number, b?: number): number {
 	const factor = Math.random();
 	return undefined !== b ? a + (factor * (b - a)) : factor * a;
 }
+
+export function isInRange(min: number, value: number, max: number): boolean {
+	if (max < min) {
+		return max <= value && min >= value;
+	}
+
+	return min <= value && max >= value;
+}

@@ -1,13 +1,13 @@
 import type { Collider } from "./Collider";
 import { Angle } from "../ValueObject/Angle";
 import { Vector } from "../ValueObject/Vector";
+import { isInRange } from "../math";
 
 export class TorusCollider implements Collider {
-	private _torusInnerRadiusSq: number;
-	private _torusOuterRadiusSq: number;
-	private _torusOffset: Angle = Angle.Zero;
-	private _startAngle: Angle = Angle.Zero;
-	private _endAngle: Angle = Angle.PI2;
+	private torusInnerRadiusSq: number;
+	private torusOuterRadiusSq: number;
+	private torusOffset: Angle = Angle.Zero;
+	private angleSize: Angle = Angle.PI2;
 
 	constructor(
 		private _torusCenter: Vector,
@@ -17,43 +17,34 @@ export class TorusCollider implements Collider {
 		arcStart: Angle = Angle.Zero,
 	) {
 		const halfWidth = torusWidth / 2;
-		this._torusInnerRadiusSq = Math.pow(torusRadius - halfWidth, 2);
-		this._torusOuterRadiusSq = Math.pow(torusRadius + halfWidth, 2);
+		this.torusInnerRadiusSq = Math.pow(torusRadius - halfWidth, 2);
+		this.torusOuterRadiusSq = Math.pow(torusRadius + halfWidth, 2);
 
-		if (arcStart.rad < 0) {
-			this._torusOffset = arcStart;
-			arcStart = Angle.Zero;
-		}
-
-		this._startAngle = arcStart;
-		this._endAngle = arcStart.add(arc);
+		// Keep the difference to later check the angle as if it started from Zero
+		this.torusOffset = arcStart.mul(-1);
+		this.angleSize = arc;
 	}
 
 	setCenter(point: Vector): void {
-		this._torusCenter;
+		this._torusCenter = point;
 	}
 
 	isInside(point: Vector): boolean {
-		const relativePoint = point.sub(this._torusCenter);
-		const distance = relativePoint.magSq();
+		const centerToPoint = point.sub(this._torusCenter);
+		const distance = centerToPoint.magSq();
 
 		// Is it inside the torus ?
-		if (this._torusInnerRadiusSq > distance || this._torusOuterRadiusSq < distance) {
+		if (this.torusInnerRadiusSq >= distance || this.torusOuterRadiusSq <= distance) {
 			return false;
 		}
 
-		// Ne need to check the angle
-		if (Angle.Zero === this._startAngle && Angle.PI2 === this._endAngle) {
+		// Ne need to check the angle in a full circle
+		if (Angle.PI2 === this.angleSize) {
 			return true;
 		}
 
-		let pointAngle = relativePoint.angle(true);
-
-		// When the start point is negative, we change the base for the 0
-		if (Angle.Zero !== this._torusOffset) {
-			pointAngle = pointAngle.sub(Angle.PI2.add(this._torusOffset));
-		}
-
-		return this._startAngle.rad <= pointAngle.rad && this._endAngle.rad >= pointAngle.rad;
+		// Get the angle and rotate to check the Angle from Zero
+		const angle = centerToPoint.angle(true).add(this.torusOffset);
+		return isInRange(0, angle.rad, this.angleSize.rad);
 	}
 }

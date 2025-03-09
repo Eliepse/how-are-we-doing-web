@@ -170,4 +170,4 @@ function setupContextControls(app: App): void {
 	});
 }
 
-void main(false);
+void main();

@@ -8,7 +8,5 @@ export interface WithLifecycle {
 	 */
 	onMount(engine: Engine): void | (() => void);
 
-	onRender(deltaTime: number): void;
-
 	onUnmount(engine: Engine): void;
 }

@@ -1,14 +1,12 @@
 // @ts-ignore
 import { Noise } from "noisejs";
-import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
-import type { Engine } from "../../../Engine2D/Engine";
 import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { Vector } from "../../../Engine2D/ValueObject/Vector";
 import type { Pathology } from "./Pathology";
 import { PI2 } from "../../../Engine2D/math";
 
-export class PathologyFamily extends Node2D implements WithLifecycle {
+export class PathologyFamily extends Node2D {
 	public paused = false;
 
 	private _noise: Noise;
@@ -32,7 +30,7 @@ export class PathologyFamily extends Node2D implements WithLifecycle {
 			child.setPosition(
 				Vector.Right.mul(radius)
 					.rot(angleCursor) // Place the node
-					.add(Vector.rand(6)) // Add randomness
+					.add(Vector.rand(6)), // Add randomness
 			);
 
 			this.addChildren(child);
@@ -48,21 +46,17 @@ export class PathologyFamily extends Node2D implements WithLifecycle {
 		});
 	}
 
-	onMount(engine: Engine): void | (() => void) {
-		//
-	}
+	override onProcess(deltaTime: number): void {
+		super.onProcess(deltaTime);
 
-	onRender(deltaTime: number): void {
 		if (this.paused) {
+			this.shouldRepaint();
 			return;
 		}
 
 		this._noiseClock += deltaTime;
 		this.updateShiftedPosition(this._noiseClock);
-	}
-
-	onUnmount(engine: Engine): void {
-		//
+		this.shouldRerender();
 	}
 
 	getSize(): number {
@@ -78,7 +72,7 @@ export class PathologyFamily extends Node2D implements WithLifecycle {
 
 		this._shiftedPosition = new Vector(
 			this._noise.simplex2(0, scaledTime) * 16,
-			this._noise.simplex2(scaledTime, 0) * 16
+			this._noise.simplex2(scaledTime, 0) * 16,
 		);
 	}
 }

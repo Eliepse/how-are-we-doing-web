@@ -1,6 +1,4 @@
 import type db from "../public/data/database.json";
-import type { WithLifecycle } from "../Engine2D/Contract/WithLifecycle";
-import type { Engine } from "../Engine2D/Engine";
 import { NodeEvent } from "../Engine2D/Core/NodeEvent";
 import { Node2D } from "../Engine2D/Node/Node2D";
 import { Angle } from "../Engine2D/ValueObject/Angle";
@@ -29,7 +27,7 @@ export type DeterminantsData = (typeof db)["determinants"];
 type Source = { source: string; doi: string };
 type SourceList = Map<number, Array<Source>>;
 
-export class Diagram extends Node2D implements WithLifecycle {
+export class Diagram extends Node2D {
 	private _selectedNode: SelectableNode | undefined = undefined;
 	private _pathologies = new Map<number, Pathology>();
 	private _determinants = new Map<number, Determinant>();
@@ -112,16 +110,10 @@ export class Diagram extends Node2D implements WithLifecycle {
 		this.addChildren(this.decorations = new BgDecorationManager());
 	}
 
-	onMount(engine: Engine): void | (() => void) {
-		//
-	}
-
-	onRender(deltaTime: number): void {
+	override onProcess(deltaTime: number): void {
+		super.onProcess(deltaTime);
 		this.backgroundBlobClock += deltaTime;
-	}
-
-	onUnmount(engine: Engine): void {
-		//
+		this.shouldRepaint();
 	}
 
 	private buildFacilityGroups(groups: FacilitiesData): Array<ArcGroup<Facility>> {
@@ -216,6 +208,12 @@ export class Diagram extends Node2D implements WithLifecycle {
 			return;
 		}
 
+		for(const det of this._determinants.values()) {
+			if(det.isActive()) {
+
+			}
+		}
+
 		if (this._selectedNode instanceof Pathology) {
 			const parent = this._selectedNode.getParent() as PathologyFamily;
 			parent.paused = false;
@@ -225,12 +223,12 @@ export class Diagram extends Node2D implements WithLifecycle {
 			const parent = node.getParent() as PathologyFamily;
 			parent.paused = true;
 
-			if("social" === parent.name) {
-				this.decorations.select("social")
-			} else if("mental" === parent.name) {
-				this.decorations.select("mental")
-			} else if("physical" === parent.name) {
-				this.decorations.select("physical")
+			if ("social" === parent.name) {
+				this.decorations.select("social");
+			} else if ("mental" === parent.name) {
+				this.decorations.select("mental");
+			} else if ("physical" === parent.name) {
+				this.decorations.select("physical");
 			}
 		} else {
 			this.decorations.select(undefined);

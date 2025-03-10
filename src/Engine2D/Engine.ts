@@ -14,6 +14,10 @@ type Listeners = {
 	mousemove: Listener<EngineMouseEvent>;
 	click: Listener<EngineMouseEvent>;
 };
+type ValueOf<T> = T[keyof T];
+
+export const RenderTypes = { Skip: 0, Paint: 1, Breaking: 2 } as const;
+export type RenderType = ValueOf<typeof RenderTypes>;
 
 export class Engine<TRenderer extends Renderer = Renderer> {
 	private readonly tree: VirtualTree;
@@ -86,14 +90,33 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		this.renderer.unmountNode(vnode);
 	}
 
-	private renderRecursive(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
+	private processTree(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
+		vnode.node.onProcess(deltaTime);
+		vnode.children.forEach((child) => this.processTree(child, deltaTime, frames));
+	}
+
+	private renderNode(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
 		this.renderer.renderNode(vnode, deltaTime, frames);
+		vnode.node.onRendered(deltaTime);
+	}
 
-		// Lifecycle aware node
-		vnode.node.onRender && vnode.node.onRender(deltaTime);
+	private renderTree(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
+		this.renderNode(vnode, deltaTime, frames);
+		vnode.children.forEach((child) => this.renderTree(child, deltaTime, frames));
+	}
 
-		// Render children
-		vnode.children.forEach((child) => this.renderRecursive(child, deltaTime, frames));
+	private walkTreeForRender(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
+		if (RenderTypes.Breaking === vnode.node.renderState()) {
+			this.renderTree(vnode, deltaTime, frames);
+			return;
+		}
+
+		if (RenderTypes.Paint === vnode.node.renderState()) {
+			this.renderNode(vnode, deltaTime, frames);
+		}
+
+		// Check children
+		vnode.children.forEach((child) => this.walkTreeForRender(child, deltaTime, frames));
 	}
 
 	addEventListener<TKey extends keyof Listeners>(
@@ -158,7 +181,8 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 
 		this.tree.update();
-		this.renderRecursive(this.tree.getVRoot(), deltaTime, frames);
+		this.processTree(this.tree.getVRoot(), deltaTime, frames);
+		this.walkTreeForRender(this.tree.getVRoot(), deltaTime, frames);
 	}
 
 	isHovering(node: Node2D & WithPointerEvents): boolean {

@@ -37,7 +37,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		super(asset);
 	}
 
-	onMount(engine: Engine): void | (() => void) {
+	onMount(_: Engine): void | (() => void) {
 		const parent = this.getParent();
 
 		if (!(parent instanceof DeterminantSubFamily)) {
@@ -60,7 +60,11 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		);
 	}
 
-	onRender(deltaTime: number): void {
+	override onProcess(deltaTime: number) {
+		super.onProcess(deltaTime);
+
+		this.shouldRepaint();
+
 		if (this.stepsTransition) {
 			this.step = this.stepsTransition.value;
 		}
@@ -94,6 +98,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 			{ durationMs: 350, from: this.step, to: step, completed: () => this.stepsTransition = undefined },
 			(percent, from, to) => Math.round(interpolate(from, to, percent)) as Steps,
 		);
+		this.shouldRepaint();
 	}
 
 	notApplicable(): void {

@@ -1,12 +1,14 @@
 import { Angle } from "../ValueObject/Angle";
 import { Vector } from "../ValueObject/Vector";
 import { Observable } from "./Observable";
+import { type RenderType, RenderTypes } from "../Engine";
 
 export class Node2D extends Observable {
 	protected _parent?: Node2D = undefined;
 	protected children: Array<Node2D> = [];
 	protected position = Vector.Zero;
 	protected rotation = Angle.Zero;
+	private rerender: RenderType = RenderTypes.Skip;
 
 	setParent(element: Node2D): void {
 		this._parent = element;
@@ -17,6 +19,7 @@ export class Node2D extends Observable {
 	}
 
 	addChildren(element: Node2D): void {
+		this.shouldRerender();
 		this.children.push(element);
 		element.setParent(this);
 	}
@@ -26,6 +29,7 @@ export class Node2D extends Observable {
 	}
 
 	setPosition(value: Vector): void {
+		this.shouldRerender();
 		this.position = value;
 	}
 
@@ -42,6 +46,7 @@ export class Node2D extends Observable {
 	}
 
 	setRotation(value: Angle): void {
+		this.shouldRerender();
 		this.rotation = value;
 	}
 
@@ -51,6 +56,26 @@ export class Node2D extends Observable {
 
 	getGlobalRotation(): Angle {
 		return (this.getParent()?.getGlobalRotation() ?? Angle.Zero).add(this.getRotation());
+	}
+
+	onProcess(deltaTime: number): void {
+		//
+	}
+
+	onRendered(deltaTime: number): void {
+		this.rerender = RenderTypes.Skip;
+	}
+
+	protected shouldRepaint(): void {
+		this.rerender = RenderTypes.Paint;
+	}
+
+	protected shouldRerender(): void {
+		this.rerender = RenderTypes.Breaking;
+	}
+
+	renderState(): RenderType {
+		return this.rerender;
 	}
 
 	static findParent(

@@ -48,14 +48,17 @@ export class BgDecorationManager extends Node2D implements WithLifecycle {
 	private timer: number = 0;
 	private noise: Noise = new Noise();
 
-	onMount(engine: Engine): void | (() => void) {
+	onMount(_: Engine): void | (() => void) {
 		this.timer += Math.random() * 1234;
 	}
 
-	onRender(deltaTime: number): void {
+	override onProcess(deltaTime: number): void {
+		super.onProcess(deltaTime);
+
 		if (undefined === this.current) {
 			return;
 		}
+
 
 		this.timer += deltaTime;
 		const speed = .03;
@@ -70,11 +73,13 @@ export class BgDecorationManager extends Node2D implements WithLifecycle {
 			const rotation = this.noise.perlin2(baseTime * 3, tShift + 3743.6);
 
 			node.setPosition(new Vector(Math.cos(PI2 * angle) * radius, Math.sin(PI2 * angle) * radius));
-			node.setRotation(Angle.PI2.mul(rotation))
+			node.setRotation(Angle.PI2.mul(rotation));
 		});
+
+		this.shouldRerender();
 	}
 
-	onUnmount(engine: Engine): void {
+	onUnmount(_: Engine): void {
 	}
 
 	select(type: "social" | "mental" | "physical" | undefined): void {

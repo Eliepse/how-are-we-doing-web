@@ -55,8 +55,9 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		);
 	}
 
-	onRender(deltaTime: number): void {
-		//
+	override onProcess(deltaTime: number) {
+		super.onProcess(deltaTime);
+		this.shouldRepaint();
 	}
 
 	onUnmount(engine: Engine): void {

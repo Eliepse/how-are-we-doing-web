@@ -1,6 +1,4 @@
 import { Node2D } from "../../Engine2D/Node/Node2D";
-import type { WithLifecycle } from "../../Engine2D/Contract/WithLifecycle";
-import type { Engine } from "../../Engine2D/Engine";
 import { BgDecoration, genericAssets, mentalAssets, physiqueAssets, socialAssets } from "./BgDecoration";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { rand } from "../../Engine2D/math";
@@ -8,11 +6,12 @@ import { rand } from "../../Engine2D/math";
 import { Noise } from "noisejs";
 import { Angle } from "../../Engine2D/ValueObject/Angle";
 
-//
+// Allow using a simpler Noise dimension by generating distant portions.
+// Each group will appear having different behavior, even on the same seed.
 const typeNoiseTimeShift = { social: 0, mental: 371_233.1, physical: 644_903.3 } as const;
 const PI2 = Angle.PI2.rad;
 
-export class BgDecorationManager extends Node2D implements WithLifecycle {
+export class BgDecorationManager extends Node2D {
 	private radius = 300;
 	private current?: "social" | "mental" | "physical";
 	private nodes = {
@@ -48,7 +47,8 @@ export class BgDecorationManager extends Node2D implements WithLifecycle {
 	private timer: number = 0;
 	private noise: Noise = new Noise();
 
-	onMount(_: Engine): void | (() => void) {
+	constructor() {
+		super();
 		this.timer += Math.random() * 1234;
 	}
 
@@ -77,9 +77,6 @@ export class BgDecorationManager extends Node2D implements WithLifecycle {
 		});
 
 		this.shouldRerender();
-	}
-
-	onUnmount(_: Engine): void {
 	}
 
 	select(type: "social" | "mental" | "physical" | undefined): void {

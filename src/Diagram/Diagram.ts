@@ -208,9 +208,31 @@ export class Diagram extends Node2D {
 			return;
 		}
 
-		for(const det of this._determinants.values()) {
-			if(det.isActive()) {
+		// Activate linked nodes
 
+		if (undefined !== node) {
+			for (const det of this._determinants.values()) {
+				det.setActive(node === det || det.isConnected(node));
+			}
+
+			for (const fac of this._facilities.values()) {
+				fac.setActive(node === fac || fac.isConnected(node));
+			}
+
+			for (const pat of this._pathologies.values()) {
+				pat.setActive(node === pat || pat.isConnected(node));
+			}
+		} else {
+			for (const det of this._determinants.values()) {
+				det.setActive(false);
+			}
+
+			for (const fac of this._facilities.values()) {
+				fac.setActive(false);
+			}
+
+			for (const pat of this._pathologies.values()) {
+				pat.setActive(false);
 			}
 		}
 

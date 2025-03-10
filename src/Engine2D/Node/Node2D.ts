@@ -67,6 +67,11 @@ export class Node2D extends Observable {
 	}
 
 	protected shouldRepaint(): void {
+		if (RenderTypes.Breaking === this.rerender) {
+			// Prevent rolling back to lower rendering state
+			return;
+		}
+
 		this.rerender = RenderTypes.Paint;
 	}
 

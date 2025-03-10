@@ -5,10 +5,9 @@ import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEv
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
 import type { Engine } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
-import { Node2D } from "../../../Engine2D/Node/Node2D";
 import type { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
-import { Diagram } from "../../Diagram";
+import { type SelectableNode } from "../../Diagram";
 import { Facility } from "../Facility/Facility";
 import { Pathology } from "../Pathology/Pathology";
 import { DeterminantSubFamily } from "./DeterminantSubFamily";
@@ -22,9 +21,9 @@ type Associations = { pathologies: number[]; facilities: number[] };
 export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
 	private step: Steps = 2;
 	private _collider?: TorusCollider;
-	private _diagram?: Diagram;
 	private stepsTransition ?: CustomTransition<Steps>;
 	private applicable: boolean = true;
+	public active = false;
 
 	constructor(
 		public readonly id: number,
@@ -44,10 +43,6 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 			return;
 		}
 
-		this._diagram = Node2D.findParent(parent, (n) => n instanceof Diagram) as
-			| Diagram
-			| undefined;
-
 		const outerRadius = parent.getRadius() + 8;
 		const torusWidth = parent.getTorusWidth() + 16;
 
@@ -63,10 +58,9 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	override onProcess(deltaTime: number) {
 		super.onProcess(deltaTime);
 
-		this.shouldRepaint();
-
 		if (this.stepsTransition) {
 			this.step = this.stepsTransition.value;
+			this.shouldRepaint();
 		}
 	}
 
@@ -110,13 +104,12 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		return this.applicable;
 	}
 
-	isActive(): boolean {
-		const node = this._diagram?.getSelectedNode();
+	setActive(state: boolean): void {
+		this.active = state;
+		this.shouldRepaint();
+	}
 
-		if (this === node) {
-			return true;
-		}
-
+	isConnected(node: SelectableNode): boolean {
 		if (node instanceof Facility) {
 			return this.associations.facilities.includes(node.id);
 		}

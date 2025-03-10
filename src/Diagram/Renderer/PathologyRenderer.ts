@@ -23,7 +23,6 @@ export class PathologyRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Pathology>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const isActive = node.isActive();
 		const selectedNode = this.app.getDiagram().getSelectedNode();
 		const position = node.getGlobalPosition();
 		const isHovered = this.engine.isHovering(node);
@@ -34,7 +33,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		edge.updateMesh(position);
 		core.updateMesh(position);
 
-		if (isActive) {
+		if (node.active) {
 			edge.updateStyle(activeStyle);
 		} else if (isHovered) {
 			edge.updateStyle(hoveredStyle);
@@ -44,7 +43,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			edge.updateStyle(defaultStyle);
 		}
 
-		if (isActive) {
+		if (node.active) {
 			core.updateStyle(coreStyle);
 			core.show();
 		} else {

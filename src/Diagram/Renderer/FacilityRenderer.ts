@@ -29,7 +29,7 @@ export class FacilityRenderer extends SVGNodeRenderer {
 		const element = shapes.get("sprite", () => new SVGSymbol(node.getShape()));
 		element.updateMesh(node.getGlobalPosition(), node.getGlobalRotation());
 
-		if (node.isActive()) {
+		if (node.active) {
 			element.updateStyle(shapeStyle.selected);
 		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
 			element.updateStyle(shapeStyle.dimmed);

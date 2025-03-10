@@ -1,21 +1,17 @@
 import type { Collider } from "../../../Engine2D/Physic/Collider";
-import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { CircleCollider } from "../../../Engine2D/Physic/CircleCollider";
-import type { Engine } from "../../../Engine2D/Engine";
 import { NodeEvent } from "../../../Engine2D/Core/NodeEvent";
 import { Node2D } from "../../../Engine2D/Node/Node2D";
-import { Diagram } from "../../Diagram";
+import { type SelectableNode } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
 import { Facility } from "../Facility/Facility";
 
 export type PathologyEvents = { click: NodeEvent<Pathology> };
 type Associations = { determinants: number[] };
 
-export class Pathology
-	extends Node2D
-	implements WithLifecycle, WithPointerEvents {
-	private _diagram?: Diagram;
+export class Pathology extends Node2D implements WithPointerEvents {
+	public active = false;
 
 	constructor(
 		public readonly id: number,
@@ -25,28 +21,12 @@ export class Pathology
 		super();
 	}
 
-	onMount(engine: Engine): void | (() => void) {
-		this._diagram = Node2D.findParent(this.getParent(), (n) => n instanceof Diagram) as
-			| Diagram
-			| undefined;
-	}
-
-	override onProcess(deltaTime: number) {
-		super.onProcess(deltaTime);
+	setActive(state: boolean): void {
+		this.active = state;
 		this.shouldRepaint();
 	}
 
-	onUnmount(engine: Engine): void {
-		//
-	}
-
-	isActive(): boolean {
-		const node = this._diagram?.getSelectedNode();
-
-		if (this === node) {
-			return true;
-		}
-
+	isConnected(node: SelectableNode): boolean {
 		if (node instanceof Determinant) {
 			return this.associations.determinants.includes(node.id);
 		}
@@ -61,9 +41,5 @@ export class Pathology
 
 	getPointerCollider(): Collider {
 		return new CircleCollider(this.getGlobalPosition(), 10);
-	}
-
-	getDiagram(): Diagram | undefined {
-		return this._diagram;
 	}
 }

@@ -4,10 +4,9 @@ import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEv
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
 import type { Engine } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
-import { Node2D } from "../../../Engine2D/Node/Node2D";
 import type { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
-import { Diagram } from "../../Diagram";
+import { type SelectableNode } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
 import { Pathology } from "../Pathology/Pathology";
 import { FacilityFamily } from "./FacilityFamily";
@@ -17,7 +16,7 @@ type Associations = { determinants: number[] };
 
 export class Facility extends VirtualShape implements WithPointerEvents, WithLifecycle {
 	private _collider?: TorusCollider;
-	private _diagram?: Diagram;
+	public active = false;
 
 	constructor(
 		public readonly id: number,
@@ -35,14 +34,6 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 			return;
 		}
 
-		this._diagram = Node2D.findParent(parent, (n) => n instanceof Diagram) as
-			| Diagram
-			| undefined;
-
-		if (undefined === this._diagram) {
-			throw new Error("Failed to find diagram");
-		}
-
 		const outerRadius = parent.getRadius() + 8;
 		const torusWidth = 24;
 
@@ -53,11 +44,6 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 			this._arc,
 			this.getGlobalRotation().sub(this._arc.div(2)),
 		);
-	}
-
-	override onProcess(deltaTime: number) {
-		super.onProcess(deltaTime);
-		this.shouldRepaint();
 	}
 
 	onUnmount(engine: Engine): void {
@@ -78,13 +64,12 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		return this._collider;
 	}
 
-	isActive(): boolean {
-		const node = this._diagram?.getSelectedNode();
+	setActive(state: boolean): void {
+		this.active = state;
+		this.shouldRepaint();
+	}
 
-		if (this === node) {
-			return true;
-		}
-
+	isConnected(node: SelectableNode): boolean {
 		if (node instanceof Determinant) {
 			return this.associations.determinants.includes(node.id);
 		}

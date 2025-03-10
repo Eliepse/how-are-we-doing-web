@@ -16,7 +16,11 @@ type Listeners = {
 };
 type ValueOf<T> = T[keyof T];
 
-export const RenderTypes = { Skip: 0, Paint: 1, Breaking: 2 } as const;
+export const RenderTypes = {
+	Skip: 0, // Do not need to refresh visual
+	Paint: 1, // Render but don't force children
+	Breaking: 2, // Render and force children
+} as const;
 export type RenderType = ValueOf<typeof RenderTypes>;
 
 export class Engine<TRenderer extends Renderer = Renderer> {

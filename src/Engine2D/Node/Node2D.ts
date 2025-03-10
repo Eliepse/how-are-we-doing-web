@@ -52,4 +52,15 @@ export class Node2D extends Observable {
 	getGlobalRotation(): Angle {
 		return (this.getParent()?.getGlobalRotation() ?? Angle.Zero).add(this.getRotation());
 	}
+
+	static findParent(
+		node: Node2D | undefined,
+		callback: (node: Node2D) => boolean,
+	): Node2D | undefined {
+		if (undefined === node || callback(node)) {
+			return node;
+		}
+
+		return Node2D.findParent(node.getParent(), callback);
+	}
 }

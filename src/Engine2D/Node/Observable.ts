@@ -27,15 +27,4 @@ export class Observable<TNodeEvents extends NodeEvents = DefaultEvents> {
 			this.getParent()?.dispatchEvent(event);
 		}
 	}
-
-	static findParent(
-		node: Node2D | undefined,
-		callback: (node: Node2D) => boolean,
-	): Node2D | undefined {
-		if (undefined === node || callback(node)) {
-			return node;
-		}
-
-		return Observable.findParent(node.getParent(), callback);
-	}
 }

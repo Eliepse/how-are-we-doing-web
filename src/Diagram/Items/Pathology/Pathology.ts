@@ -6,12 +6,16 @@ import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { type SelectableNode } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
 import { Facility } from "../Facility/Facility";
+import { interpolate } from "../../../helpers";
 
 export type PathologyEvents = { click: NodeEvent<Pathology> };
 type Associations = { determinants: number[] };
 
 export class Pathology extends Node2D implements WithPointerEvents {
 	public active = false;
+	private time: number = 0;
+	static readonly maxRadius: number = 8;
+	static readonly minRadius: number = 4;
 
 	constructor(
 		public readonly id: number,
@@ -19,6 +23,20 @@ export class Pathology extends Node2D implements WithPointerEvents {
 		public readonly associations: Associations,
 	) {
 		super();
+
+		this.time = Math.random() * 124.134;
+		this.shouldRepaint();
+	}
+
+	override onProcess(deltaTime: number) {
+		super.onProcess(deltaTime);
+
+		this.time += deltaTime;
+	}
+
+	getRadius(): number {
+		const factor = (Math.cos(this.time / 3) + 1) / 2;
+		return interpolate(Pathology.minRadius, Pathology.maxRadius, factor);
 	}
 
 	setActive(state: boolean): void {

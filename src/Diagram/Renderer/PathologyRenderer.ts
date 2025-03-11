@@ -31,7 +31,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const edge = shapes.get("edge", () => new Circle(8));
 		const core = shapes.get("core", () => new Circle(5));
 
-		edge.updateMesh(position);
+		edge.updateMesh(position, node.active ? Pathology.maxRadius : node.getRadius());
 		core.updateMesh(position);
 
 		if (node.active) {

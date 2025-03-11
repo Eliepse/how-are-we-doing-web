@@ -70,7 +70,7 @@
         "road traffic low exposure": 1
       },
       "id": "lyon-2",
-      "name": "Quartier Lyon 2 - Confluence"
+      "name": "Confluence"
     },
     {
       "determinants": {
@@ -106,7 +106,7 @@
         "road traffic low exposure": 0.5
       },
       "id": "villeurbanne",
-      "name": "Quartier Villeurbanne - le Tonkin"
+      "name": "Charpennes Tonkin"
     },
     {
       "determinants": {
@@ -142,7 +142,7 @@
         "road traffic low exposure": 0.75
       },
       "id": "la-saulaie",
-      "name": "Quartier La saulaie - Oullins"
+      "name": "La Mulatière - Oullins-Pierre-Bénite"
     }
   ]
 }

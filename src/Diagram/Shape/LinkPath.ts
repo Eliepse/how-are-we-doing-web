@@ -4,7 +4,7 @@ import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { colors } from "../colors";
 import type { Vector } from "../../Engine2D/ValueObject/Vector";
 
-const pathStyle = new SVGStyle({ stroke: new Stroke(3, colors.selected.alpha(0.75)) });
+const pathStyle = new SVGStyle({ stroke: new Stroke(2, colors.selected.alpha(0.6)) });
 
 export class LinkPath extends SVGShape {
 	private readonly dom: SVGPathElement;

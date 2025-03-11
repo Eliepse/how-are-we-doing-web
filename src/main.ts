@@ -6,7 +6,6 @@ import type { Context } from "./Diagram/Context";
 	TODO list:
 		- legend
 		- image bento wall
-		- optimize rendering (limit useless renders, opacity = 0, no movements)
  */
 
 async function main(withLoader = true) {

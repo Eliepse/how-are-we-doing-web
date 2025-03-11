@@ -103,7 +103,7 @@ export class Diagram extends Node2D {
 			});
 
 			const family = new PathologyFamily(familyData.name, children, 96);
-			family.setPosition(Vector.Right.mul(100).rot(index * Math.PI * (2 / 3)));
+			family.setPosition(Vector.Right.mul(100).rot((-index * Math.PI * (2 / 3)) + (Math.PI * .75)));
 			this.addChildren(family);
 		});
 

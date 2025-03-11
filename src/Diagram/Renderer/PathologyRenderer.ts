@@ -8,8 +8,9 @@ import { Pathology } from "../Items/Pathology/Pathology";
 import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { App } from "../../App";
+import { Color } from "../../Engine2D/ValueObject/Color";
 
-const defaultStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
+const defaultStyle = new SVGStyle({ stroke: new Stroke(3, new Color(158, 185, 200)) });
 const hoveredStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
 const activeStyle = new SVGStyle({ stroke: new Stroke(3, colors.selected) });
 const dimmedStyle = new SVGStyle({ stroke: new Stroke(3, colors.dimmedWhite) });

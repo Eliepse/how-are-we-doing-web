@@ -2697,127 +2697,6 @@
 					]
 				},
 				{
-					"id": 7,
-					"name": "intermodality",
-					"parent_id": "3",
-					"children": [
-						{
-							"id": 22,
-							"name": "road network quality for active transportation",
-							"parent_id": "7",
-							"facilities": {
-								"55": {
-									"count": 2,
-									"sources": [
-										{
-											"source": "beard, 2010",
-											"doi": "10.1007/bf03391610"
-										},
-										{
-											"source": "leal, 2009",
-											"doi": "n/r"
-										}
-									]
-								},
-								"61": {
-									"count": 1,
-									"sources": [
-										{
-											"source": "rothman, 2013",
-											"doi": "10.1136/injuryprev-2012-040701"
-										}
-									]
-								},
-								"62": {
-									"count": 2,
-									"sources": [
-										{
-											"source": "beard, 2012",
-											"doi": "10.1007/bf03391610"
-										},
-										{
-											"source": "papas, 2007",
-											"doi": "10.1093/epirev/mxm009"
-										}
-									]
-								}
-							},
-							"pathologies": {
-								"88": {
-									"count": 1,
-									"sources": [
-										{
-											"source": "beard, 2012",
-											"doi": "10.1007/bf03391610"
-										}
-									]
-								},
-								"104": {
-									"count": 3,
-									"sources": [
-										{
-											"source": "beard, 2010",
-											"doi": "10.1007/bf03391610"
-										},
-										{
-											"source": "papas, 2007",
-											"doi": "10.1093/epirev/mxm009"
-										},
-										{
-											"source": "leal, 2009",
-											"doi": "n/r"
-										}
-									]
-								},
-								"111": {
-									"count": 1,
-									"sources": [
-										{
-											"source": "rothman, 2013",
-											"doi": "10.1136/injuryprev-2012-040701"
-										}
-									]
-								}
-							}
-						},
-						{
-							"id": 23,
-							"name": "access to and variety of the transportation offer",
-							"parent_id": "7",
-							"facilities": {
-								"56": {
-									"count": 1,
-									"sources": [
-										{
-											"source": "davison, 2006",
-											"doi": "10.1186/1479-5868-3-19"
-										}
-									]
-								},
-								"57": {
-									"count": 1,
-									"sources": [
-										{
-											"source": "davison, 2006",
-											"doi": "10.1186/1479-5868-3-19"
-										}
-									]
-								},
-								"58": {
-									"count": 1,
-									"sources": [
-										{
-											"source": "davison, 2006",
-											"doi": "10.1186/1479-5868-3-19"
-										}
-									]
-								}
-							},
-							"pathologies": []
-						}
-					]
-				},
-				{
 					"id": 6,
 					"name": "outdoor usages",
 					"parent_id": "3",
@@ -3035,6 +2914,127 @@
 									]
 								}
 							}
+						}
+					]
+				},
+				{
+					"id": 7,
+					"name": "intermodality",
+					"parent_id": "3",
+					"children": [
+						{
+							"id": 22,
+							"name": "road network quality for active transportation",
+							"parent_id": "7",
+							"facilities": {
+								"55": {
+									"count": 2,
+									"sources": [
+										{
+											"source": "beard, 2010",
+											"doi": "10.1007/bf03391610"
+										},
+										{
+											"source": "leal, 2009",
+											"doi": "n/r"
+										}
+									]
+								},
+								"61": {
+									"count": 1,
+									"sources": [
+										{
+											"source": "rothman, 2013",
+											"doi": "10.1136/injuryprev-2012-040701"
+										}
+									]
+								},
+								"62": {
+									"count": 2,
+									"sources": [
+										{
+											"source": "beard, 2012",
+											"doi": "10.1007/bf03391610"
+										},
+										{
+											"source": "papas, 2007",
+											"doi": "10.1093/epirev/mxm009"
+										}
+									]
+								}
+							},
+							"pathologies": {
+								"88": {
+									"count": 1,
+									"sources": [
+										{
+											"source": "beard, 2012",
+											"doi": "10.1007/bf03391610"
+										}
+									]
+								},
+								"104": {
+									"count": 3,
+									"sources": [
+										{
+											"source": "beard, 2010",
+											"doi": "10.1007/bf03391610"
+										},
+										{
+											"source": "papas, 2007",
+											"doi": "10.1093/epirev/mxm009"
+										},
+										{
+											"source": "leal, 2009",
+											"doi": "n/r"
+										}
+									]
+								},
+								"111": {
+									"count": 1,
+									"sources": [
+										{
+											"source": "rothman, 2013",
+											"doi": "10.1136/injuryprev-2012-040701"
+										}
+									]
+								}
+							}
+						},
+						{
+							"id": 23,
+							"name": "access to and variety of the transportation offer",
+							"parent_id": "7",
+							"facilities": {
+								"56": {
+									"count": 1,
+									"sources": [
+										{
+											"source": "davison, 2006",
+											"doi": "10.1186/1479-5868-3-19"
+										}
+									]
+								},
+								"57": {
+									"count": 1,
+									"sources": [
+										{
+											"source": "davison, 2006",
+											"doi": "10.1186/1479-5868-3-19"
+										}
+									]
+								},
+								"58": {
+									"count": 1,
+									"sources": [
+										{
+											"source": "davison, 2006",
+											"doi": "10.1186/1479-5868-3-19"
+										}
+									]
+								}
+							},
+							"pathologies": []
 						}
 					]
 				}

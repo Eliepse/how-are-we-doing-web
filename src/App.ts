@@ -127,7 +127,7 @@ export class App {
 				return;
 			}
 
-			if (node === this.diagram.getSelectedNode()) {
+			if (node === this.diagram?.getSelectedNode()) {
 				this.labelManager.hide("hover");
 				return;
 			}

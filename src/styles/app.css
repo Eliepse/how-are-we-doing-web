@@ -84,7 +84,7 @@
     border: 1px solid white;
     background: var(--dark-blue);
     color: white;
-    font-size: 14px;
+    font-size: 13px;
     user-select: none;
     z-index: 5;
     opacity: .9;

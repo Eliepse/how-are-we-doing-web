@@ -120,20 +120,26 @@ export class App {
 		this.engine.root.addChildren(this.diagram);
 
 		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
-			if (undefined === event.target) {
+			const node = event.target;
+
+			if (undefined === node) {
+				this.labelManager.hide("selected");
 				return;
 			}
 
-			if (event.target === this.diagram?.getSelectedNode()) {
+			if (node === this.diagram.getSelectedNode()) {
 				this.labelManager.hide("hover");
 				return;
 			}
 
+			const nodePosition = node.getGlobalPosition();
+			const hSize = this.engine.getRenderer().size.div(2);
+
 			this.labelManager.show(
 				"hover",
-				event.target.label,
-				this.engine.getRenderer().localPointToWindow(event.target?.getGlobalPosition()),
-				"left",
+				node.label,
+				this.engine.getRenderer().localPointToWindow(nodePosition),
+				hSize.x > nodePosition.x ? "left" : "right",
 				16,
 			);
 		});
@@ -143,17 +149,22 @@ export class App {
 		});
 
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
-			if (undefined === event.target) {
+			const node = event.target;
+
+			if (undefined === node) {
 				this.labelManager.hide("selected");
 				return;
 			}
 
+			const nodePosition = node.getGlobalPosition();
+			const hSize = this.engine.getRenderer().size.div(2);
+
 			this.labelManager.hide("hover");
 			this.labelManager.show(
 				"selected",
-				event.target.label,
-				this.engine.getRenderer().localPointToWindow(event.target?.getGlobalPosition()),
-				"left",
+				node.label,
+				this.engine.getRenderer().localPointToWindow(nodePosition),
+				hSize.x > nodePosition.x ? "left" : "right",
 				16,
 			);
 		});

@@ -37,20 +37,21 @@ export class FloatingLabelManager {
 		dom.textContent = dynText.toString();
 		dom.style.display = "";
 		const bbox = dom.getBoundingClientRect();
-		const centerOffset = new Vector(bbox.width, bbox.height);
-		let offset = centerOffset.mul(new Vector(0.5, 1)).add(new Vector(0, margin));
+		const boxSize = new Vector(bbox.width, bbox.height);
+		let offset = boxSize.mul(new Vector(-0.5, -1)).add(new Vector(0, -margin));
 
 		switch (placement) {
 			case "bottom":
-				offset = centerOffset.mul(new Vector(0.5, 0)).add(new Vector(0, -margin));
+				offset = boxSize.mul(new Vector(-0.5, 0)).add(new Vector(0, margin));
 				break;
 			case "left":
-				offset = centerOffset.mul(new Vector(-1, 0.5)).add(new Vector(-margin, 0));
+				offset = boxSize.mul(new Vector(-1, -0.5)).add(new Vector(-margin, 0));
+				break;
 			case "right":
-				offset = centerOffset.mul(new Vector(1, 0.5)).add(new Vector(margin, 0));
+				offset = boxSize.mul(new Vector(0, -0.5)).add(new Vector(margin, 0));
 		}
 
-		const xy = position.sub(offset).toAttributes();
+		const xy = position.add(offset).toAttributes();
 		dom.style.transform = `translate(${xy.x}px, ${xy.y}px)`;
 	}
 

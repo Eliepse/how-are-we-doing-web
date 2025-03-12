@@ -1,8 +1,8 @@
 import { Facility } from "./Items/Facility/Facility";
 import { Determinant } from "./Items/Determinant/Determinant";
 import { Pathology } from "./Items/Pathology/Pathology";
-import type { Node2D } from "../Engine2D/Node/Node2D";
 import type { Translator } from "./Translation/Translator";
+import type { IntlStr } from "./Translation/IntlStr";
 
 export class BiblioManager {
 	private readonly root: HTMLDivElement;
@@ -24,11 +24,11 @@ export class BiblioManager {
 		const content = document.createElement("div");
 		content.id = "biblioContent";
 
-		this.pathologies = new NodeBox(content, this.translator.t("general.pathologies"));
-		this.pathologySources = new SourceBox(content);
-		this.determinants = new NodeBox(content, this.translator.t("general.determinants"));
-		this.facilitySources = new SourceBox(content);
-		this.facilities = new NodeBox(content, this.translator.t("general.facilities"));
+		this.pathologies = new NodeBox(content, "general.pathologies", this.translator);
+		this.pathologySources = new SourceBox(content, this.translator);
+		this.determinants = new NodeBox(content, "general.determinants", this.translator);
+		this.facilitySources = new SourceBox(content, this.translator);
+		this.facilities = new NodeBox(content, "general.facilities", this.translator);
 
 		this.root.append(content);
 	}
@@ -70,38 +70,45 @@ export class BiblioManager {
 }
 
 class NodeBox {
-	private readonly root: HTMLUListElement;
-	private nodes = new WeakMap<Node2D, HTMLLIElement>();
+	private readonly root: HTMLDivElement;
+	private readonly list: HTMLUListElement;
+	private nodesIntlStr = new Map<string, IntlStr>();
 
-	constructor(container: Element, private title: string) {
-		this.root = document.createElement("ul");
-		this.root.classList.add("biblio-nodes");
-		this.renderTitle();
+	constructor(container: Element, private titleKey: string, private translator: Translator) {
+		this.root = document.createElement("div");
+
+		this.list = document.createElement("ul");
+		this.list.classList.add("biblio-nodes");
+
+		const title = document.createElement("div");
+		title.classList.add("biblio-nodesTitle");
+		const titleStr = this.translator.dyn(this.titleKey, (text) => title.innerText = text);
+		title.innerText = titleStr.toString();
+
+		this.root.append(title);
+		this.root.append(this.list);
 		container.append(this.root);
 	}
 
-	private renderTitle() {
-		const title = document.createElement("li");
-		title.classList.add("biblio-nodesTitle");
-		title.innerText = this.title;
-		this.root.append(title);
-	}
-
 	addNode(node: Facility | Determinant | Pathology): void {
-		if (this.nodes.has(node)) {
+		if (this.nodesIntlStr.has(node.label)) {
 			return;
 		}
 
 		const element = document.createElement("li");
-		element.innerText = node.label;
-		this.nodes.set(node, element);
-		this.root.append(element);
+		const str = this.translator.dyn(`nodes.${node.label}`, (text) => element.innerText = text);
+		element.innerText = str.toString();
+		this.nodesIntlStr.set(node.label, str);
+		this.list.append(element);
 	}
 
 	clear(): void {
-		this.root.innerText = "";
-		this.nodes = new WeakMap();
-		this.renderTitle();
+		for (const intl of this.nodesIntlStr.values()) {
+			intl.disconnect();
+		}
+
+		this.list.innerText = "";
+		this.nodesIntlStr.clear();
 	}
 }
 
@@ -109,7 +116,7 @@ class SourceBox {
 	private readonly root: HTMLDivElement;
 	private readonly sources = new Set<string>();
 
-	constructor(container: Element) {
+	constructor(container: Element, private translator: Translator) {
 		this.root = document.createElement("div");
 		this.root.classList.add("biblio-links");
 		container.append(this.root);

@@ -147,8 +147,9 @@
     list-style: none;
 }
 
-.biblio-nodes .biblio-nodesTitle {
+.biblio-nodesTitle {
     font-size: 16px;
+    margin-bottom: 16px;
 }
 
 .biblio-nodes li {

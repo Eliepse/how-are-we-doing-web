@@ -2,22 +2,30 @@ html, body {
     background: #000;
 }
 
-html, body, #wall {
+html, body {
     width: 100%;
     height: 100%;
     padding: 0;
     margin: 0;
 }
 
+body {
+    display: flex;
+}
+
 #wall {
+    flex: 1;
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     grid-template-rows: repeat(7, 1fr);
     grid-gap: 24px;
+    margin: 24px;
+    overflow: hidden;
 }
 
-.layout {}
-
-.layout[data-layout='1'] {
-
+#wall img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

@@ -1,5 +1,5 @@
 import { Layout } from "./Layout";
-import { Cells } from "./Cell";
+import { Cell } from "./Cell";
 import { Vector } from "../Engine2D/ValueObject/Vector";
 
 export const layouts = [
@@ -7,14 +7,14 @@ export const layouts = [
 	new Layout(
 		6,
 		[
-			new Cells(new Vector(0, 0), new Vector(4, 3)),
-			new Cells(new Vector(4, 1), new Vector(2, 2)),
-			new Cells(new Vector(6, 0), new Vector(4, 3)),
-			new Cells(new Vector(0, 5), new Vector(2, 2)),
-			new Cells(new Vector(2, 3), new Vector(2, 3)),
-			new Cells(new Vector(4, 3), new Vector(3, 4)),
-			new Cells(new Vector(8, 3), new Vector(3, 2)),
-			new Cells(new Vector(7, 5), new Vector(3, 2)),
+			new Cell(new Vector(0, 0), new Vector(4, 3)),
+			new Cell(new Vector(4, 1), new Vector(2, 2)),
+			new Cell(new Vector(6, 0), new Vector(4, 3)),
+			new Cell(new Vector(0, 5), new Vector(2, 2)),
+			new Cell(new Vector(2, 3), new Vector(2, 3)),
+			new Cell(new Vector(4, 3), new Vector(3, 4)),
+			new Cell(new Vector(8, 3), new Vector(3, 2)),
+			new Cell(new Vector(7, 5), new Vector(3, 2)),
 		],
 	),
 
@@ -22,14 +22,14 @@ export const layouts = [
 	new Layout(
 		6,
 		[
-			new Cells(new Vector(0, 0), new Vector(2, 2)),
-			new Cells(new Vector(2, 0), new Vector(3, 2)),
-			new Cells(new Vector(5, 0), new Vector(2, 3)),
-			new Cells(new Vector(7, 0), new Vector(4, 4)),
-			new Cells(new Vector(0, 2), new Vector(5, 5)),
-			new Cells(new Vector(5, 3), new Vector(2, 4)),
-			new Cells(new Vector(7, 4), new Vector(2, 3)),
-			new Cells(new Vector(9, 4), new Vector(2, 3)),
+			new Cell(new Vector(0, 0), new Vector(2, 2)),
+			new Cell(new Vector(2, 0), new Vector(3, 2)),
+			new Cell(new Vector(5, 0), new Vector(2, 3)),
+			new Cell(new Vector(7, 0), new Vector(4, 4)),
+			new Cell(new Vector(0, 2), new Vector(5, 5)),
+			new Cell(new Vector(5, 3), new Vector(2, 4)),
+			new Cell(new Vector(7, 4), new Vector(2, 3)),
+			new Cell(new Vector(9, 4), new Vector(2, 3)),
 		],
 	),
 
@@ -37,14 +37,14 @@ export const layouts = [
 	new Layout(
 		6,
 		[
-			new Cells(new Vector(0, 0), new Vector(3, 5)),
-			new Cells(new Vector(0, 5), new Vector(3, 2)),
-			new Cells(new Vector(3, 0), new Vector(2, 2)),
-			new Cells(new Vector(5, 0), new Vector(3, 2)),
-			new Cells(new Vector(8, 0), new Vector(3, 3)),
-			new Cells(new Vector(3, 2), new Vector(5, 5), 1),
-			new Cells(new Vector(9, 3), new Vector(2, 2)),
-			new Cells(new Vector(8, 5), new Vector(2, 2)),
+			new Cell(new Vector(0, 0), new Vector(3, 5)),
+			new Cell(new Vector(0, 5), new Vector(3, 2)),
+			new Cell(new Vector(3, 0), new Vector(2, 2)),
+			new Cell(new Vector(5, 0), new Vector(3, 2)),
+			new Cell(new Vector(8, 0), new Vector(3, 3)),
+			new Cell(new Vector(3, 2), new Vector(5, 5), 1),
+			new Cell(new Vector(9, 3), new Vector(2, 2)),
+			new Cell(new Vector(8, 5), new Vector(2, 2)),
 		],
 	),
 
@@ -52,13 +52,13 @@ export const layouts = [
 	new Layout(
 		5,
 		[
-			new Cells(new Vector(0, 0), new Vector(3, 3)),
-			new Cells(new Vector(3, 0), new Vector(2, 2)),
-			new Cells(new Vector(5, 0), new Vector(2, 2)),
-			new Cells(new Vector(7, 0), new Vector(3, 2)),
-			new Cells(new Vector(0, 3), new Vector(3, 3)),
-			new Cells(new Vector(3, 2), new Vector(5, 5), 1),
-			new Cells(new Vector(8, 3), new Vector(3, 4)),
+			new Cell(new Vector(0, 0), new Vector(3, 3)),
+			new Cell(new Vector(3, 0), new Vector(2, 2)),
+			new Cell(new Vector(5, 0), new Vector(2, 2)),
+			new Cell(new Vector(7, 0), new Vector(3, 2)),
+			new Cell(new Vector(0, 3), new Vector(3, 3)),
+			new Cell(new Vector(3, 2), new Vector(5, 5), 1),
+			new Cell(new Vector(8, 3), new Vector(3, 4)),
 		],
 	),
 
@@ -66,11 +66,11 @@ export const layouts = [
 	new Layout(
 		4,
 		[
-			new Cells(new Vector(3, 0), new Vector(4, 2)),
-			new Cells(new Vector(7, 0), new Vector(4, 4)),
-			new Cells(new Vector(0, 2), new Vector(5, 5), 1),
-			new Cells(new Vector(5, 2), new Vector(2, 2)),
-			new Cells(new Vector(5, 4), new Vector(5, 3)),
+			new Cell(new Vector(3, 0), new Vector(4, 2)),
+			new Cell(new Vector(7, 0), new Vector(4, 4)),
+			new Cell(new Vector(0, 2), new Vector(5, 5), 1),
+			new Cell(new Vector(5, 2), new Vector(2, 2)),
+			new Cell(new Vector(5, 4), new Vector(5, 3)),
 		],
 	),
 
@@ -78,16 +78,16 @@ export const layouts = [
 	new Layout(
 		10,
 		[
-			new Cells(new Vector(0, 0), new Vector(3, 2)),
-			new Cells(new Vector(3, 0), new Vector(2, 2)),
-			new Cells(new Vector(5, 0), new Vector(3, 2)),
-			new Cells(new Vector(8, 0), new Vector(2, 2)),
-			new Cells(new Vector(1, 2), new Vector(2, 2)),
-			new Cells(new Vector(3, 2), new Vector(2, 3)),
-			new Cells(new Vector(5, 3), new Vector(2, 2)),
-			new Cells(new Vector(7, 2), new Vector(2, 3)),
-			new Cells(new Vector(9, 2), new Vector(2, 2)),
-			new Cells(new Vector(0, 4), new Vector(2, 3)),
+			new Cell(new Vector(0, 0), new Vector(3, 2)),
+			new Cell(new Vector(3, 0), new Vector(2, 2)),
+			new Cell(new Vector(5, 0), new Vector(3, 2)),
+			new Cell(new Vector(8, 0), new Vector(2, 2)),
+			new Cell(new Vector(1, 2), new Vector(2, 2)),
+			new Cell(new Vector(3, 2), new Vector(2, 3)),
+			new Cell(new Vector(5, 3), new Vector(2, 2)),
+			new Cell(new Vector(7, 2), new Vector(2, 3)),
+			new Cell(new Vector(9, 2), new Vector(2, 2)),
+			new Cell(new Vector(0, 4), new Vector(2, 3)),
 		],
 	),
 ];

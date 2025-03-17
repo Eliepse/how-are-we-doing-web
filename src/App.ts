@@ -37,6 +37,7 @@ export class App {
 	private loaded: boolean = false;
 
 	public onContextChanged = (context: Context) => undefined;
+	public onSelectionChanged = (node: SelectableNode | undefined) => undefined;
 
 	constructor(
 		rootDom: Element,
@@ -98,9 +99,10 @@ export class App {
 		this.contexts = data.contexts.map((context: {
 			id: string,
 			name: string,
+			default?: boolean,
 			determinants: { [k in DeterminantKey]: number }
 		}) => {
-			return new Context(context.id, context.name, context.determinants);
+			return new Context(context.id, context.name, context.determinants, true === context.default);
 		});
 
 		this.loaded = true;
@@ -150,6 +152,8 @@ export class App {
 
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
+
+			this.onSelectionChanged(node);
 
 			if (undefined === node) {
 				this.labelManager.hide("selected");

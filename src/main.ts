@@ -8,6 +8,9 @@ import type { Context } from "./Diagram/Context";
 		- image bento wall
  */
 
+export type BroadcastDetermiant = { label: string, id: number };
+const diagramChannel = new BroadcastChannel("diagram");
+
 async function main(withLoader = true) {
 	function updateLoader(percent: number, title: string): void {
 		if (false === withLoader) {
@@ -56,6 +59,21 @@ async function main(withLoader = true) {
 			node.textContent = translator.translate(context.name.toLowerCase(), "general").toUpperCase();
 			node.dataset.tr = context.id;
 		});
+
+		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
+	};
+
+	app.onSelectionChanged = (node) => {
+		if (undefined === node) {
+			diagramChannel.postMessage({ type: "selectionChanged", data: { nodes: [] } });
+			return;
+		}
+
+		const broadcastNodes: BroadcastDetermiant[] = app.getDiagram().getActiveNodes().determinants.map((det) => {
+			return { label: det.label, id: det.id };
+		});
+
+		diagramChannel.postMessage({ type: "selectionChanged", data: { nodes: broadcastNodes } });
 	};
 
 	translator.dyn("general.no context", (txt) => {

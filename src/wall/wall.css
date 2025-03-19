@@ -1,4 +1,22 @@
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/Inter/Inter-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("/Inter/Inter-Bold.woff2") format("woff2");
+}
+
+
 html, body {
+    font-family: Inter, sans-serif;
     background: #000;
 }
 
@@ -24,8 +42,29 @@ body {
 }
 
 #wall img {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#wall figure {
+    position: relative;
+    flex: 1;
+    padding: 0;
+    margin: 0;
+}
+
+#wall .box {
+    display: flex;
+    flex-direction: column;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+}
+
+#wall .box .title {
+    flex: none;
+    margin-top: 6px;
 }

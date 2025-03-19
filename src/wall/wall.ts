@@ -28,8 +28,6 @@ channel.onmessage = (ev) => {
 		activeDeterminants = payload.data.nodes;
 	}
 
-	console.debug(activeDeterminants);
-
 	const isMultiDeterminants = activeDeterminants.length > 1;
 	const filteredPictures = findImages(activeContext, activeDeterminants);
 	const shouldHandlePriority = false === isMultiDeterminants && filteredPictures.some((p) => p.priority > 0);
@@ -47,15 +45,27 @@ channel.onmessage = (ev) => {
 			return;
 		}
 
-		const img = document.createElement("img");
 		const startPosition = cell.position.add(Vector.One);
 		const endPosition = startPosition.add(cell.size);
-		img.style.gridColumnStart = startPosition.x.toFixed();
-		img.style.gridColumnEnd = endPosition.x.toFixed();
-		img.style.gridRowStart = startPosition.y.toFixed();
-		img.style.gridRowEnd = endPosition.y.toFixed();
+
+		const box = document.createElement("div");
+		box.classList.add("box")
+		box.style.gridColumnStart = startPosition.x.toFixed();
+		box.style.gridColumnEnd = endPosition.x.toFixed();
+		box.style.gridRowStart = startPosition.y.toFixed();
+		box.style.gridRowEnd = endPosition.y.toFixed();
+
+		const figure = document.createElement("figure");
+		const img = document.createElement("img");
 		img.src = `/image/wall/${picture.filename}.${picture.fileExtension}`;
-		wallDOM.append(img);
+		figure.append(img);
+
+		const legend = document.createElement("div");
+		legend.textContent = picture.source;
+		legend.classList.add("title");
+
+		box.append(figure, legend);
+		wallDOM.append(box);
 	});
 };
 

@@ -98,6 +98,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	notApplicable(): void {
 		this.step = 1;
 		this.applicable = false;
+		this.shouldRepaint();
 	}
 
 	isApplicable(): boolean {

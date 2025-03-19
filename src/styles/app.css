@@ -28,6 +28,7 @@
 */
 
 #diagramRoot {
+    position: relative;
     grid-column: 1 / 2;
     grid-row: 2 / 3;
     overflow: hidden;
@@ -64,7 +65,7 @@
 */
 
 #labels {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
@@ -74,7 +75,7 @@
 }
 
 .floatingLabel {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     max-width: 180px;
@@ -272,4 +273,36 @@
     margin: 0 16px;
     min-width: 320px;
     text-align: center;
+}
+
+/*
+| --------------------------------
+| Legend
+| --------------------------------
+*/
+
+.legend {
+    position: absolute;
+    left: 16px;
+    bottom: 32px;
+    display: flex;
+}
+
+.legend img {
+    fill: white;
+    color: white;
+    transform: scaleY(-100%);
+    width: 80px;
+    margin-bottom: 1rem;
+}
+
+.legend figure {
+    text-align: center;
+    padding: 0;
+    margin: 0 1rem;
+}
+
+.legend figcaption {
+    width: 160px;
+    font-size: 13px;
 }

@@ -53,6 +53,7 @@ async function main(withLoader = true) {
 
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
+	translator.translateDOM(document.querySelector<HTMLElement>(".legend"));
 
 	app.onContextChanged = (context: Context) => {
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {

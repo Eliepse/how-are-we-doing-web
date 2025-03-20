@@ -2,12 +2,6 @@ import { App } from "./App";
 import { wait } from "./helpers";
 import type { Context } from "./Diagram/Context";
 
-/*
-	TODO list:
-		- legend
-		- image bento wall
- */
-
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
 

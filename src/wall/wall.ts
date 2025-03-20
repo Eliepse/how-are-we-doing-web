@@ -31,15 +31,18 @@ channel.onmessage = (ev) => {
 	const isMultiDeterminants = activeDeterminants.length > 1;
 	const filteredPictures = findImages(activeContext, activeDeterminants);
 	const shouldHandlePriority = false === isMultiDeterminants && filteredPictures.some((p) => p.priority > 0);
-
 	activeLayout = selectRandomLayout(shouldHandlePriority);
 
 	// Remove images
 	wallDOM.innerHTML = "";
 
-	filteredPictures.slice(0, activeLayout.cells.length).forEach((picture, i) => {
-		console.debug(picture);
-		const cell = activeLayout.cells[i];
+	const cells = activeLayout.cells.sort((a, b) => b.priority - a.priority); // Descending sort
+
+	filteredPictures
+		.sort((a, b) => b.priority - a.priority) // Descending sort
+		.slice(0, activeLayout.cells.length)
+		.forEach((picture, i) => {
+		const cell = cells[i];
 
 		if (undefined === cell) {
 			return;
@@ -57,7 +60,7 @@ channel.onmessage = (ev) => {
 
 		const figure = document.createElement("figure");
 		const img = document.createElement("img");
-		img.src = `/image/wall/${picture.filename}.${picture.fileExtension}`;
+		img.src = `/image/wall/${picture.filename}`;
 		figure.append(img);
 
 		const legend = document.createElement("div");
@@ -167,7 +170,7 @@ async function preloadImages(onUpdate: (progress: number) => void): Promise<void
 			continue;
 		}
 
-		const src = `/image/wall/${picture.filename}.${picture.fileExtension}`;
+		const src = `/image/wall/${picture.filename}`;
 		await preloadImage(src);
 		const cursor = (i + 1);
 		onUpdate(cursor / count);

@@ -960,7 +960,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "relaxing, cultural and recreational activities",
-	"filename": "P0733_002_00361.jpeg",
+	"filename": "P0733_002_00361.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Blanchoz-Rh\u00f4ne, Sylviane",
 	"title": "",
@@ -1107,7 +1107,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "access to a diversified and qualitative offer",
-	"filename": "P0757_007_02213.jpeg",
+	"filename": "P0757_007_02213.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Cusin, Antoine",
 	"title": "",
@@ -1149,14 +1149,14 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "neighbourhood functional mix",
-	"filename": "P0762_005_00005.jpeg",
+	"filename": "P0762_005_00005.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Meyer, Anne",
 	"title": "",
 }, {
 	"context": "lyon-2",
 	"determinant": "neighbourhood functional mix",
-	"filename": "P0799_009_00006.jpeg",
+	"filename": "P0799_009_00006.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Bouillaud, Nathalie",
 	"title": "",
@@ -1240,7 +1240,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "aeraulic and hygrothermal outdoor comfort",
-	"filename": "P0799_009_00006.jpeg",
+	"filename": "P0799_009_00006.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Bouillaud, Nathalie",
 	"title": "",
@@ -1555,7 +1555,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "environment and biodiversity preservation",
-	"filename": "P0905_001_00003.jpeg",
+	"filename": "P0905_001_00003.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Michel, Pierre",
 	"title": "",
@@ -1807,6 +1807,13 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "active transportation choice",
+	"filename": "_MG_5469.jpg",
+	"priority": 0,
+	"source": "\u00a9 CAUE Rh\u00f4ne M\u00e9tropole \/ Florent Perroud",
+	"title": "",
+}, {
+	"context": "la-saulaie",
+	"determinant": "active transportation choice",
 	"filename": "DSC04361.jpg",
 	"priority": 0,
 	"source": "\u00a9 Fondation AIA \/ Jacques Merel",
@@ -1880,6 +1887,13 @@ export const pictures = [{
 	"filename": "DSC04226.jpg",
 	"priority": 0,
 	"source": "\u00a9 Fondation AIA \/ Jacques Merel",
+	"title": "",
+}, {
+	"context": "la-saulaie",
+	"determinant": "stability and regularity of access to quality housing",
+	"filename": "_MG_6807.jpg",
+	"priority": 0,
+	"source": "\u00a9 CAUE Rh\u00f4ne M\u00e9tropole \/ Florent Perroud",
 	"title": "",
 }, {
 	"context": "la-saulaie",
@@ -2037,6 +2051,13 @@ export const pictures = [{
 	"title": "",
 }, {
 	"context": "la-saulaie",
+	"determinant": "interactions with natural environments",
+	"filename": "_MG_6807.jpg",
+	"priority": 0,
+	"source": "\u00a9 CAUE Rh\u00f4ne M\u00e9tropole \/ Florent Perroud",
+	"title": "",
+}, {
+	"context": "la-saulaie",
 	"determinant": "urban appropriation access and equity",
 	"filename": "DSC04423.jpg",
 	"priority": 0,
@@ -2094,6 +2115,13 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "access to and variety of the transportation offer",
+	"filename": "LYO_044862.jpg",
+	"priority": 0,
+	"source": "\u00a9 UrbaLyon -  RUCH MP",
+	"title": "",
+}, {
+	"context": "la-saulaie",
+	"determinant": "access to and variety of the transportation offer",
 	"filename": "DSC04129.jpg",
 	"priority": 0,
 	"source": "\u00a9 Fondation AIA \/ Jacques Merel",
@@ -2132,6 +2160,13 @@ export const pictures = [{
 	"filename": "dic_0614phot_027.jpg",
 	"priority": 0,
 	"source": "\u00a9 M\u00e9tropole de Lyon - Laurence DANI\u00c8RE",
+	"title": "",
+}, {
+	"context": "la-saulaie",
+	"determinant": "environment and biodiversity preservation",
+	"filename": "_MG_5469.jpg",
+	"priority": 0,
+	"source": "\u00a9 CAUE Rh\u00f4ne M\u00e9tropole \/ Florent Perroud",
 	"title": "",
 }, {
 	"context": "la-saulaie",

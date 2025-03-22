@@ -63,11 +63,19 @@ channel.onmessage = (ev) => {
 			img.src = `/image/wall/${picture.filename}`;
 			figure.append(img);
 
-			const legend = document.createElement("div");
-			legend.textContent = picture.source;
-			legend.classList.add("source");
+			const source = document.createElement("div");
+			source.textContent = picture.source;
+			source.classList.add("source");
 
-			box.append(figure, legend);
+			box.append(figure, source);
+
+			if(picture.title.trim().length) {
+				const title = document.createElement("div");
+				title.innerHTML = picture.title;
+				title.classList.add("title")
+				box.append(title);
+			}
+
 			wallDOM.append(box);
 		});
 };

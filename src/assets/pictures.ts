@@ -123,7 +123,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_001_Charpennes_Tram.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux stations de tramway dans un rayon de 500m",
+	"title": "Accessibilit\u00e9 aux stations de tramway<span>dans un rayon de 500m</span>",
 }, {
 	"context": "villeurbanne",
 	"determinant": "active transportation choice",
@@ -151,7 +151,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_001_Charpennes_sport.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux \u00e9quipements sportifs dans un rayon de 500 m",
+	"title": "Accessibilit\u00e9 aux \u00e9quipements sportifs<span>dans un rayon de 500 m</span>",
 }, {
 	"context": "villeurbanne",
 	"determinant": "sport and physical activities",
@@ -207,7 +207,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_001_Charpennes_alimentation.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux march\u00e9s alimentaires dans un rayon d'1km",
+	"title": "Accessibilit\u00e9 aux march\u00e9s alimentaires<span>dans un rayon d'1km</span>",
 }, {
 	"context": "villeurbanne",
 	"determinant": "healthy food knowledge and choice",
@@ -291,7 +291,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_001_Charpennes_medecins.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Densit\u00e9 de m\u00e9decins g\u00e9n\u00e9ralistes selon un maillage de 300x300m",
+	"title": "Densit\u00e9 de m\u00e9decins g\u00e9n\u00e9ralistes<span>selon un maillage de 300x300m</span>",
 }, {
 	"context": "villeurbanne",
 	"determinant": "access to a diversified and qualitative offer",
@@ -340,7 +340,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_001_Charpennes_scolaires.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux \u00e9tablissements scolaires  dans un rayon de 300 m",
+	"title": "Accessibilit\u00e9 aux \u00e9tablissements scolaires<span>dans un rayon de 300 m</span>",
 }, {
 	"context": "villeurbanne",
 	"determinant": "neighbourhood functional mix",
@@ -683,7 +683,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_001_Charpennes_pollution_air.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Concentration en dioxyde d'azote dans l'air en moyenne annuelle (en \u00b5g\/m\u00b3)",
+	"title": "Concentration en dioxyde d'azote dans l'air<span>en moyenne annuelle (en \u00b5g\/m\u00b3)</span>",
 }, {
 	"context": "villeurbanne",
 	"determinant": "air pollution and electromagnetic fields low exposure",
@@ -711,7 +711,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_001_Charpennes_nuisances_sonores.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Niveau sonore moyen sur une journ\u00e9e (en dB (A))",
+	"title": "Niveau sonore moyen sur une journ\u00e9e<span>(en dB (A))</span>",
 }, {
 	"context": "villeurbanne",
 	"determinant": "qualitative and adequate sound environment",
@@ -893,7 +893,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_002_Confluence_Tram.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux stations de tramway dans un rayon de 500m",
+	"title": "Accessibilit\u00e9 aux stations de tramway<span>dans un rayon de 500m</span>",
 }, {
 	"context": "lyon-2",
 	"determinant": "active transportation choice",
@@ -984,7 +984,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_002_Confluence_alimentation.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux march\u00e9s alimentaires dans un rayon d'1km",
+	"title": "Accessibilit\u00e9 aux march\u00e9s alimentaires<span>dans un rayon d'1km</span>",
 }, {
 	"context": "lyon-2",
 	"determinant": "healthy food knowledge and choice",
@@ -1047,7 +1047,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_002_Confluence_sport.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux \u00e9quipements sportifs dans un rayon de 500 m",
+	"title": "Accessibilit\u00e9 aux \u00e9quipements sportifs <span>dans un rayon de 500 m</span>",
 }, {
 	"context": "lyon-2",
 	"determinant": "sport and physical activities",
@@ -1187,7 +1187,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_002_Confluence_medecins.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Densit\u00e9 de m\u00e9decins g\u00e9n\u00e9ralistes selon un maillage de 300x300m",
+	"title": "Densit\u00e9 de m\u00e9decins g\u00e9n\u00e9ralistes<span>selon un maillage de 300x300m</span>",
 }, {
 	"context": "lyon-2",
 	"determinant": "access to a diversified and qualitative offer",
@@ -1215,7 +1215,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_002_Confluence_scolaires.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux \u00e9tablissements scolaires  dans un rayon de 300 m",
+	"title": "Accessibilit\u00e9 aux \u00e9tablissements scolaires <span>dans un rayon de 300 m</span>",
 }, {
 	"context": "lyon-2",
 	"determinant": "neighbourhood functional mix",
@@ -1719,7 +1719,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_002_Confluence_pollution_air.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Concentration en dioxyde d'azote dans l'air en moyenne annuelle (en \u00b5g\/m\u00b3)",
+	"title": "Concentration en dioxyde d'azote dans l'air <span>en moyenne annuelle (en \u00b5g\/m\u00b3)</span>",
 }, {
 	"context": "lyon-2",
 	"determinant": "air pollution and electromagnetic fields low exposure",
@@ -1775,7 +1775,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_002_Confluences_nuisances_sonores.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Niveau sonore moyen sur une journ\u00e9e (en dB (A))",
+	"title": "Niveau sonore moyen sur une journ\u00e9e<span>(en dB (A))</span>",
 }, {
 	"context": "lyon-2",
 	"determinant": "qualitative and adequate sound environment",
@@ -1901,7 +1901,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_003_Oullins_Tram.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux stations de tramway dans un rayon de 500m",
+	"title": "Accessibilit\u00e9 aux stations de tramway<span>dans un rayon de 500m</span>",
 }, {
 	"context": "la-saulaie",
 	"determinant": "active transportation choice",
@@ -1936,7 +1936,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_003_Oullins_sport.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux \u00e9quipements sportifs dans un rayon de 500 m",
+	"title": "Accessibilit\u00e9 aux \u00e9quipements sportifs<span>dans un rayon de 500 m</span>",
 }, {
 	"context": "la-saulaie",
 	"determinant": "sport and physical activities",
@@ -1950,7 +1950,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_003_Oullins_alimentation.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux march\u00e9s alimentaires dans un rayon d'1km",
+	"title": "Accessibilit\u00e9 aux march\u00e9s alimentaires<span>dans un rayon d'1km</span>",
 }, {
 	"context": "la-saulaie",
 	"determinant": "healthy food knowledge and choice",
@@ -2090,7 +2090,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_003_Oullins_medecins.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Densit\u00e9 de m\u00e9decins g\u00e9n\u00e9ralistes selon un maillage de 300x300m",
+	"title": "Densit\u00e9 de m\u00e9decins g\u00e9n\u00e9ralistes<span>selon un maillage de 300x300m</span>",
 }, {
 	"context": "la-saulaie",
 	"determinant": "access to a diversified and qualitative offer",
@@ -2111,7 +2111,7 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_003_Oullins_scolaires.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Accessibilit\u00e9 aux \u00e9tablissements scolaires  dans un rayon de 300 m",
+	"title": "Accessibilit\u00e9 aux \u00e9tablissements scolaires<span>dans un rayon de 300 m</span>",
 }, {
 	"context": "la-saulaie",
 	"determinant": "neighbourhood functional mix",
@@ -2412,14 +2412,14 @@ export const pictures = [{
 	"filename": "ExpoLyon_Carto_diagramme_003_Oullins_pollution_air.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Concentration en dioxyde d'azote dans l'air en moyenne annuelle (en \u00b5g\/m\u00b3)",
+	"title": "Concentration en dioxyde d'azote dans l'air <span>en moyenne annuelle (en \u00b5g\/m\u00b3)</span>",
 }, {
 	"context": "la-saulaie",
 	"determinant": "qualitative and adequate sound environment",
 	"filename": "ExpoLyon_Carto_diagramme_003_Oullins_nuisances_sonores.jpg",
 	"priority": 1,
 	"source": "\u00a9 AIA Life Designers",
-	"title": "Niveau sonore moyen sur une journ\u00e9e (en dB (A))",
+	"title": "Niveau sonore moyen sur une journ\u00e9e<span>(en dB (A))</span>",
 }, {
 	"context": "la-saulaie",
 	"determinant": "qualitative and adequate sound environment",

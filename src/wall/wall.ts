@@ -42,34 +42,34 @@ channel.onmessage = (ev) => {
 		.sort((a, b) => b.priority - a.priority) // Descending sort
 		.slice(0, activeLayout.cells.length)
 		.forEach((picture, i) => {
-		const cell = cells[i];
+			const cell = cells[i];
 
-		if (undefined === cell) {
-			return;
-		}
+			if (undefined === cell) {
+				return;
+			}
 
-		const startPosition = cell.position.add(Vector.One);
-		const endPosition = startPosition.add(cell.size);
+			const startPosition = cell.position.add(Vector.One);
+			const endPosition = startPosition.add(cell.size);
 
-		const box = document.createElement("div");
-		box.classList.add("box")
-		box.style.gridColumnStart = startPosition.x.toFixed();
-		box.style.gridColumnEnd = endPosition.x.toFixed();
-		box.style.gridRowStart = startPosition.y.toFixed();
-		box.style.gridRowEnd = endPosition.y.toFixed();
+			const box = document.createElement("div");
+			box.classList.add("box");
+			box.style.gridColumnStart = startPosition.x.toFixed();
+			box.style.gridColumnEnd = endPosition.x.toFixed();
+			box.style.gridRowStart = startPosition.y.toFixed();
+			box.style.gridRowEnd = endPosition.y.toFixed();
 
-		const figure = document.createElement("figure");
-		const img = document.createElement("img");
-		img.src = `/image/wall/${picture.filename}`;
-		figure.append(img);
+			const figure = document.createElement("figure");
+			const img = document.createElement("img");
+			img.src = `/image/wall/${picture.filename}`;
+			figure.append(img);
 
-		const legend = document.createElement("div");
-		legend.textContent = picture.source;
-		legend.classList.add("title");
+			const legend = document.createElement("div");
+			legend.textContent = picture.source;
+			legend.classList.add("title");
 
-		box.append(figure, legend);
-		wallDOM.append(box);
-	});
+			box.append(figure, legend);
+			wallDOM.append(box);
+		});
 };
 
 async function main() {
@@ -181,12 +181,12 @@ async function preloadImages(onUpdate: (progress: number) => void): Promise<void
 		const image = document.createElement("img");
 		return new Promise((resolve, reject) => {
 			image.onload = () => resolve();
-			image.onabort = () => reject();
-			image.onerror = () => reject();
+			image.onabort = () => reject(src);
+			image.onerror = () => reject(src);
 			image.src = src;
 		});
 	}
 }
 
 
-void main();
+void main().catch(console.debug);

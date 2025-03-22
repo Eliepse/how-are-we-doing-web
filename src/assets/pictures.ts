@@ -1030,7 +1030,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "relaxing, cultural and recreational activities",
-	"filename": "P0733_002_00361.jpeg",
+	"filename": "P0733_002_00361.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Blanchoz-Rh\u00f4ne, Sylviane",
 	"title": "",
@@ -1170,7 +1170,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "acoustic indoor comfort",
-	"filename": "P0799_009_00006.jpeg",
+	"filename": "P0799_009_00006.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Bouillaud, Nathalie",
 	"title": "",
@@ -1191,7 +1191,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "access to a diversified and qualitative offer",
-	"filename": "P0757_007_02213.jpeg",
+	"filename": "P0757_007_02213.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Cusin, Antoine",
 	"title": "",
@@ -1233,14 +1233,14 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "neighbourhood functional mix",
-	"filename": "P0762_005_00005.jpeg",
+	"filename": "P0762_005_00005.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Meyer, Anne",
 	"title": "",
 }, {
 	"context": "lyon-2",
 	"determinant": "neighbourhood functional mix",
-	"filename": "P0799_009_00006.jpeg",
+	"filename": "P0799_009_00006.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Bouillaud, Nathalie",
 	"title": "",
@@ -1338,7 +1338,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "aeraulic and hygrothermal outdoor comfort",
-	"filename": "P0799_009_00006.jpeg",
+	"filename": "P0799_009_00006.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Bouillaud, Nathalie",
 	"title": "",
@@ -1660,7 +1660,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "environment and biodiversity preservation",
-	"filename": "P0905_001_00003.jpeg",
+	"filename": "P0905_001_00003.jpg",
 	"priority": 0,
 	"source": "\u00a9 Biblioth\u00e8que municipale de Lyon - Michel, Pierre",
 	"title": "",

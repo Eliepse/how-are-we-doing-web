@@ -65,7 +65,7 @@ channel.onmessage = (ev) => {
 
 			const legend = document.createElement("div");
 			legend.textContent = picture.source;
-			legend.classList.add("title");
+			legend.classList.add("source");
 
 			box.append(figure, legend);
 			wallDOM.append(box);

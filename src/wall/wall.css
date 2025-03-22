@@ -60,11 +60,11 @@ body {
 #wall .box {
     display: flex;
     flex-direction: column;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 12px;
 }
 
-#wall .box .title {
+#wall .box .source {
     flex: none;
     margin-top: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
 }

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prod": "vite build",
+    "build": "vite build",
+    "prod": "vite preview --port 5173",
     "test": "mocha --require ts-node/register ./tests/**/*"
   },
   "keywords": [],

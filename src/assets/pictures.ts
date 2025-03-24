@@ -43,7 +43,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "social cohesion and involvement",
-	"filename": "LYO_056850.JPG",
+	"filename": "LYO_056850.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon - Richard P",
 	"title": "",
@@ -57,7 +57,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "social mixity, equity and solidarity",
-	"filename": "LYO_056908.JPG",
+	"filename": "LYO_056908.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon - Richard P",
 	"title": "",
@@ -78,7 +78,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "population economic activity and security",
-	"filename": "LYO_059537.JPG",
+	"filename": "LYO_059537.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  MOMMEJA M.",
 	"title": "",
@@ -113,7 +113,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "neighbourhood socio-economic status",
-	"filename": "dic_1012phot_025.JPG",
+	"filename": "dic_1012phot_025.jpg",
 	"priority": 0,
 	"source": "\u00a9 M\u00e9tropole de Lyon - Julien RAMBAUD - Alpaca Productions",
 	"title": "",
@@ -155,7 +155,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "sport and physical activities",
-	"filename": "LYO_056717.JPG",
+	"filename": "LYO_056717.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD.P",
 	"title": "",
@@ -197,7 +197,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "sport and physical activities",
-	"filename": "LYO_055853.JPG",
+	"filename": "LYO_055853.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -239,7 +239,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "sun light access and visual indoor comfort",
-	"filename": "LYO_056781.JPG",
+	"filename": "LYO_056781.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD.P",
 	"title": "",
@@ -253,21 +253,21 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "acoustic indoor comfort",
-	"filename": "dic_1012phot_025.JPG",
+	"filename": "dic_1012phot_025.jpg",
 	"priority": 0,
 	"source": "\u00a9 M\u00e9tropole de Lyon - Julien RAMBAUD - Alpaca Productions",
 	"title": "",
 }, {
 	"context": "villeurbanne",
 	"determinant": "stability and regularity of access to quality housing",
-	"filename": "LYO_057019.JPG",
+	"filename": "LYO_057019.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD.P",
 	"title": "",
 }, {
 	"context": "villeurbanne",
 	"determinant": "stability and regularity of access to quality housing",
-	"filename": "LYO_056688.JPG",
+	"filename": "LYO_056688.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD.P",
 	"title": "",
@@ -295,7 +295,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "access to a diversified and qualitative offer",
-	"filename": "LYO_051188.JPG",
+	"filename": "LYO_051188.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
@@ -316,7 +316,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "access to a diversified and qualitative offer",
-	"filename": "LYO_056684.JPG",
+	"filename": "LYO_056684.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD.P",
 	"title": "",
@@ -344,7 +344,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "neighbourhood functional mix",
-	"filename": "LYO_056905.JPG",
+	"filename": "LYO_056905.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD.P",
 	"title": "",
@@ -365,7 +365,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "urban concentration and urbanization level",
-	"filename": "dic_1012phot_025.JPG",
+	"filename": "dic_1012phot_025.jpg",
 	"priority": 0,
 	"source": "\u00a9 M\u00e9tropole de Lyon - Julien RAMBAUD - Alpaca Productions",
 	"title": "",
@@ -379,7 +379,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "multi-sensory outdoor comfort and diversity",
-	"filename": "LYO_055834.JPG",
+	"filename": "LYO_055834.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -414,14 +414,14 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "multi-sensory outdoor comfort and diversity",
-	"filename": "LYO_057009.JPG",
+	"filename": "LYO_057009.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
 }, {
 	"context": "villeurbanne",
 	"determinant": "aeraulic and hygrothermal outdoor comfort",
-	"filename": "LYO_056725.JPG",
+	"filename": "LYO_056725.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
@@ -491,7 +491,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "urban appropriation access and equity",
-	"filename": "LYO_055854.JPG",
+	"filename": "LYO_055854.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -533,14 +533,14 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "road network quality for active transportation",
-	"filename": "LYO_056704.JPG",
+	"filename": "LYO_056704.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
 }, {
 	"context": "villeurbanne",
 	"determinant": "access to and variety of the transportation offer",
-	"filename": "LYO_056831.JPG",
+	"filename": "LYO_056831.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
@@ -596,21 +596,21 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "environment and biodiversity preservation",
-	"filename": "LYO_059789.JPG",
+	"filename": "LYO_059789.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  MOMMEJA M.",
 	"title": "",
 }, {
 	"context": "villeurbanne",
 	"determinant": "environment and biodiversity preservation",
-	"filename": "LYO_056725.JPG",
+	"filename": "LYO_056725.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
 }, {
 	"context": "villeurbanne",
 	"determinant": "environment and biodiversity preservation",
-	"filename": "LYO_056726.JPG",
+	"filename": "LYO_056726.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
@@ -743,7 +743,7 @@ export const pictures = [{
 }, {
 	"context": "villeurbanne",
 	"determinant": "industrial, water and soil pollution low exposure",
-	"filename": "LYO_056962.JPG",
+	"filename": "LYO_056962.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RICHARD P",
 	"title": "",
@@ -813,14 +813,14 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "social cohesion and involvement",
-	"filename": "LYO_055903.JPG",
+	"filename": "LYO_055903.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon - DESAINTJEAN F",
 	"title": "",
 }, {
 	"context": "lyon-2",
 	"determinant": "social cohesion and involvement",
-	"filename": "LYO_056086.JPG",
+	"filename": "LYO_056086.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -995,7 +995,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "healthy food knowledge and choice",
-	"filename": "LYO_055907.JPG",
+	"filename": "LYO_055907.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon - DESAINTJEAN F",
 	"title": "",
@@ -1016,7 +1016,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "relaxing, cultural and recreational activities",
-	"filename": "LYO_048726.JPG",
+	"filename": "LYO_048726.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1296,7 +1296,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "multi-sensory outdoor comfort and diversity",
-	"filename": "LYO_050213.JPG",
+	"filename": "LYO_050213.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1492,7 +1492,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "road network quality for active transportation",
-	"filename": "LYO_050214.JPG",
+	"filename": "LYO_050214.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1632,7 +1632,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "environment and biodiversity preservation",
-	"filename": "LYO_048730.JPG",
+	"filename": "LYO_048730.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1667,7 +1667,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "environment and biodiversity preservation",
-	"filename": "LYO_055907.JPG",
+	"filename": "LYO_055907.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon - DESAINTJEAN F",
 	"title": "",
@@ -1723,7 +1723,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "air pollution and electromagnetic fields low exposure",
-	"filename": "LYO_050219.JPG",
+	"filename": "LYO_050219.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1758,7 +1758,7 @@ export const pictures = [{
 }, {
 	"context": "lyon-2",
 	"determinant": "road traffic low exposure",
-	"filename": "LYO_048737.JPG",
+	"filename": "LYO_048737.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1800,7 +1800,7 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "social cohesion and involvement",
-	"filename": "LYO_058733.JPG",
+	"filename": "LYO_058733.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1856,7 +1856,7 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "population economic activity and security",
-	"filename": "LYO_058731.JPG",
+	"filename": "LYO_058731.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -1892,6 +1892,27 @@ export const pictures = [{
 	"context": "la-saulaie",
 	"determinant": "population economic activity and security",
 	"filename": "DSC04326.jpg",
+	"priority": 0,
+	"source": "\u00a9 Fondation AIA \/ Jacques Merel",
+	"title": "",
+}, {
+	"context": "la-saulaie",
+	"determinant": "neighbourhood socio-economic status",
+	"filename": "DSC04364.jpg",
+	"priority": 0,
+	"source": "\u00a9 Fondation AIA \/ Jacques Merel",
+	"title": "",
+}, {
+	"context": "la-saulaie",
+	"determinant": "neighbourhood socio-economic status",
+	"filename": "DSC04403.jpg",
+	"priority": 0,
+	"source": "\u00a9 Fondation AIA \/ Jacques Merel",
+	"title": "",
+}, {
+	"context": "la-saulaie",
+	"determinant": "neighbourhood socio-economic status",
+	"filename": "DSC04322.jpg",
 	"priority": 0,
 	"source": "\u00a9 Fondation AIA \/ Jacques Merel",
 	"title": "",
@@ -2206,7 +2227,7 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "interactions with natural environments",
-	"filename": "LYO_058759.JPG",
+	"filename": "LYO_058759.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -2297,7 +2318,7 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "access to and variety of the transportation offer",
-	"filename": "LYO_058762.JPG",
+	"filename": "LYO_058762.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -2423,7 +2444,7 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "qualitative and adequate sound environment",
-	"filename": "LYO_058729.JPG",
+	"filename": "LYO_058729.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",
@@ -2444,7 +2465,7 @@ export const pictures = [{
 }, {
 	"context": "la-saulaie",
 	"determinant": "industrial, water and soil pollution low exposure",
-	"filename": "LYO_058730.JPG",
+	"filename": "LYO_058730.jpg",
 	"priority": 0,
 	"source": "\u00a9 UrbaLyon -  RUCH MP",
 	"title": "",

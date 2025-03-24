@@ -29,18 +29,18 @@ channel.onmessage = (ev) => {
 	}
 
 	const isMultiDeterminants = activeDeterminants.length > 1;
-	const filteredPictures = findImages(activeContext, activeDeterminants);
+	const filteredPictures = shuffle(findImages(activeContext, activeDeterminants));
 	const shouldHandlePriority = false === isMultiDeterminants && filteredPictures.some((p) => p.priority > 0);
 	activeLayout = selectRandomLayout(shouldHandlePriority);
 
 	// Remove images
 	wallDOM.innerHTML = "";
 
-	const cells = activeLayout.cells.sort((a, b) => b.priority - a.priority); // Descending sort
+	const cells = shuffle(activeLayout.cells).sort((a, b) => b.priority - a.priority); // Descending sort
 
 	filteredPictures
 		.sort((a, b) => b.priority - a.priority) // Descending sort
-		.slice(0, activeLayout.cells.length)
+		.slice(0, cells.length)
 		.forEach((picture, i) => {
 			const cell = cells[i];
 

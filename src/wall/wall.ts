@@ -69,10 +69,10 @@ channel.onmessage = (ev) => {
 
 			box.append(figure, source);
 
-			if(picture.title.trim().length) {
+			if (picture.title.trim().length) {
 				const title = document.createElement("div");
 				title.innerHTML = picture.title;
-				title.classList.add("title")
+				title.classList.add("title");
 				box.append(title);
 			}
 
@@ -196,5 +196,21 @@ async function preloadImages(onUpdate: (progress: number) => void): Promise<void
 	}
 }
 
+function debugLayout(layout: Layout): void {
+	layout.cells.forEach((cell, i) => {
+		const box = document.createElement("div");
+		box.classList.add("box", "debug");
 
-void main().catch(console.debug);
+		const startPosition = cell.position.add(Vector.One);
+		const endPosition = startPosition.add(cell.size);
+		box.style.gridColumnStart = startPosition.x.toFixed();
+		box.style.gridColumnEnd = endPosition.x.toFixed();
+		box.style.gridRowStart = startPosition.y.toFixed();
+		box.style.gridRowEnd = endPosition.y.toFixed();
+		box.textContent = i.toFixed();
+
+		wallDOM?.append(box);
+	});
+}
+
+void main().catch(console.error);

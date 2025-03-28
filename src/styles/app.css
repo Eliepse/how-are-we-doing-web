@@ -10,7 +10,7 @@
 }
 
 #app:has(#biblioRoot.open) {
-    --biblioColumn: 20rem;
+    --biblioColumn: 24rem;
 }
 
 #navigation {

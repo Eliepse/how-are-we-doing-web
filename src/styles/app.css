@@ -10,7 +10,7 @@
 }
 
 #app:has(#biblioRoot.open) {
-    --biblioColumn: 24rem;
+    --biblioColumn: 26rem;
 }
 
 #navigation {
@@ -133,7 +133,7 @@
     left: 0;
     bottom: 0;
     padding: 2.5rem 1rem 1rem;
-    width: 20rem;
+    width: var(--biblioColumn);
     overflow-y: auto;
     z-index: 20;
     user-select: none;

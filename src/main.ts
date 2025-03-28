@@ -1,6 +1,6 @@
 import { App } from "./App";
-import { wait } from "./helpers";
 import type { Context } from "./Diagram/Context";
+import { wait } from "./helpers";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
@@ -51,7 +51,9 @@ async function main(withLoader = true) {
 
 	app.onContextChanged = (context: Context) => {
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
-			node.textContent = translator.translate(context.name.toLowerCase(), "general").toUpperCase();
+			node.textContent = translator
+				.translate(context.name.toLowerCase(), "general")
+				.toUpperCase();
 			node.dataset.tr = context.id;
 		});
 
@@ -64,23 +66,31 @@ async function main(withLoader = true) {
 			return;
 		}
 
-		const broadcastNodes: BroadcastDetermiant[] = app.getDiagram().getActiveNodes().determinants.map((det) => {
-			return { label: det.label, id: det.id };
-		});
+		const broadcastNodes: BroadcastDetermiant[] = app
+			.getDiagram()
+			.getActiveNodes()
+			.determinants.map((det) => {
+				return { label: det.label, id: det.id };
+			});
 
-		diagramChannel.postMessage({ type: "selectionChanged", data: { nodes: broadcastNodes } });
+		diagramChannel.postMessage({
+			type: "selectionChanged",
+			data: { nodes: broadcastNodes },
+		});
 	};
 
 	translator.dyn("general.no context", (txt) => {
-		document.querySelectorAll<HTMLElement>("[data-tr='no-context']").forEach((el) => el.innerHTML = txt);
+		document
+			.querySelectorAll<HTMLElement>("[data-tr='no-context']")
+			.forEach((el) => (el.innerHTML = txt));
 	});
 
 	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
 
-	withLoader && await wait(500);
+	withLoader && (await wait(500));
 	updateLoader(100, "Ready");
 	void app.launch();
-	withLoader && await wait(350);
+	withLoader && (await wait(350));
 
 	setupLanguageControls(app);
 	setupBibliography(app);
@@ -94,12 +104,14 @@ async function main(withLoader = true) {
 
 function setupLanguageControls(app: App): void {
 	const translator = app.getTranslator();
-	document.querySelectorAll<HTMLElement>("button[data-action='locale:change']").forEach((node) => {
-		node.addEventListener("click", (e) => {
-			e.stopPropagation();
-			node.dataset.locale && translator.changeLocale(node.dataset.locale);
+	document
+		.querySelectorAll<HTMLElement>("button[data-action='locale:change']")
+		.forEach((node) => {
+			node.addEventListener("click", (e) => {
+				e.stopPropagation();
+				node.dataset.locale && translator.changeLocale(node.dataset.locale);
+			});
 		});
-	});
 }
 
 function setupBibliography(app: App): void {
@@ -154,11 +166,11 @@ function setupCredits(): void {
 	dom.querySelector(".credit-modal")?.addEventListener("click", (e) => e.stopPropagation());
 
 	document.querySelectorAll("button[data-action='credits:open']").forEach((btn) => {
-		btn.addEventListener("click", () => dom.ariaHidden = "false");
+		btn.addEventListener("click", () => (dom.ariaHidden = "false"));
 	});
 
 	document.querySelectorAll("button[data-action='credits:close']").forEach((btn) => {
-		btn.addEventListener("click", () => dom.ariaHidden = "true");
+		btn.addEventListener("click", () => (dom.ariaHidden = "true"));
 	});
 }
 
@@ -174,11 +186,17 @@ function setupContextControls(app: App): void {
 	});
 
 	document.querySelectorAll("[data-action='context:prev']")?.forEach((n) => {
-		n.addEventListener("click", () => app.previousContext());
+		n.addEventListener("click", (e) => {
+			e.stopPropagation();
+			app.previousContext();
+		});
 	});
 
 	document.querySelectorAll("[data-action='context:next']")?.forEach((n) => {
-		n.addEventListener("click", () => app.nextContext());
+		n.addEventListener("click", (e) => {
+			e.stopPropagation();
+			app.nextContext();
+		});
 	});
 }
 

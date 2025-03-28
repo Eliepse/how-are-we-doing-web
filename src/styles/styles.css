@@ -3,6 +3,7 @@
     --dark-blue-hsl: 244, 38%, 15%;
     --red: rgb(241, 151, 155);
     --red-hsl: hsl(357, 76%, 77%);
+    font-size: 1rem;
 }
 
 * {

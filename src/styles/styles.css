@@ -3,7 +3,7 @@
     --dark-blue-hsl: 244, 38%, 15%;
     --red: rgb(241, 151, 155);
     --red-hsl: hsl(357, 76%, 77%);
-    font-size: 1rem;
+    font-size: 16px;
 }
 
 * {
@@ -30,7 +30,6 @@ html, body {
     padding: 0;
     margin: 0;
     height: 100%;
-    font-size: 1rem;
 }
 
 html {
@@ -48,12 +47,13 @@ svg {
 }
 
 button {
-    padding: 6px 8px;
+    padding: .375rem .5rem;
     color: white;
     background: transparent;
-    border-radius: 6px;
+    border-radius: .375rem;
     border: 1px solid white;
     cursor: pointer;
+    font-size: 1rem;
 }
 
 button:hover {

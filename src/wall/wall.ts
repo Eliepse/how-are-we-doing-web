@@ -29,7 +29,6 @@ channel.onmessage = (ev) => {
 	}
 
 	const filteredPictures = shuffle(findImages(activeContext, activeDeterminants));
-	console.info(filteredPictures);
 	activeLayout = selectRandomLayout();
 
 	// Remove images

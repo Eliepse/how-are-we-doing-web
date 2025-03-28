@@ -22,16 +22,15 @@ const channel = new BroadcastChannel("diagram");
 channel.onmessage = (ev) => {
 	const payload = ev.data;
 
-	if ("contextChœanged" === payload.type) {
+	if ("contextChanged" === payload.type) {
 		activeContext = payload.data.context;
 	} else if ("selectionChanged" === payload.type) {
 		activeDeterminants = payload.data.nodes;
 	}
 
 	const filteredPictures = shuffle(findImages(activeContext, activeDeterminants));
-	const shouldHandlePriority =
-		activeDeterminants[0]?.selected && filteredPictures.some((p) => p.priority > 0);
-	activeLayout = selectRandomLayout(shouldHandlePriority);
+	console.info(filteredPictures);
+	activeLayout = selectRandomLayout();
 
 	// Remove images
 	wallDOM.innerHTML = "";
@@ -118,8 +117,6 @@ function findImages(
 	context: Context | undefined,
 	determinants: BroadcastDetermiant[],
 ): Picture[] {
-	const isSelectedDeterminant = true === determinants[0]?.selected;
-
 	// To prevent duplicates
 	const listedFilenames: string[] = [];
 
@@ -132,8 +129,8 @@ function findImages(
 		const isMap = picture.priority > 0;
 		const isSelectedContext = picture.context === context?.id;
 
-		// Filter maps when multiple determinants are activated
-		if (isMap && false === isSelectedDeterminant) {
+		// Filter maps when the determinant is not directly activated
+		if (isMap && true !== determinants[0]?.selected) {
 			continue;
 		}
 

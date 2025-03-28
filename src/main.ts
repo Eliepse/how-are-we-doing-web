@@ -58,7 +58,10 @@ async function main(withLoader = true) {
 			node.dataset.tr = context.id;
 		});
 
-		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
+		diagramChannel.postMessage({
+			type: "contextChanged",
+			data: { context: context.normalize() },
+		});
 	};
 
 	app.onSelectionChanged = (node) => {

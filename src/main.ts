@@ -2,13 +2,7 @@ import { App } from "./App";
 import type { Context } from "./Diagram/Context";
 import { wait } from "./helpers";
 
-/*
-	TODO list:
-		- legend
-		- image bento wall
- */
-
-export type BroadcastDetermiant = { label: string; id: number };
+export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
 
 async function main(withLoader = true) {

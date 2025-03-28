@@ -83,18 +83,18 @@
     text-align: center;
     padding: .5rem;
     border-radius: .5rem;
-    border: 1px solid white;
+    border: 2px solid white;
     background: var(--dark-blue);
     color: white;
     font-size: .8125rem;
     user-select: none;
     z-index: 5;
-    opacity: .9;
+    opacity: 1;
 }
 
 .floatingLabel[data-id=selected] {
-    color: red;
-    border-color: red;
+    color: hsl(0, 96%, 56%);
+    border-color: hsl(0, 96%, 56%);
     z-index: 1;
 }
 

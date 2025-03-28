@@ -22,7 +22,7 @@ const channel = new BroadcastChannel("diagram");
 channel.onmessage = (ev) => {
 	const payload = ev.data;
 
-	if ("contextChanged" === payload.type) {
+	if ("contextChœanged" === payload.type) {
 		activeContext = payload.data.context;
 	} else if ("selectionChanged" === payload.type) {
 		activeDeterminants = payload.data.nodes;
@@ -118,7 +118,7 @@ function findImages(
 	context: Context | undefined,
 	determinants: BroadcastDetermiant[],
 ): Picture[] {
-	const isSelectedDeterminant = determinants[0]?.selected ?? false;
+	const isSelectedDeterminant = true === determinants[0]?.selected;
 
 	// To prevent duplicates
 	const listedFilenames: string[] = [];

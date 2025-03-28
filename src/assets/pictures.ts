@@ -2627,7 +2627,7 @@ export const pictures = [
 		context: "la-saulaie",
 		determinant: "interactions with natural environments",
 		filename: "ExpoLyon_Carto_diagramme_003_Oullins_espaces_verts.jpg",
-		priority: 0,
+		priority: 1,
 		source: "\u00a9 AIA Life Designers",
 		title: "Parcs, jardins et espaces verts publics",
 	},

@@ -1,10 +1,10 @@
-import { pickRandom, shuffle, wait } from "../helpers";
 import { pictures } from "../assets/pictures";
+import type { Context } from "../Diagram/Context";
+import { Vector } from "../Engine2D/ValueObject/Vector";
+import { pickRandom, shuffle, wait } from "../helpers";
+import type { BroadcastDetermiant } from "../main";
 import type { Layout } from "./Layout";
 import { layouts } from "./layouts";
-import type { Context } from "../Diagram/Context";
-import type { BroadcastDetermiant } from "../main";
-import { Vector } from "../Engine2D/ValueObject/Vector";
 
 type Picture = (typeof pictures)[number];
 
@@ -28,9 +28,9 @@ channel.onmessage = (ev) => {
 		activeDeterminants = payload.data.nodes;
 	}
 
-	const isMultiDeterminants = activeDeterminants.length > 1;
 	const filteredPictures = shuffle(findImages(activeContext, activeDeterminants));
-	const shouldHandlePriority = false === isMultiDeterminants && filteredPictures.some((p) => p.priority > 0);
+	const shouldHandlePriority =
+		activeDeterminants[0]?.selected && filteredPictures.some((p) => p.priority > 0);
 	activeLayout = selectRandomLayout(shouldHandlePriority);
 
 	// Remove images
@@ -114,8 +114,11 @@ function selectRandomLayout(withPriorityCells = false): Layout {
 	return pickRandom(layouts);
 }
 
-function findImages(context: Context | undefined, determinants: BroadcastDetermiant[]): Picture[] {
-	const isMultiDeterminants = determinants.length > 1;
+function findImages(
+	context: Context | undefined,
+	determinants: BroadcastDetermiant[],
+): Picture[] {
+	const isSelectedDeterminant = determinants[0]?.selected ?? false;
 
 	// To prevent duplicates
 	const listedFilenames: string[] = [];
@@ -130,7 +133,7 @@ function findImages(context: Context | undefined, determinants: BroadcastDetermi
 		const isSelectedContext = picture.context === context?.id;
 
 		// Filter maps when multiple determinants are activated
-		if (isMap && isMultiDeterminants) {
+		if (isMap && false === isSelectedDeterminant) {
 			continue;
 		}
 
@@ -180,7 +183,7 @@ async function preloadImages(onUpdate: (progress: number) => void): Promise<void
 
 		const src = `/image/wall/${picture.filename}`;
 		await preloadImage(src);
-		const cursor = (i + 1);
+		const cursor = i + 1;
 		onUpdate(cursor / count);
 		console.debug(`Loaded (${cursor}/${count}): ${src}`);
 	}

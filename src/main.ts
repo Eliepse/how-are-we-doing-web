@@ -1,8 +1,9 @@
 import { App } from "./App";
 import type { Context } from "./Diagram/Context";
+import { Determinant } from "./Diagram/Items/Determinant/Determinant";
 import { wait } from "./helpers";
 
-export type BroadcastDetermiant = { label: string, id: number };
+export type BroadcastDetermiant = { label: string; id: number; selected: boolean };
 const diagramChannel = new BroadcastChannel("diagram");
 
 async function main(withLoader = true) {
@@ -66,11 +67,19 @@ async function main(withLoader = true) {
 			return;
 		}
 
+		if (node instanceof Determinant) {
+			diagramChannel.postMessage({
+				type: "selectionChanged",
+				data: { nodes: [{ label: node.label, id: node.id, selected: true }] },
+			});
+			return;
+		}
+
 		const broadcastNodes: BroadcastDetermiant[] = app
 			.getDiagram()
 			.getActiveNodes()
 			.determinants.map((det) => {
-				return { label: det.label, id: det.id };
+				return { label: det.label, id: det.id, selected: false };
 			});
 
 		diagramChannel.postMessage({

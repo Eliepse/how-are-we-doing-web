@@ -12,6 +12,7 @@ export default defineConfig({
 			input: {
 				main: resolve(__dirname, "src/index.html"),
 			}
-		}
+		},
+		emptyOutDir: true,
 	},
 });

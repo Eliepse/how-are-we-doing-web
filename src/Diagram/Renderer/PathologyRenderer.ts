@@ -14,6 +14,7 @@ const defaultStyle = new SVGStyle({ stroke: new Stroke(3, new Color(158, 185, 20
 const hoveredStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
 const activeStyle = new SVGStyle({ stroke: new Stroke(3, colors.selected) });
 const dimmedStyle = new SVGStyle({ stroke: new Stroke(3, colors.dimmedWhite) });
+const secondaryStyle = new SVGStyle({ stroke: new Stroke(3, colors.secondary) });
 const coreStyle = new SVGStyle({ fill: colors.selected });
 
 export class PathologyRenderer extends SVGNodeRenderer {
@@ -34,8 +35,10 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		edge.updateMesh(position, node.active ? Pathology.maxRadius : node.getRadius());
 		core.updateMesh(position);
 
-		if (node.active) {
+		if ("selected" === node.active) {
 			edge.updateStyle(activeStyle);
+		} else if ("preview" === node.active) {
+			edge.updateStyle(secondaryStyle);
 		} else if (isHovered) {
 			edge.updateStyle(hoveredStyle);
 		} else if (undefined !== selectedNode && node !== selectedNode) {
@@ -44,7 +47,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			edge.updateStyle(defaultStyle);
 		}
 
-		if (node.active) {
+		if ("selected" === node.active) {
 			core.updateStyle(coreStyle);
 			core.show();
 		} else {

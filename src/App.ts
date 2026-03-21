@@ -22,6 +22,7 @@ import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
+import type { Determinant } from "./Diagram/Items/Determinant/Determinant";
 
 export class App {
 	private readonly translator: Translator;
@@ -38,6 +39,7 @@ export class App {
 
 	public onContextChanged = (context: Context) => undefined;
 	public onSelectionChanged = (node: SelectableNode | undefined) => undefined;
+	public onPreviewChanged = (node: SelectableNode | undefined) => undefined;
 
 	constructor(
 		rootDom: Element,
@@ -202,6 +204,8 @@ export class App {
 			links.pathologies.forEach((l) => this.biblio.addLink("pathology", l.source.toLowerCase()));
 			links.facilities.forEach((l) => this.biblio.addLink("facility", l.source.toLowerCase()));
 		});
+
+		this.diagram.addListener("nodePreviewed", (e: NodeEvent<Determinant | undefined>) => console.debug(e))
 
 		// Start the engine
 		this.engine.render();

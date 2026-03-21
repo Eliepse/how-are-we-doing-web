@@ -18,6 +18,7 @@ const shapeStyle = {
 	default: new SVGStyle({ fill: colors.defaultWhite }),
 	selected: new SVGStyle({ fill: colors.selected }),
 	dimmed: new SVGStyle({ fill: colors.dimmedWhite }),
+	secondary: new SVGStyle({ fill: colors.secondary }),
 } as const;
 
 const anchorStyle = {
@@ -45,14 +46,12 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Determinant>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const selectedNode = this.app.getDiagram().getSelectedNode();
 
 		// Create a temporary node to compute the position
 		const anchor = new Node2D();
 		anchor.setParent(node);
 		anchor.setPosition(determinantAnchorOffset);
 		const anchorPosition = anchor.getGlobalPosition();
-		const isHovering = this.engine.isHovering(node);
 
 		const circle = shapes.get("anchor", () => new Circle(5));
 		const circleCore = shapes.get("anchor:core", () => new Circle(3));
@@ -68,13 +67,16 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 			element.blur(0);
 		}
 
-		if (node.active) {
+		if ("selected" === node.active) {
 			element.updateStyle(shapeStyle.selected, stepClipsOptimized[node.getStep()]);
 			circle.updateStyle(anchorStyle.selected);
 			circleCore.updateMesh(anchorPosition);
 			circleCore.updateStyle(anchorCoreStyle);
 			circleCore.show();
-		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
+		} else if ("preview" === node.active) {
+			element.updateStyle(shapeStyle.secondary, stepClipsOptimized[node.getStep()]);
+			circle.updateStyle(anchorStyle.dimmed);
+		} else if ("dimmed" === node.active) {
 			element.updateStyle(shapeStyle.dimmed, stepClipsOptimized[node.getStep()]);
 			circle.updateStyle(anchorStyle.dimmed);
 		} else {

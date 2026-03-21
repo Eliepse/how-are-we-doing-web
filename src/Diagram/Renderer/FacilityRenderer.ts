@@ -13,6 +13,7 @@ const shapeStyle = {
 	default: new SVGStyle({ fill: Color.White }),
 	selected: new SVGStyle({ fill: Color.Red }),
 	dimmed: new SVGStyle({ fill: colors.dimmedWhite }),
+	secondary: new SVGStyle({ fill: colors.secondary }),
 } as const;
 
 export class FacilityRenderer extends SVGNodeRenderer {
@@ -23,15 +24,15 @@ export class FacilityRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Facility>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const selectedNode = this.app.getDiagram().getSelectedNode();
-		const isHovering = this.engine.isHovering(node);
 
 		const element = shapes.get("sprite", () => new SVGSymbol(node.getShape()));
 		element.updateMesh(node.getGlobalPosition(), node.getGlobalRotation());
 
-		if (node.active) {
+		if ("selected" === node.active) {
 			element.updateStyle(shapeStyle.selected);
-		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
+		} else if ("preview" === node.active) {
+			element.updateStyle(shapeStyle.secondary);
+		} else if ("dimmed" === node.active) {
 			element.updateStyle(shapeStyle.dimmed);
 		} else {
 			element.updateStyle(shapeStyle.default);

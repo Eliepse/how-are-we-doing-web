@@ -29,6 +29,7 @@ type SourceList = Map<number, Array<Source>>;
 
 export class Diagram extends Node2D {
 	private _selectedNode: SelectableNode | undefined = undefined;
+	private _previewedNode: SelectableNode | undefined = undefined;
 	private _pathologies = new Map<number, Pathology>();
 	private _determinants = new Map<number, Determinant>();
 	private _facilities = new Map<number, Facility>();
@@ -61,6 +62,13 @@ export class Diagram extends Node2D {
 
 			this.selectNode(undefined);
 		});
+
+		this.addListener("mouseenter", (e: NodeEvent) => {
+			if (e.target instanceof Determinant) {
+				this.previewNode(e.target);
+			}
+		});
+		this.addListener("mouseleave", (e: NodeEvent) => e.target instanceof Determinant && this.previewNode(undefined));
 
 		const facilities = new FacilitiesRing(this.buildFacilityGroups(facilitiesData));
 		facilities.setRotation(Angle.fromDeg(156));
@@ -208,13 +216,6 @@ export class Diagram extends Node2D {
 			return;
 		}
 
-		// Activate linked nodes
-		if (undefined !== node) {
-			this.highlightConnectedNodes(node);
-		} else {
-			this.unhighlightedNodes();
-		}
-
 		// Stop pathology movement
 		if (this._selectedNode instanceof Pathology) {
 			const parent = this._selectedNode.getParent() as PathologyFamily;
@@ -238,35 +239,52 @@ export class Diagram extends Node2D {
 		}
 
 		this._selectedNode = node;
+		this.updateNodesHighlight();
 		this.dispatchEvent(new NodeEvent("nodeSelected", this._selectedNode));
 	}
 
-	private highlightConnectedNodes(refNode: SelectableNode) {
-		// Activate linked nodes
-		for (const det of this._determinants.values()) {
-			det.setActive(refNode === det || det.isConnected(refNode));
+	previewNode(previewNode: SelectableNode | undefined): void {
+		if (this._previewedNode === previewNode) {
+			return;
 		}
 
-		for (const fac of this._facilities.values()) {
-			fac.setActive(refNode === fac || fac.isConnected(refNode));
+		if (undefined !== previewNode && !(previewNode instanceof Determinant)) {
+			return;
 		}
 
-		for (const pat of this._pathologies.values()) {
-			pat.setActive(refNode === pat || pat.isConnected(refNode));
-		}
+		this._previewedNode = previewNode;
+		this.updateNodesHighlight();
+		this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
 	}
 
-	private unhighlightedNodes() {
-		for (const det of this._determinants.values()) {
-			det.setActive(false);
-		}
+	private updateNodesHighlight() {
+		const nodes = [
+			...this._determinants.values(),
+			...this._facilities.values(),
+			...this._pathologies.values(),
+		];
 
-		for (const fac of this._facilities.values()) {
-			fac.setActive(false);
-		}
+		for (const node of nodes) {
+			if(undefined !== this._selectedNode) {
+				if(node === this._selectedNode || node.isConnected(this._selectedNode)) {
+					node.setActive("selected");
+					continue;
+				}
+			}
 
-		for (const pat of this._pathologies.values()) {
-			pat.setActive(false);
+			if(undefined !== this._previewedNode) {
+				if(node === this._previewedNode || node.isConnected(this._previewedNode)) {
+					node.setActive("preview");
+					continue;
+				}
+
+			}
+
+			if(undefined == this._selectedNode && undefined == this._previewedNode) {
+				node.setActive(false);
+			} else {
+				node.setActive("dimmed");
+			}
 		}
 	}
 

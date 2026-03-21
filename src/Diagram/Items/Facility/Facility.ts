@@ -11,12 +11,13 @@ import { Determinant } from "../Determinant/Determinant";
 import { Pathology } from "../Pathology/Pathology";
 import { FacilityFamily } from "./FacilityFamily";
 import { facilityShape } from "./shapes";
+import type { ActiveStatus } from "../../types";
 
 type Associations = { determinants: number[] };
 
 export class Facility extends VirtualShape implements WithPointerEvents, WithLifecycle {
 	private _collider?: TorusCollider;
-	public active = false;
+	public active: ActiveStatus | false = false;
 
 	constructor(
 		public readonly id: number,
@@ -64,8 +65,12 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		return this._collider;
 	}
 
-	setActive(state: boolean): void {
-		this.active = state;
+	setActive(status: ActiveStatus | false): void {
+		if (this.active === status) {
+			return;
+		}
+
+		this.active = status;
 		this.shouldRepaint();
 	}
 

@@ -17,7 +17,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 
 			pathology.associations.determinants.forEach((detId) => {
 				const determinant = determinants.get(detId);
-				const linkActive = pathologyActive && determinant?.active;
+				const linkActive = pathologyActive && "selected" === determinant?.active;
 
 				if (undefined === determinant) {
 					return;

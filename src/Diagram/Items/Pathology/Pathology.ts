@@ -7,12 +7,13 @@ import { type SelectableNode } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
 import { Facility } from "../Facility/Facility";
 import { interpolate } from "../../../helpers";
+import type { ActiveStatus } from "../../types";
 
 export type PathologyEvents = { click: NodeEvent<Pathology> };
 type Associations = { determinants: number[] };
 
 export class Pathology extends Node2D implements WithPointerEvents {
-	public active = false;
+	public active: ActiveStatus | false = false;
 	private time: number = 0;
 	static readonly maxRadius: number = 8;
 	static readonly minRadius: number = 4;
@@ -39,8 +40,12 @@ export class Pathology extends Node2D implements WithPointerEvents {
 		return interpolate(Pathology.minRadius, Pathology.maxRadius, factor);
 	}
 
-	setActive(state: boolean): void {
-		this.active = state;
+	setActive(status: ActiveStatus | false): void {
+		if (this.active === status) {
+			return;
+		}
+
+		this.active = status;
 		this.shouldRepaint();
 	}
 

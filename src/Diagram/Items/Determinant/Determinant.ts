@@ -13,7 +13,7 @@ import { Pathology } from "../Pathology/Pathology";
 import { DeterminantSubFamily } from "./DeterminantSubFamily";
 import { CustomTransition } from "../../../Engine2D/Util/CustomTransition";
 import { interpolate } from "../../../helpers";
-import type { DeterminantKey } from "../../types";
+import type { ActiveStatus, DeterminantKey } from "../../types";
 
 export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[] };
@@ -23,7 +23,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	private _collider?: TorusCollider;
 	private stepsTransition ?: CustomTransition<Steps>;
 	private applicable: boolean = true;
-	public active = false;
+	public active: ActiveStatus | false = false;
 
 	constructor(
 		public readonly id: number,
@@ -105,8 +105,12 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		return this.applicable;
 	}
 
-	setActive(state: boolean): void {
-		this.active = state;
+	setActive(status: ActiveStatus | false): void {
+		if (this.active === status) {
+			return;
+		}
+
+		this.active = status;
 		this.shouldRepaint();
 	}
 

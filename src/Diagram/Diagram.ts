@@ -209,38 +209,19 @@ export class Diagram extends Node2D {
 		}
 
 		// Activate linked nodes
-
 		if (undefined !== node) {
-			for (const det of this._determinants.values()) {
-				det.setActive(node === det || det.isConnected(node));
-			}
-
-			for (const fac of this._facilities.values()) {
-				fac.setActive(node === fac || fac.isConnected(node));
-			}
-
-			for (const pat of this._pathologies.values()) {
-				pat.setActive(node === pat || pat.isConnected(node));
-			}
+			this.highlightConnectedNodes(node);
 		} else {
-			for (const det of this._determinants.values()) {
-				det.setActive(false);
-			}
-
-			for (const fac of this._facilities.values()) {
-				fac.setActive(false);
-			}
-
-			for (const pat of this._pathologies.values()) {
-				pat.setActive(false);
-			}
+			this.unhighlightedNodes();
 		}
 
+		// Stop pathology movement
 		if (this._selectedNode instanceof Pathology) {
 			const parent = this._selectedNode.getParent() as PathologyFamily;
 			parent.paused = false;
 		}
 
+		// Update decoration
 		if (node instanceof Pathology) {
 			const parent = node.getParent() as PathologyFamily;
 			parent.paused = true;
@@ -258,6 +239,35 @@ export class Diagram extends Node2D {
 
 		this._selectedNode = node;
 		this.dispatchEvent(new NodeEvent("nodeSelected", this._selectedNode));
+	}
+
+	private highlightConnectedNodes(refNode: SelectableNode) {
+		// Activate linked nodes
+		for (const det of this._determinants.values()) {
+			det.setActive(refNode === det || det.isConnected(refNode));
+		}
+
+		for (const fac of this._facilities.values()) {
+			fac.setActive(refNode === fac || fac.isConnected(refNode));
+		}
+
+		for (const pat of this._pathologies.values()) {
+			pat.setActive(refNode === pat || pat.isConnected(refNode));
+		}
+	}
+
+	private unhighlightedNodes() {
+		for (const det of this._determinants.values()) {
+			det.setActive(false);
+		}
+
+		for (const fac of this._facilities.values()) {
+			fac.setActive(false);
+		}
+
+		for (const pat of this._pathologies.values()) {
+			pat.setActive(false);
+		}
 	}
 
 	getSelectedNode(): SelectableNode | undefined {

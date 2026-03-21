@@ -162,20 +162,34 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	}
 
 	private handleMouseMove(cursor: Vector): void {
-		for (const node of this._pointerEventsNodes) {
-			const hovering = node.getPointerCollider().isInside(cursor);
-			const nodeHovered = this._hoveredNodes.has(node);
+		const skipCheck: (Node2D & WithPointerEvents)[] = [];
 
-			if (hovering && false === nodeHovered) {
-				this._hoveredNodes.add(node);
-				node.dispatchEvent(new NodeEvent("mouseenter", node));
+		for (const hoveredNodes of this._hoveredNodes) {
+			// Still hovering
+			if (hoveredNodes.getPointerCollider().isInside(cursor)) {
 				continue;
 			}
 
-			if (false === hovering && nodeHovered) {
-				this._hoveredNodes.delete(node);
-				node.dispatchEvent(new NodeEvent("mouseleave", node));
+			// Handle not hovering anymore
+			skipCheck.push(hoveredNodes);
+			this._hoveredNodes.delete(hoveredNodes);
+			hoveredNodes.dispatchEvent(new NodeEvent("mouseleave", hoveredNodes));
+		}
+
+		for (const node of this._pointerEventsNodes) {
+			// Prevent re-checking node that has already been checked for "mouseleave"
+			if (skipCheck.includes(node)) {
+				continue;
 			}
+
+			// Not hovering
+			if (false === node.getPointerCollider().isInside(cursor)) {
+				continue;
+			}
+
+			// Handle hovering
+			this._hoveredNodes.add(node);
+			node.dispatchEvent(new NodeEvent("mouseenter", node));
 		}
 	}
 

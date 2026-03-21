@@ -97,6 +97,17 @@ async function main(withLoader = true) {
 	setupCredits();
 	setupContextControls(app);
 
+	// Toggle the interface visibility
+	document.addEventListener("keydown", (e) => {
+		const nav = document.querySelector<HTMLElement>("#navigation");
+		const legend = document.querySelector<HTMLElement>(".legend");
+
+		if ("i" === e.key && nav && legend) {
+			nav.style.display = nav.style.display.trim() ? "" : "none";
+			legend.style.display = legend.style.display.trim() ? "" : "none";
+		}
+	});
+
 	loaderDom.root && (loaderDom.root.style.opacity = "0");
 	await wait(1000);
 	loaderDom.root?.remove();

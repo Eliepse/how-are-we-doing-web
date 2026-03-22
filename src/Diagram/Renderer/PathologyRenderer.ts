@@ -28,11 +28,12 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const selectedNode = this.app.getDiagram().getSelectedNode();
 		const position = node.getGlobalPosition();
 		const isHovered = this.engine.isHovering(node);
+		const isActive = "selected" === node.active || "preview" === node.active;
 
 		const edge = shapes.get("edge", () => new Circle(8));
 		const core = shapes.get("core", () => new Circle(5));
 
-		edge.updateMesh(position, node.active ? Pathology.maxRadius : node.getRadius());
+		edge.updateMesh(position, isActive ? Pathology.maxRadius : node.getRadius());
 		core.updateMesh(position);
 
 		if ("selected" === node.active) {

@@ -4,7 +4,7 @@ import { Angle } from "../../Engine2D/ValueObject/Angle";
 import { Diagram } from "../Diagram";
 import { determinantAnchorOffset } from "./DeterminantRenderer";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
-import { LinkPath } from "../Shape/LinkPath";
+import { LinkPath, style } from "../Shape/LinkPath";
 
 export class PathologyLinkRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode): void {
@@ -13,19 +13,19 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 
 		node.getPathologies().forEach((pathology) => {
-			const pathologyActive = pathology.active;
+			const pathologyActive = "selected" === pathology.active || "preview" === pathology.active;
 
 			pathology.associations.determinants.forEach((detId) => {
 				const determinant = determinants.get(detId);
-				const linkActive = pathologyActive && "selected" === determinant?.active;
 
 				if (undefined === determinant) {
 					return;
 				}
 
+				const determinantActive = "selected" === determinant.active || "preview" === determinant.active;
 				const shapeKey = `link:pathology:${pathology.id}-${determinant.id}`;
 
-				if (false === linkActive) {
+				if (false === pathologyActive || false === determinantActive) {
 					shapes.remove(shapeKey);
 					return;
 				}
@@ -45,6 +45,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 				const toAnchor = center.sub(to).rot(Angle.fromDeg(32)).mul(0.32).add(to);
 
 				path.updateMesh(from, fromAnchor, to, toAnchor);
+				path.updateStyle("selected" === determinant.active ? style.selected : style.preview);
 			});
 		});
 	}

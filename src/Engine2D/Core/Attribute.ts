@@ -21,8 +21,8 @@ export class Attribute<TValue> {
 	/**
 	 * Change the current value
 	 */
-	set(value: TValue) {
-		this.current = value;
+	set(value: TValue|((previous: TValue, current: TValue) => TValue)) {
+		this.current = value instanceof Function ? value(this.previous, this.current) : value;
 		return this;
 	}
 

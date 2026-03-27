@@ -28,7 +28,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const selectedNode = this.app.getDiagram().getSelectedNode();
 		const position = node.getGlobalPosition();
 		const isHovered = this.engine.isHovering(node);
-		const isActive = "selected" === node.active || "preview" === node.active;
+		const isActive = "selected" === node.active.get() || "preview" === node.active.get();
 
 		const edge = shapes.get("edge", () => new Circle(8));
 		const core = shapes.get("core", () => new Circle(5));
@@ -39,9 +39,9 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			core.updateMesh(position.get());
 		}
 
-		if ("selected" === node.active) {
+		if ("selected" === node.active.get()) {
 			edge.updateStyle(activeStyle);
-		} else if ("preview" === node.active) {
+		} else if ("preview" === node.active.get()) {
 			edge.updateStyle(secondaryStyle);
 		} else if (isHovered) {
 			edge.updateStyle(hoveredStyle);
@@ -51,7 +51,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			edge.updateStyle(defaultStyle);
 		}
 
-		if ("selected" === node.active) {
+		if ("selected" === node.active.get()) {
 			core.updateStyle(coreStyle);
 			core.show();
 		} else {

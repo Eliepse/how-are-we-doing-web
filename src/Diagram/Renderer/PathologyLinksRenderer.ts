@@ -13,7 +13,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 
 		node.getPathologies().forEach((pathology) => {
-			const pathologyActive = "selected" === pathology.active || "preview" === pathology.active;
+			const pathologyActive = "selected" === pathology.active.get() || "preview" === pathology.active.get();
 
 			pathology.associations.determinants.forEach((detId) => {
 				const determinant = determinants.get(detId);

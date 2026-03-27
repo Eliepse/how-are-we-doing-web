@@ -22,7 +22,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 					return;
 				}
 
-				const determinantActive = "selected" === determinant.active || "preview" === determinant.active;
+				const determinantActive = "selected" === determinant.active.get() || "preview" === determinant.active.get();
 				const shapeKey = `link:pathology:${pathology.id}-${determinant.id}`;
 
 				if (false === pathologyActive || false === determinantActive) {
@@ -45,7 +45,10 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 				const toAnchor = center.sub(to.get()).rot(Angle.fromDeg(32)).mul(0.32).add(to.get());
 
 				path.updateMesh(from.get(), fromAnchor, to.get(), toAnchor);
-				path.updateStyle("selected" === determinant.active ? style.selected : style.preview);
+
+				if(determinant.active.hasChanged()) {
+					path.updateStyle("selected" === determinant.active.get() ? style.selected : style.preview);
+				}
 			});
 		});
 	}

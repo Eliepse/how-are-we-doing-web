@@ -3,9 +3,9 @@ import type { Symbolic } from "../../../Engine2D/Contract/renderable";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
-import type { Engine } from "../../../Engine2D/Engine";
+import { type Engine, type RenderType, RenderTypes } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
-import type { Angle } from "../../../Engine2D/ValueObject/Angle";
+import { type Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
 import { type SelectableNode } from "../../Diagram";
 import { Facility } from "../Facility/Facility";
@@ -14,16 +14,17 @@ import { DeterminantSubFamily } from "./DeterminantSubFamily";
 import { CustomTransition } from "../../../Engine2D/Util/CustomTransition";
 import { interpolate } from "../../../helpers";
 import type { ActiveStatus, DeterminantKey } from "../../types";
+import { Attribute } from "../../../Engine2D/Core/Attribute";
 
 export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[] };
 
 export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
-	private step: Steps = 2;
 	private _collider?: TorusCollider;
+	private step = new Attribute<Steps>(2);
+	private applicable = new Attribute(true);
+	public active = new Attribute<ActiveStatus | false>(false);
 	private stepsTransition ?: CustomTransition<Steps>;
-	private applicable: boolean = true;
-	public active: ActiveStatus | false = false;
 
 	constructor(
 		public readonly id: number,
@@ -59,8 +60,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		super.onProcess(deltaTime);
 
 		if (this.stepsTransition) {
-			this.step = this.stepsTransition.value;
-			this.shouldRepaint();
+			this.step.set(this.stepsTransition.value);
 		}
 	}
 
@@ -82,36 +82,29 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		return this._collider;
 	}
 
-	getStep(): Steps {
+	getStep() {
 		return this.step;
 	}
 
 	setStep(step: Steps): void {
-		this.applicable = true;
+		this.applicable.set(true);
 		this.stepsTransition = new CustomTransition(
-			{ durationMs: 350, from: this.step, to: step, completed: () => this.stepsTransition = undefined },
+			{ durationMs: 350, from: this.step.get(), to: step, completed: () => this.stepsTransition = undefined },
 			(percent, from, to) => Math.round(interpolate(from, to, percent)) as Steps,
 		);
-		this.shouldRepaint();
 	}
 
 	notApplicable(): void {
-		this.step = 1;
-		this.applicable = false;
-		this.shouldRepaint();
+		this.step.set(1);
+		this.applicable.set(false);
 	}
 
-	isApplicable(): boolean {
+	isApplicable() {
 		return this.applicable;
 	}
 
 	setActive(status: ActiveStatus | false): void {
-		if (this.active === status) {
-			return;
-		}
-
-		this.active = status;
-		this.shouldRepaint();
+		this.active.set(status);
 	}
 
 	isConnected(node: SelectableNode): boolean {
@@ -124,5 +117,28 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		}
 
 		return false;
+	}
+
+
+	override onRendered(_deltaTime: number) {
+		super.onRendered(_deltaTime);
+		this.step.commit();
+		this.applicable.commit();
+		this.active.commit();
+	}
+
+
+	override renderState(): RenderType {
+		const parent = super.renderState();
+
+		if (RenderTypes.Breaking === parent) {
+			return parent;
+		}
+
+		if (this.active.hasChanged() || this.applicable.hasChanged() || this.step.hasChanged()) {
+			return RenderTypes.Paint;
+		}
+
+		return parent;
 	}
 }

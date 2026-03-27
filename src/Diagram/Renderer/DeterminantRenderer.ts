@@ -70,30 +70,26 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 
 		circleCore.hide();
 
-		if(false === node.isApplicable()) {
-			element.blur(4);
-		} else {
-			element.blur(0);
+		if(node.isApplicable().hasChanged()) {
+			element.blur(node.isApplicable().get() ? 4 : 0);
 		}
 
-		if ("selected" === node.active) {
-			element.updateStyle(shapeStyle.selected, stepClipsOptimized[node.getStep()]);
+		const active = node.active;
+		const step = node.getStep();
+
+		if ("selected" === active.get()) {
+			element.updateStyle(shapeStyle.selected, stepClipsOptimized[step.get()]);
 			circle.updateStyle(anchorStyle.selected);
-
-			if(anchorPosition.hasChanged()) {
-				circle.updateMesh(anchorPosition.get());
-			}
-
 			circleCore.updateStyle(anchorCoreStyle);
 			circleCore.show();
-		} else if ("preview" === node.active) {
-			element.updateStyle(shapeStyle.secondary, stepClipsOptimized[node.getStep()]);
+		} else if ("preview" === active.get()) {
+			element.updateStyle(shapeStyle.secondary, stepClipsOptimized[step.get()]);
 			circle.updateStyle(anchorStyle.dimmed);
-		} else if ("dimmed" === node.active) {
-			element.updateStyle(shapeStyle.dimmed, stepClipsOptimized[node.getStep()]);
+		} else if ("dimmed" === active.get()) {
+			element.updateStyle(shapeStyle.dimmed, stepClipsOptimized[step.get()]);
 			circle.updateStyle(anchorStyle.dimmed);
 		} else {
-			element.updateStyle(shapeStyle.default, stepClipsOptimized[node.getStep()]);
+			element.updateStyle(shapeStyle.default, stepClipsOptimized[step.get()]);
 			circle.updateStyle(anchorStyle.default);
 		}
 	}

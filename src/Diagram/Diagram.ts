@@ -15,9 +15,12 @@ import { FacilityFamily } from "./Items/Facility/FacilityFamily";
 import { Pathology } from "./Items/Pathology/Pathology";
 import { PathologyFamily } from "./Items/Pathology/PathologyFamily";
 import type { DeterminantKey } from "./types";
-import type { Context } from "./Context";
+import { type Context } from "./Context";
 import { BgDecorationManager } from "./Decoration/BgDecorationManager";
+import { Attribute } from "../Engine2D/Core/Attribute";
+import { type RenderType, RenderTypes } from "../Engine2D/Engine";
 
+export type RingType = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
 
 export type PathologiesData = (typeof db)["pathologies"];
@@ -37,8 +40,9 @@ export class Diagram extends Node2D {
 		Determinant["id"],
 		{ pathologies: SourceList; facilities: SourceList }
 	>();
-	public backgroundBlobClock: number = 0;
+	public backgroundBlobClock = new Attribute(0);
 	private decorations: BgDecorationManager;
+	private highlightedRings: RingType[] = [];
 
 	constructor(
 		pathologiesData: PathologiesData,
@@ -120,8 +124,7 @@ export class Diagram extends Node2D {
 
 	override onProcess(deltaTime: number): void {
 		super.onProcess(deltaTime);
-		this.backgroundBlobClock += deltaTime;
-		this.shouldRepaint();
+		this.backgroundBlobClock.set((_, current) => current + deltaTime);
 	}
 
 	private buildFacilityGroups(groups: FacilitiesData): Array<ArcGroup<Facility>> {
@@ -265,22 +268,22 @@ export class Diagram extends Node2D {
 		];
 
 		for (const node of nodes) {
-			if(undefined !== this._selectedNode) {
-				if(node === this._selectedNode || node.isConnected(this._selectedNode)) {
+			if (undefined !== this._selectedNode) {
+				if (node === this._selectedNode || node.isConnected(this._selectedNode)) {
 					node.setActive("selected");
 					continue;
 				}
 			}
 
-			if(undefined !== this._previewedNode) {
-				if(node === this._previewedNode || node.isConnected(this._previewedNode)) {
+			if (undefined !== this._previewedNode) {
+				if (node === this._previewedNode || node.isConnected(this._previewedNode)) {
 					node.setActive("preview");
 					continue;
 				}
 
 			}
 
-			if(undefined == this._selectedNode && undefined == this._previewedNode) {
+			if (undefined == this._selectedNode && undefined == this._previewedNode) {
 				node.setActive(false);
 			} else {
 				node.setActive("dimmed");
@@ -394,5 +397,22 @@ export class Diagram extends Node2D {
 
 			determinant.setStep(value);
 		}
+	}
+
+
+	override onRendered(_deltaTime: number) {
+		super.onRendered(_deltaTime);
+		this.backgroundBlobClock.commit();
+	}
+
+
+	override renderState(): RenderType {
+		const parent = super.renderState();
+
+		if (RenderTypes.Breaking === parent) {
+			return parent;
+		}
+
+		return this.backgroundBlobClock.hasChanged() ? RenderTypes.Paint : parent;
 	}
 }

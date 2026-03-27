@@ -7,7 +7,12 @@ export class DiagramBackgroundRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Diagram>): void {
 		const shapes = this.getShapes(vnode);
 		const blob = shapes.get("background", () => new DiagramBlobBackground(260));
-		blob.updateMesh(vnode.node.getGlobalPosition().get(), vnode.node.backgroundBlobClock);
+		const position = vnode.node.getGlobalPosition();
+		const clock = vnode.node.backgroundBlobClock;
+
+		if (position.hasChanged() || clock.hasChanged()) {
+			blob.updateMesh(position.get(), clock.get());
+		}
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

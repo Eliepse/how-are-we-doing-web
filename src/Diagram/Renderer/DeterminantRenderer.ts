@@ -71,7 +71,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		circleCore.hide();
 
 		if(node.isApplicable().hasChanged()) {
-			element.blur(node.isApplicable().get() ? 4 : 0);
+			element.blur(node.isApplicable().get() ? 0 : 4);
 		}
 
 		const active = node.active;

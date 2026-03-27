@@ -63,6 +63,6 @@ export class Pathology extends Node2D implements WithPointerEvents {
 	}
 
 	getPointerCollider(): Collider {
-		return new CircleCollider(this.getGlobalPosition(), 10);
+		return new CircleCollider(this.getGlobalPosition().get(), 10);
 	}
 }

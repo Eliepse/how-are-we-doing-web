@@ -14,11 +14,14 @@ export class PathologyFamilyRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<PathologyFamily>): void {
 		const shapes = this.getShapes(vnode);
 		const size = vnode.node.getChildren().length;
+		const position = vnode.node.getGlobalPosition();
 
 		const blob = shapes.get("blob", () => new PathologyBlob(blobSize(size / 25)));
 
-		// TODO: add time
-		blob.updateMesh(0, vnode.node.getGlobalPosition());
+		if (position.hasChanged()) {
+			// TODO: add time
+			blob.updateMesh(0, position.get());
+		}
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

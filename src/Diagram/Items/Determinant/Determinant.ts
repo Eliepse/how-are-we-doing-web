@@ -47,11 +47,11 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		const torusWidth = parent.getTorusWidth() + 16;
 
 		this._collider = new TorusCollider(
-			parent.getGlobalPosition(),
+			parent.getGlobalPosition().get(),
 			outerRadius - torusWidth / 2,
 			torusWidth,
 			this._colliderConfig.arc,
-			this.getGlobalRotation().sub(this._colliderConfig.arc.div(2)),
+			this.getGlobalRotation().get().sub(this._colliderConfig.arc.div(2)),
 		);
 	}
 
@@ -76,7 +76,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		const position = this.getParent()?.getGlobalPosition();
 
 		if (position) {
-			this._collider.setCenter(position);
+			this._collider.setCenter(position.get());
 		}
 
 		return this._collider;

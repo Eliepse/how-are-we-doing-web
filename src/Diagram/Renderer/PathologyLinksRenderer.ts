@@ -41,10 +41,10 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 				tempNode.setPosition(determinantAnchorOffset);
 				const to = tempNode.getGlobalPosition();
 
-				const fromAnchor = to.sub(center).mul(0.16).add(from);
-				const toAnchor = center.sub(to).rot(Angle.fromDeg(32)).mul(0.32).add(to);
+				const fromAnchor = to.get().sub(center).mul(0.16).add(from.get());
+				const toAnchor = center.sub(to.get()).rot(Angle.fromDeg(32)).mul(0.32).add(to.get());
 
-				path.updateMesh(from, fromAnchor, to, toAnchor);
+				path.updateMesh(from.get(), fromAnchor, to.get(), toAnchor);
 				path.updateStyle("selected" === determinant.active ? style.selected : style.preview);
 			});
 		});

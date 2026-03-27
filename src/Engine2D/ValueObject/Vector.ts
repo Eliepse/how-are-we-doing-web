@@ -99,7 +99,7 @@ export class Vector {
 	}
 
 	isEqual(vector: Vector): boolean {
-		return this.x === vector.x && this.y === vector.y;
+		return Vector.isEqual(this, vector);
 	}
 
 	toAttributes() {
@@ -116,5 +116,12 @@ export class Vector {
 
 	static rand(size: number = 1) {
 		return new Vector((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2).mul(size);
+	}
+
+	static isEqual(a: Vector, b: Vector): boolean {
+		return a.x === b.x && a.y === b.y;
+	}
+	static isDiff(a: Vector, b: Vector): boolean {
+		return !Vector.isEqual(a, b);
 	}
 }

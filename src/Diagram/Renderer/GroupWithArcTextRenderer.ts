@@ -15,6 +15,7 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<FacilityFamily | DeterminantSubFamily>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
+		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
 		const angleShift = node.getItemArc().div(2);
 
@@ -28,12 +29,14 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 			},
 		);
 
-		arcText.updateMesh(
-			node.getGlobalPosition(),
-			node.getRadius() + (node instanceof FacilityFamily ? 32 : 44),
-			rotation.sub(angleShift),
-			rotation.sub(angleShift).add(node.getArc()),
-		);
+		if (position.hasChanged() || rotation.hasChanged()) {
+			arcText.updateMesh(
+				position.get(),
+				node.getRadius() + (node instanceof FacilityFamily ? 32 : 44),
+				rotation.get().sub(angleShift),
+				rotation.get().sub(angleShift).add(node.getArc()),
+			);
+		}
 	}
 
 	override accepts(node: VirtualNode): boolean {

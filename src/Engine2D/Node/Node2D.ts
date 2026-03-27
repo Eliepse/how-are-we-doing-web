@@ -2,12 +2,15 @@ import { Angle } from "../ValueObject/Angle";
 import { Vector } from "../ValueObject/Vector";
 import { Observable } from "./Observable";
 import { type RenderType, RenderTypes } from "../Engine";
+import { Attribute } from "../Core/Attribute";
 
 export class Node2D extends Observable {
 	protected _parent?: Node2D = undefined;
 	protected children: Array<Node2D> = [];
-	protected position = Vector.Zero;
-	protected rotation = Angle.Zero;
+	protected position = new Attribute(Vector.Zero, Vector.isDiff);
+	protected rotation = new Attribute(Angle.Zero, Angle.isDiff);
+	protected globalPosition = new Attribute(Vector.Zero, Vector.isDiff);
+	protected globalRotation = new Attribute(Angle.Zero, Angle.isDiff);
 	private rerender: RenderType = RenderTypes.Skip;
 
 	setParent(element: Node2D): void {
@@ -30,40 +33,74 @@ export class Node2D extends Observable {
 
 	setPosition(value: Vector): void {
 		this.shouldRerender();
-		this.position = value;
+		this.position.set(value);
 	}
 
-	getPosition(): Vector {
+	getPosition() {
 		return this.position;
 	}
 
-	getGlobalPosition(): Vector {
-		const parentPosition = this.getParent()?.getGlobalPosition() ?? Vector.Zero;
-		const position = this.getPosition().rot(
-			this.getParent()?.getGlobalRotation() ?? Angle.Zero,
-		);
-		return parentPosition.add(position);
+	getGlobalPosition() {
+		const parent = this.getParent();
+
+		// Current node is root, therefore the local position is the reference
+		if (undefined === parent) {
+			return this.position;
+		}
+
+		const parentPos = parent.getGlobalPosition();
+
+		// Positions changed, recompute all!
+		if (parentPos.hasChanged() || this.position.hasChanged()) {
+			// Rotate the position based on the parent position and rotation
+			const rotatedPosition = this.getPosition().get().rot(parent.getGlobalRotation().get());
+
+			// Apply the rotated local position to the parent one
+			const newPosition = parentPos.get().add(rotatedPosition);
+
+			// Cache the new position
+			this.globalPosition.set(newPosition);
+		}
+
+		return this.globalPosition;
 	}
 
 	setRotation(value: Angle): void {
 		this.shouldRerender();
-		this.rotation = value;
+		this.rotation.set(value);
 	}
 
-	getRotation(): Angle {
+	getRotation() {
 		return this.rotation;
 	}
 
-	getGlobalRotation(): Angle {
-		return (this.getParent()?.getGlobalRotation() ?? Angle.Zero).add(this.getRotation());
+	getGlobalRotation() {
+		const parent = this.getParent();
+
+		// Current node is root, therefore the local rotation is the reference
+		if (undefined === parent) {
+			return this.rotation;
+		}
+
+		const parentRot = parent.getGlobalRotation();
+
+		if (parentRot.hasChanged() || this.rotation.hasChanged()) {
+			this.globalRotation.set(parentRot.get().add(this.rotation.get()));
+		}
+
+		return this.globalRotation;
 	}
 
-	onProcess(deltaTime: number): void {
+	onProcess(_deltaTime: number): void {
 		//
 	}
 
-	onRendered(deltaTime: number): void {
+	onRendered(_deltaTime: number): void {
 		this.rerender = RenderTypes.Skip;
+		this.position.commit();
+		this.rotation.commit();
+		this.globalRotation.commit();
+		this.globalRotation.commit();
 	}
 
 	protected shouldRepaint(): void {

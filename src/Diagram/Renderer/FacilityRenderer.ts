@@ -24,9 +24,14 @@ export class FacilityRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Facility>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
+		const position = node.getGlobalPosition();
+		const rotation = node.getGlobalRotation();
 
 		const element = shapes.get("sprite", () => new SVGSymbol(node.getShape()));
-		element.updateMesh(node.getGlobalPosition(), node.getGlobalRotation());
+
+		if(position.hasChanged() || rotation.hasChanged()) {
+			element.updateMesh(position.get(), rotation.get());
+		}
 
 		if ("selected" === node.active) {
 			element.updateStyle(shapeStyle.selected);

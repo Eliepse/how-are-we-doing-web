@@ -47,6 +47,9 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
 
+		const nodePosition = node.getGlobalPosition();
+		const nodeRotation = node.getGlobalRotation();
+
 		// Create a temporary node to compute the position
 		const anchor = new Node2D();
 		anchor.setParent(node);
@@ -57,8 +60,14 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		const circleCore = shapes.get("anchor:core", () => new Circle(3));
 		const element = shapes.get("virtualShape", () => new SVGSymbol(node.getShape()));
 
-		element.updateMesh(node.getGlobalPosition(), node.getGlobalRotation());
-		circle.updateMesh(anchorPosition);
+		if(nodePosition.hasChanged() || nodeRotation.hasChanged()) {
+			element.updateMesh(nodePosition.get(), nodeRotation.get());
+		}
+
+		if(anchorPosition.hasChanged()) {
+			circle.updateMesh(anchorPosition.get());
+		}
+
 		circleCore.hide();
 
 		if(false === node.isApplicable()) {
@@ -70,7 +79,11 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		if ("selected" === node.active) {
 			element.updateStyle(shapeStyle.selected, stepClipsOptimized[node.getStep()]);
 			circle.updateStyle(anchorStyle.selected);
-			circleCore.updateMesh(anchorPosition);
+
+			if(anchorPosition.hasChanged()) {
+				circle.updateMesh(anchorPosition.get());
+			}
+
 			circleCore.updateStyle(anchorCoreStyle);
 			circleCore.show();
 		} else if ("preview" === node.active) {

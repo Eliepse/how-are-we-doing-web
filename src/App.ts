@@ -136,7 +136,7 @@ export class App {
 				return;
 			}
 
-			const nodePosition = node.getGlobalPosition();
+			const nodePosition = node.getGlobalPosition().get();
 			const hSize = this.engine.getRenderer().size.div(2);
 
 			this.labelManager.show(
@@ -162,7 +162,7 @@ export class App {
 				return;
 			}
 
-			const nodePosition = node.getGlobalPosition();
+			const nodePosition = node.getGlobalPosition().get();
 			const hSize = this.engine.getRenderer().size.div(2);
 
 			this.labelManager.hide("hover");

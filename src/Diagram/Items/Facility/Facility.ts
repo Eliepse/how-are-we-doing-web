@@ -39,11 +39,11 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		const torusWidth = 24;
 
 		this._collider = new TorusCollider(
-			parent.getGlobalPosition(),
+			parent.getGlobalPosition().get(),
 			outerRadius - torusWidth / 2,
 			torusWidth,
 			this._arc,
-			this.getGlobalRotation().sub(this._arc.div(2)),
+			this.getGlobalRotation().get().sub(this._arc.div(2)),
 		);
 	}
 
@@ -59,7 +59,7 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		const position = this.getParent()?.getGlobalPosition();
 
 		if (position) {
-			this._collider.setCenter(position);
+			this._collider.setCenter(position.get());
 		}
 
 		return this._collider;

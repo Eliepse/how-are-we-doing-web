@@ -51,7 +51,6 @@ export class PathologyFamily extends Node2D {
 		super.onProcess(deltaTime);
 
 		if (this.paused) {
-			this.shouldRepaint();
 			return;
 		}
 

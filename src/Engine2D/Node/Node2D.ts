@@ -103,29 +103,20 @@ export class Node2D extends Observable {
 		this.globalRotation.commit();
 	}
 
-	protected shouldRepaint(): void {
-		if (RenderTypes.Breaking === this.rerender) {
-			// Prevent rolling back to lower rendering state
-			return;
-		}
-
-		this.rerender = RenderTypes.Paint;
-	}
-
 	protected shouldRerender(): void {
 		this.rerender = RenderTypes.Breaking;
 	}
 
 	renderState(): RenderType {
-		if(RenderTypes.Breaking === this.rerender) {
+		if (RenderTypes.Breaking === this.rerender) {
 			return this.rerender;
 		}
 
-		if(this.position.hasChanged() || this.rotation.hasChanged()) {
+		if (this.position.hasChanged() || this.rotation.hasChanged()) {
 			return RenderTypes.Paint;
 		}
 
-		if(this.globalPosition.hasChanged() || this.globalRotation.hasChanged()) {
+		if (this.globalPosition.hasChanged() || this.globalRotation.hasChanged()) {
 			return RenderTypes.Paint;
 		}
 

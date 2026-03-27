@@ -9,7 +9,9 @@ export class Node2D extends Observable {
 	protected children: Array<Node2D> = [];
 	protected position = new Attribute(Vector.Zero, Vector.isDiff);
 	protected rotation = new Attribute(Angle.Zero, Angle.isDiff);
+	// Global position caches, used only in getGlobalPosition()
 	protected globalPosition = new Attribute(Vector.Zero, Vector.isDiff);
+	// Global position caches, used only in getGlobalRotation()
 	protected globalRotation = new Attribute(Angle.Zero, Angle.isDiff);
 	private rerender: RenderType = RenderTypes.Skip;
 
@@ -32,7 +34,6 @@ export class Node2D extends Observable {
 	}
 
 	setPosition(value: Vector): void {
-		this.shouldRerender();
 		this.position.set(value);
 	}
 
@@ -66,7 +67,6 @@ export class Node2D extends Observable {
 	}
 
 	setRotation(value: Angle): void {
-		this.shouldRerender();
 		this.rotation.set(value);
 	}
 
@@ -117,6 +117,18 @@ export class Node2D extends Observable {
 	}
 
 	renderState(): RenderType {
+		if(RenderTypes.Breaking === this.rerender) {
+			return this.rerender;
+		}
+
+		if(this.position.hasChanged() || this.rotation.hasChanged()) {
+			return RenderTypes.Paint;
+		}
+
+		if(this.globalPosition.hasChanged() || this.globalRotation.hasChanged()) {
+			return RenderTypes.Paint;
+		}
+
 		return this.rerender;
 	}
 

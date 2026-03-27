@@ -57,7 +57,6 @@ export class PathologyFamily extends Node2D {
 
 		this._noiseClock += deltaTime;
 		this.updateShiftedPosition(this._noiseClock);
-		this.shouldRerender();
 	}
 
 	getSize(): number {

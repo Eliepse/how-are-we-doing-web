@@ -2,9 +2,9 @@ import type { Collider } from "../../../Engine2D/Physic/Collider";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
-import type { Engine } from "../../../Engine2D/Engine";
+import { type Engine, type RenderType, RenderTypes } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
-import type { Angle } from "../../../Engine2D/ValueObject/Angle";
+import { type Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
 import { type SelectableNode } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
@@ -12,12 +12,13 @@ import { Pathology } from "../Pathology/Pathology";
 import { FacilityFamily } from "./FacilityFamily";
 import { facilityShape } from "./shapes";
 import type { ActiveStatus } from "../../types";
+import { Attribute } from "../../../Engine2D/Core/Attribute";
 
 type Associations = { determinants: number[] };
 
 export class Facility extends VirtualShape implements WithPointerEvents, WithLifecycle {
 	private _collider?: TorusCollider;
-	public active: ActiveStatus | false = false;
+	public active = new Attribute<ActiveStatus | false>(false);
 
 	constructor(
 		public readonly id: number,
@@ -66,12 +67,7 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 	}
 
 	setActive(status: ActiveStatus | false): void {
-		if (this.active === status) {
-			return;
-		}
-
-		this.active = status;
-		this.shouldRepaint();
+		this.active.set(status);
 	}
 
 	isConnected(node: SelectableNode): boolean {
@@ -85,5 +81,22 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		}
 
 		return false;
+	}
+
+
+	override onRendered(_deltaTime: number) {
+		super.onRendered(_deltaTime);
+		this.active.commit();
+	}
+
+
+	override renderState(): RenderType {
+		const parent = super.renderState();
+
+		if (RenderTypes.Breaking === parent) {
+			return parent;
+		}
+
+		return this.active.hasChanged() ? RenderTypes.Paint : parent;
 	}
 }

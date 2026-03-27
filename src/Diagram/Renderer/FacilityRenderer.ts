@@ -29,15 +29,19 @@ export class FacilityRenderer extends SVGNodeRenderer {
 
 		const element = shapes.get("sprite", () => new SVGSymbol(node.getShape()));
 
-		if(position.hasChanged() || rotation.hasChanged()) {
+		if (position.hasChanged() || rotation.hasChanged()) {
 			element.updateMesh(position.get(), rotation.get());
 		}
 
-		if ("selected" === node.active) {
+		if (false === node.active.hasChanged()) {
+			return;
+		}
+
+		if ("selected" === node.active.get()) {
 			element.updateStyle(shapeStyle.selected);
-		} else if ("preview" === node.active) {
+		} else if ("preview" === node.active.get()) {
 			element.updateStyle(shapeStyle.secondary);
-		} else if ("dimmed" === node.active) {
+		} else if ("dimmed" === node.active.get()) {
 			element.updateStyle(shapeStyle.dimmed);
 		} else {
 			element.updateStyle(shapeStyle.default);

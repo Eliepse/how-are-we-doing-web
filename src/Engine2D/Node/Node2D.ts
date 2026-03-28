@@ -112,9 +112,8 @@ export class Node2D extends Observable {
 		}
 
 		const parentOpacity = parent.getGlobalOpacity();
-
 		if (parentOpacity.hasChanged() || this.opacity.hasChanged()) {
-			this.globalOpacity.set(new Opacity(parentOpacity.get().ratio * this.opacity.get().ratio));
+			this.globalOpacity.set(parentOpacity.get().mul(this.opacity.get()));
 		}
 
 		return this.globalOpacity;

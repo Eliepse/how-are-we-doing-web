@@ -5,7 +5,7 @@ export class Opacity implements Parameter {
 	static Opaque = new Opacity(1);
 	static Transparent = new Opacity(0);
 
-	private value: number;
+	private readonly value: number;
 
 	constructor(value: number = 1) {
 		this.value = clamp(0, value, 1);
@@ -13,6 +13,10 @@ export class Opacity implements Parameter {
 
 	get ratio(): number {
 		return this.value;
+	}
+
+	mul(factor: number | Opacity) {
+		return new Opacity(this.value * (factor instanceof Opacity ? factor.value : clamp(0, factor, 1)));
 	}
 
 	isEqual(parameter: Parameter): boolean {

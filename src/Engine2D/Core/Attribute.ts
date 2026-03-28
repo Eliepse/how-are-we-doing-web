@@ -5,6 +5,7 @@ type Checker<TValue> = (previous: TValue, current: TValue) => boolean;
  * Really useful for rendering to prevent useless render
  */
 export class Attribute<TValue> {
+	private dirty = true;
 	private previous: TValue;
 	private current: TValue;
 	private readonly checker: Checker<TValue> = (a, b) => a !== b;
@@ -21,8 +22,13 @@ export class Attribute<TValue> {
 	/**
 	 * Change the current value
 	 */
-	set(value: TValue|((previous: TValue, current: TValue) => TValue)) {
+	set(value: TValue | ((previous: TValue, current: TValue) => TValue)) {
 		this.current = value instanceof Function ? value(this.previous, this.current) : value;
+
+		if (this.checker(this.previous, this.current)) {
+			this.dirty = true;
+		}
+
 		return this;
 	}
 
@@ -37,7 +43,7 @@ export class Attribute<TValue> {
 	 * Check if a changed occured since the last 'commit'
 	 */
 	hasChanged(): boolean {
-		return this.checker(this.previous, this.current);
+		return this.dirty;
 	}
 
 	/**
@@ -46,6 +52,7 @@ export class Attribute<TValue> {
 	 */
 	commit(): TValue {
 		this.previous = this.current;
+		this.dirty = false;
 		return this.current;
 	}
 
@@ -55,6 +62,7 @@ export class Attribute<TValue> {
 	 */
 	revert(): TValue {
 		this.current = this.previous;
+		this.dirty = false;
 		return this.current;
 	}
 }

@@ -13,7 +13,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 
 		node.getPathologies().forEach((pathology) => {
-			const pathologyActive = "selected" === pathology.active.get() || "preview" === pathology.active.get();
+			const pathologyActive = "selected" === pathology.status.get() || "preview" === pathology.status.get();
 
 			pathology.associations.determinants.forEach((detId) => {
 				const determinant = determinants.get(detId);
@@ -22,7 +22,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 					return;
 				}
 
-				const determinantActive = "selected" === determinant.active.get() || "preview" === determinant.active.get();
+				const determinantActive = "selected" === determinant.status.get() || "preview" === determinant.status.get();
 				const shapeKey = `link:pathology:${pathology.id}-${determinant.id}`;
 
 				if (false === pathologyActive || false === determinantActive) {
@@ -46,8 +46,8 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 
 				path.updateMesh(from.get(), fromAnchor, to.get(), toAnchor);
 
-				if(determinant.active.hasChanged()) {
-					path.updateStyle("selected" === determinant.active.get() ? style.selected : style.preview);
+				if(determinant.status.hasChanged()) {
+					path.updateStyle("selected" === determinant.status.get() ? style.selected : style.preview);
 				}
 			});
 		});

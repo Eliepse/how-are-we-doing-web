@@ -33,19 +33,20 @@ export class FacilityRenderer extends SVGNodeRenderer {
 			element.updateMesh(position.get(), rotation.get());
 		}
 
-		if (false === node.active.hasChanged()) {
+		if (false === node.status.hasChanged() && false === node.getOpacity().hasChanged()) {
 			return;
 		}
 
-		if ("selected" === node.active.get()) {
-			element.updateStyle(shapeStyle.selected);
-		} else if ("preview" === node.active.get()) {
-			element.updateStyle(shapeStyle.secondary);
-		} else if ("dimmed" === node.active.get()) {
-			element.updateStyle(shapeStyle.dimmed);
-		} else {
-			element.updateStyle(shapeStyle.default);
+		const opacity = node.getGlobalOpacity().get();
+		let color = Color.White;
+
+		if ("selected" === node.status.get()) {
+			color = Color.Red;
+		} else if ("preview" === node.status.get()) {
+			color = colors.secondary;
 		}
+
+		element.updateStyle(new SVGStyle({ fill: color, opacity: opacity }));
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

@@ -3,16 +3,20 @@ import { Vector } from "../ValueObject/Vector";
 import { Observable } from "./Observable";
 import { type RenderType, RenderTypes } from "../Engine";
 import { Attribute } from "../Core/Attribute";
+import { Opacity } from "../ValueObject/Opacity";
 
 export class Node2D extends Observable {
 	protected _parent?: Node2D = undefined;
 	protected children: Array<Node2D> = [];
 	protected position = new Attribute(Vector.Zero, Vector.isDiff);
 	protected rotation = new Attribute(Angle.Zero, Angle.isDiff);
+	protected opacity = new Attribute(Opacity.Opaque, Opacity.isDiff);
 	// Global position caches, used only in getGlobalPosition()
 	protected globalPosition = new Attribute(Vector.Zero, Vector.isDiff);
-	// Global position caches, used only in getGlobalRotation()
+	// Global rotation caches, used only in getGlobalRotation()
 	protected globalRotation = new Attribute(Angle.Zero, Angle.isDiff);
+	// Global opacity caches, used only in getGlobalRotation()
+	protected globalOpacity = new Attribute(Opacity.Opaque, Opacity.isDiff);
 	private rerender: RenderType = RenderTypes.Skip;
 
 	setParent(element: Node2D): void {
@@ -91,6 +95,31 @@ export class Node2D extends Observable {
 		return this.globalRotation;
 	}
 
+	setOpacity(value: Opacity) {
+		this.opacity.set(value);
+	}
+
+	getOpacity() {
+		return this.opacity;
+	}
+
+	getGlobalOpacity() {
+		const parent = this.getParent();
+
+		// Current node is root, therefore the local opacity is the reference
+		if (undefined === parent) {
+			return this.opacity;
+		}
+
+		const parentOpacity = parent.getGlobalOpacity();
+
+		if (parentOpacity.hasChanged() || this.opacity.hasChanged()) {
+			this.globalOpacity.set(new Opacity(parentOpacity.get().ratio * this.opacity.get().ratio));
+		}
+
+		return this.globalOpacity;
+	}
+
 	onProcess(_deltaTime: number): void {
 		//
 	}
@@ -101,6 +130,7 @@ export class Node2D extends Observable {
 		this.rotation.commit();
 		this.globalRotation.commit();
 		this.globalRotation.commit();
+		this.opacity.commit();
 	}
 
 	protected shouldRerender(): void {
@@ -112,11 +142,15 @@ export class Node2D extends Observable {
 			return this.rerender;
 		}
 
-		if (this.position.hasChanged() || this.rotation.hasChanged()) {
+		if (this.position.hasChanged() || this.globalPosition.hasChanged()) {
 			return RenderTypes.Paint;
 		}
 
-		if (this.globalPosition.hasChanged() || this.globalRotation.hasChanged()) {
+		if (this.rotation.hasChanged() || this.globalRotation.hasChanged()) {
+			return RenderTypes.Paint;
+		}
+
+		if (this.opacity.hasChanged() || this.globalOpacity.hasChanged()) {
 			return RenderTypes.Paint;
 		}
 

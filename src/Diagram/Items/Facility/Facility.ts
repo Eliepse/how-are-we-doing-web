@@ -13,12 +13,14 @@ import { FacilityFamily } from "./FacilityFamily";
 import { facilityShape } from "./shapes";
 import type { ActiveStatus } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
+import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
+import { dimmedAlpha } from "../../colors";
 
 type Associations = { determinants: number[] };
 
 export class Facility extends VirtualShape implements WithPointerEvents, WithLifecycle {
 	private _collider?: TorusCollider;
-	public active = new Attribute<ActiveStatus | false>(false);
+	public status = new Attribute<ActiveStatus | false>(false);
 
 	constructor(
 		public readonly id: number,
@@ -66,8 +68,9 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		return this._collider;
 	}
 
-	setActive(status: ActiveStatus | false): void {
-		this.active.set(status);
+	setStatus(status: ActiveStatus | false): void {
+		this.status.set(status);
+		this.opacity.set("dimmed" === status ? dimmedAlpha : Opacity.Opaque);
 	}
 
 	isConnected(node: SelectableNode): boolean {
@@ -86,7 +89,7 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 
 	override onRendered(_deltaTime: number) {
 		super.onRendered(_deltaTime);
-		this.active.commit();
+		this.status.commit();
 	}
 
 
@@ -97,6 +100,6 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 			return parent;
 		}
 
-		return this.active.hasChanged() ? RenderTypes.Paint : parent;
+		return this.status.hasChanged() ? RenderTypes.Paint : parent;
 	}
 }

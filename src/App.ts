@@ -205,7 +205,7 @@ export class App {
 			links.facilities.forEach((l) => this.biblio.addLink("facility", l.source.toLowerCase()));
 		});
 
-		this.diagram.addListener("nodePreviewed", (e: NodeEvent<Determinant | undefined>) => console.debug(e))
+		// this.diagram.addListener("nodePreviewed", (e: NodeEvent<Determinant | undefined>) => console.debug(e));
 
 		// Start the engine
 		this.engine.render();

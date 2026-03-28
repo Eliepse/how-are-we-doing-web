@@ -10,13 +10,15 @@ import { interpolate } from "../../../helpers";
 import type { ActiveStatus } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
 import { type RenderType, RenderTypes } from "../../../Engine2D/Engine";
+import { dimmedAlpha } from "../../colors";
+import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
 
 export type PathologyEvents = { click: NodeEvent<Pathology> };
 type Associations = { determinants: number[] };
 
 export class Pathology extends Node2D implements WithPointerEvents {
 	private time = new Attribute(0);
-	public active = new Attribute<ActiveStatus | false>(false);
+	public status = new Attribute<ActiveStatus | false>(false);
 	static readonly maxRadius: number = 8;
 	static readonly minRadius: number = 4;
 
@@ -40,8 +42,9 @@ export class Pathology extends Node2D implements WithPointerEvents {
 		return interpolate(Pathology.minRadius, Pathology.maxRadius, factor);
 	}
 
-	setActive(status: ActiveStatus | false): void {
-		this.active.set(status);
+	setStatus(status: ActiveStatus | false): void {
+		this.status.set(status);
+		this.opacity.set("dimmed" === status ? dimmedAlpha : Opacity.Opaque);
 	}
 
 	isConnected(node: SelectableNode): boolean {
@@ -65,7 +68,7 @@ export class Pathology extends Node2D implements WithPointerEvents {
 	override onRendered(_deltaTime: number) {
 		super.onRendered(_deltaTime);
 		this.time.commit();
-		this.active.commit();
+		this.status.commit();
 	}
 
 
@@ -76,7 +79,7 @@ export class Pathology extends Node2D implements WithPointerEvents {
 			return parent;
 		}
 
-		if (this.time.hasChanged() || this.active.hasChanged()) {
+		if (this.time.hasChanged() || this.status.hasChanged()) {
 			return RenderTypes.Paint;
 		}
 

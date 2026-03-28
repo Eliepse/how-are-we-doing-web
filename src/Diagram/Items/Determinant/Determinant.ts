@@ -15,6 +15,8 @@ import { CustomTransition } from "../../../Engine2D/Util/CustomTransition";
 import { interpolate } from "../../../helpers";
 import type { ActiveStatus, DeterminantKey } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
+import { dimmedAlpha } from "../../colors";
+import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
 
 export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[] };
@@ -23,7 +25,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	private _collider?: TorusCollider;
 	private step = new Attribute<Steps>(2);
 	private applicable = new Attribute(true);
-	public active = new Attribute<ActiveStatus | false>(false);
+	public status = new Attribute<ActiveStatus | false>(false);
 	private stepsTransition ?: CustomTransition<Steps>;
 
 	constructor(
@@ -103,8 +105,9 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		return this.applicable;
 	}
 
-	setActive(status: ActiveStatus | false): void {
-		this.active.set(status);
+	setStatus(status: ActiveStatus | false): void {
+		this.status.set(status);
+		this.opacity.set("dimmed" === status ? dimmedAlpha : Opacity.Opaque);
 	}
 
 	isConnected(node: SelectableNode): boolean {
@@ -124,7 +127,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		super.onRendered(_deltaTime);
 		this.step.commit();
 		this.applicable.commit();
-		this.active.commit();
+		this.status.commit();
 	}
 
 
@@ -135,7 +138,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 			return parent;
 		}
 
-		if (this.active.hasChanged() || this.applicable.hasChanged() || this.step.hasChanged()) {
+		if (this.status.hasChanged() || this.applicable.hasChanged() || this.step.hasChanged()) {
 			return RenderTypes.Paint;
 		}
 

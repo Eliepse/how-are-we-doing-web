@@ -270,23 +270,23 @@ export class Diagram extends Node2D {
 		for (const node of nodes) {
 			if (undefined !== this._selectedNode) {
 				if (node === this._selectedNode || node.isConnected(this._selectedNode)) {
-					node.setActive("selected");
+					node.setStatus("selected");
 					continue;
 				}
 			}
 
 			if (undefined !== this._previewedNode) {
 				if (node === this._previewedNode || node.isConnected(this._previewedNode)) {
-					node.setActive("preview");
+					node.setStatus("preview");
 					continue;
 				}
 
 			}
 
 			if (undefined == this._selectedNode && undefined == this._previewedNode) {
-				node.setActive(false);
+				node.setStatus(false);
 			} else {
-				node.setActive("dimmed");
+				node.setStatus("dimmed");
 			}
 		}
 	}

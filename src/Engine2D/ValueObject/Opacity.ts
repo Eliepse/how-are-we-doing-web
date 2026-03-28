@@ -1,9 +1,29 @@
 import type { Parameter } from "./Parameter";
+import { clamp } from "../math";
 
 export class Opacity implements Parameter {
-  constructor(private value: number = 1) {}
+	static Opaque = new Opacity(1);
+	static Transparent = new Opacity(0);
 
-  isEqual(parameter: Parameter): boolean {
-    return parameter instanceof Opacity && parameter.value === this.value;
-  }
+	private value: number;
+
+	constructor(value: number = 1) {
+		this.value = clamp(0, value, 1);
+	}
+
+	get ratio(): number {
+		return this.value;
+	}
+
+	isEqual(parameter: Parameter): boolean {
+		return parameter instanceof Opacity && parameter.value === this.value;
+	}
+
+	static isEqual(a: Opacity, b: Opacity): boolean {
+		return a.value !== b.value;
+	}
+
+	static isDiff(a: Opacity, b: Opacity): boolean {
+		return false === Opacity.isEqual(a, b);
+	}
 }

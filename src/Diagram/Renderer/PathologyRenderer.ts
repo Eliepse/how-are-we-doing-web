@@ -9,13 +9,7 @@ import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { App } from "../../App";
 import { Color } from "../../Engine2D/ValueObject/Color";
-
-const defaultStyle = new SVGStyle({ stroke: new Stroke(3, new Color(158, 185, 200)) });
-const hoveredStyle = new SVGStyle({ stroke: new Stroke(3, colors.defaultWhite) });
-const activeStyle = new SVGStyle({ stroke: new Stroke(3, colors.selected) });
-const dimmedStyle = new SVGStyle({ stroke: new Stroke(3, colors.dimmedWhite) });
-const secondaryStyle = new SVGStyle({ stroke: new Stroke(3, colors.secondary) });
-const coreStyle = new SVGStyle({ fill: colors.selected });
+import type { ActiveStatus } from "../types";
 
 export class PathologyRenderer extends SVGNodeRenderer {
 	constructor(renderer: SVGRenderer, engine: Engine, private app: App) {
@@ -27,36 +21,55 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 		const selectedNode = this.app.getDiagram().getSelectedNode();
 		const position = node.getGlobalPosition();
+		const opacity = node.getGlobalOpacity();
+		const status = node.status;
 		const isHovered = this.engine.isHovering(node);
-		const isActive = "selected" === node.active.get() || "preview" === node.active.get();
+		const isActive = "selected" === node.status.get() || "preview" === node.status.get();
 
 		const edge = shapes.get("edge", () => new Circle(8));
-		const core = shapes.get("core", () => new Circle(5));
+		const core = shapes.get("core", () => {
+			const shape = new Circle(5);
+			shape.hide();
+			return shape;
+		});
 
-		edge.updateMesh(position.get(), isActive ? Pathology.maxRadius : node.getRadius());
 
-		if(position.hasChanged()) {
+		if (position.hasChanged() || status.hasChanged()) {
 			core.updateMesh(position.get());
+			edge.updateMesh(position.get(), isActive ? Pathology.maxRadius : node.getRadius());
 		}
 
-		if ("selected" === node.active.get()) {
-			edge.updateStyle(activeStyle);
-		} else if ("preview" === node.active.get()) {
-			edge.updateStyle(secondaryStyle);
-		} else if (isHovered) {
-			edge.updateStyle(hoveredStyle);
-		} else if (undefined !== selectedNode && node !== selectedNode) {
-			edge.updateStyle(dimmedStyle);
-		} else {
-			edge.updateStyle(defaultStyle);
+		if (status.hasChanged() || opacity.hasChanged()) {
+			const color = this.getStatusColor(status.get()).alpha(opacity.get());
+			edge.updateStyle(new SVGStyle({ stroke: new Stroke(3, color) }));
 		}
 
-		if ("selected" === node.active.get()) {
-			core.updateStyle(coreStyle);
-			core.show();
-		} else {
-			core.hide();
+		// if (isHovered) {
+		// 	edge.updateStyle(hoveredStyle);
+		// } else if (undefined !== selectedNode && node !== selectedNode) {
+		// 	edge.updateStyle(dimmedStyle);
+		// }
+
+		if (status.hasChanged()) {
+			if ("selected" === status.get()) {
+				core.updateStyle(new SVGStyle({ fill: colors.selected }));
+				core.show();
+			} else {
+				core.hide();
+			}
 		}
+	}
+
+	private getStatusColor(status: ActiveStatus | false): Color {
+		if ("selected" === status) {
+			return Color.Red;
+		}
+
+		if ("preview" === status) {
+			return colors.secondary;
+		}
+
+		return new Color(158, 185, 200);
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

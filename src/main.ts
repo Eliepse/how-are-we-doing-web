@@ -106,10 +106,10 @@ async function main(withLoader = true) {
 			nav.style.display = nav.style.display.trim() ? "" : "none";
 			legend.style.display = legend.style.display.trim() ? "" : "none";
 		}
+	});
 
-		if ("o" === e.key) {
-			app.changeMode("focus:determinant" === app.getMode() ? "default" : "focus:determinant");
-		}
+	document.querySelectorAll("[data-action='mode:change']").forEach((el) => {
+		el.addEventListener("click", (e) => app.changeMode(el.dataset.mode));
 	});
 
 	loaderDom.root && (loaderDom.root.style.opacity = "0");

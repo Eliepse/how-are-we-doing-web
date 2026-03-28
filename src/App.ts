@@ -23,6 +23,7 @@ import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
 import { AutoTransition } from "./Engine2D/Util/AutoTransition";
+import { interpolateNumber } from "./Engine2D/Util/interpolations";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -289,7 +290,7 @@ export class App {
 		const transition = new AutoTransition({
 			durationMs: duration,
 			completed: () => App.transitions.delete(transition),
-		}, (t) => clb(from + ((to - from) * t.value)));
+		}, (t) => clb(interpolateNumber(t.value, from, to)));
 
 		App.transitions.add(transition);
 	}

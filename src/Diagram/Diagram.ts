@@ -104,6 +104,7 @@ export class Diagram extends Node2D {
 			),
 		);
 
+		const pathologies = new Node2D();
 		pathologiesData.forEach((familyData, index) => {
 			const children = familyData.children.map((child) => {
 				const associatedDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
@@ -116,8 +117,9 @@ export class Diagram extends Node2D {
 
 			const family = new PathologyFamily(familyData.name, children, 96);
 			family.setPosition(Vector.Right.mul(100).rot((-index * Math.PI * (2 / 3)) + (Math.PI * .75)));
-			this.addChildren(family);
+			pathologies.addChildren(family);
 		});
+		this.addChildren(pathologies);
 
 		this.addChildren(this.decorations = new BgDecorationManager());
 	}

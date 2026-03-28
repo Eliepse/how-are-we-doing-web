@@ -16,11 +16,11 @@ export class Opacity implements Parameter {
 	}
 
 	isEqual(parameter: Parameter): boolean {
-		return parameter instanceof Opacity && parameter.value === this.value;
+		return parameter instanceof Opacity && Opacity.isEqual(this, parameter);
 	}
 
 	static isEqual(a: Opacity, b: Opacity): boolean {
-		return a.value !== b.value;
+		return a.value === b.value;
 	}
 
 	static isDiff(a: Opacity, b: Opacity): boolean {

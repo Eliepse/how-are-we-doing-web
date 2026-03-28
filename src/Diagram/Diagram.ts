@@ -20,6 +20,7 @@ import { BgDecorationManager } from "./Decoration/BgDecorationManager";
 import { Attribute } from "../Engine2D/Core/Attribute";
 import { type RenderType, RenderTypes } from "../Engine2D/Engine";
 import { Opacity } from "../Engine2D/ValueObject/Opacity";
+import { App } from "../App";
 
 export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
@@ -410,17 +411,17 @@ export class Diagram extends Node2D {
 
 	focusFamily(type: Family | false) {
 		if (false === type) {
-			this.families.pathology.setOpacity(Opacity.Opaque);
-			this.families.determinant.setOpacity(Opacity.Opaque);
-			this.families.facility.setOpacity(Opacity.Opaque);
-			this.decorations.setOpacity(Opacity.Opaque);
+			transitionNodeOpacity(this.families.pathology, 500, Opacity.Opaque);
+			transitionNodeOpacity(this.families.determinant, 500, Opacity.Opaque);
+			transitionNodeOpacity(this.families.facility, 500, Opacity.Opaque);
+			transitionNodeOpacity(this.decorations, 500, Opacity.Opaque);
 			return;
 		}
 
-		this.families.pathology.setOpacity("pathology" === type ? Opacity.Opaque : new Opacity(.1));
-		this.families.determinant.setOpacity("determinant" === type ? Opacity.Opaque : new Opacity(.1));
-		this.families.facility.setOpacity("facility" === type ? Opacity.Opaque : new Opacity(.1));
-		this.decorations.setOpacity("facility" === type ? Opacity.Opaque : new Opacity(.1));
+		transitionNodeOpacity(this.families.pathology, 500, "pathology" === type ? Opacity.Opaque : new Opacity(.1));
+		transitionNodeOpacity(this.families.determinant, 500, "determinant" === type ? Opacity.Opaque : new Opacity(.1));
+		transitionNodeOpacity(this.families.facility, 500, "facility" === type ? Opacity.Opaque : new Opacity(.1));
+		transitionNodeOpacity(this.decorations, 500, "facility" === type ? Opacity.Opaque : new Opacity(.1));
 	}
 
 	override onRendered(_deltaTime: number) {
@@ -438,4 +439,8 @@ export class Diagram extends Node2D {
 
 		return this.backgroundBlobClock.hasChanged() ? RenderTypes.Paint : parent;
 	}
+}
+
+function transitionNodeOpacity(node: Node2D, duration: number, to: Opacity) {
+	App.transition(duration, node.getOpacity().get().ratio, to.ratio, (v) => node.setOpacity(new Opacity(v)));
 }

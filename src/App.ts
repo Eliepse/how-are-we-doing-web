@@ -22,6 +22,7 @@ import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
+import { AutoTransition } from "./Engine2D/Util/AutoTransition";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -33,6 +34,7 @@ export class App {
 	private contexts: Context[] = [];
 	private currentContext?: Context;
 	private database?: any;
+	static transitions = new Set<AutoTransition>();
 
 	private diagram?: Diagram;
 	private biblio: BiblioManager;
@@ -61,6 +63,7 @@ export class App {
 
 		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1100, 1100), Config.Render.debug);
 		this.engine = new Engine(new Node2D(), renderer);
+		this.engine.addEventListener("tick", () => App.processTransition());
 
 		renderer.registerReferencable(blobPattern);
 		renderer.addNodeRenderer(new FacilityRenderer(renderer, this.engine, this));
@@ -258,6 +261,10 @@ export class App {
 	}
 
 	changeMode(mode: AppMode) {
+		if (mode === this.mode) {
+			return;
+		}
+
 		this.mode = mode;
 
 		if ("focus:determinant" === mode) {
@@ -270,5 +277,20 @@ export class App {
 
 	getMode(): AppMode {
 		return this.mode;
+	}
+
+	private static processTransition() {
+		for (const transition of App.transitions) {
+			transition.tick();
+		}
+	}
+
+	static transition(duration: number, from: number, to: number, clb: (value: number) => void) {
+		const transition = new AutoTransition({
+			durationMs: duration,
+			completed: () => App.transitions.delete(transition),
+		}, (t) => clb(from + ((to - from) * t.value)));
+
+		App.transitions.add(transition);
 	}
 }

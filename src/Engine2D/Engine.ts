@@ -7,12 +7,14 @@ import { VirtualNode } from "./Core/VirtualNode";
 import { NodeEvent } from "./Core/NodeEvent";
 import { VirtualTree } from "./Core/VirtualTree";
 import type { Renderer } from "./Renderer/Renderer";
+import type { Transition } from "./Util/Transition";
 
 export type EngineMouseEvent = { cursor: Vector };
 type Listener<TEvent extends object> = (event: TEvent) => void;
 type Listeners = {
 	mousemove: Listener<EngineMouseEvent>;
 	click: Listener<EngineMouseEvent>;
+	tick: Listener<{ deltaTime: number, frames: number }>;
 };
 type ValueOf<T> = T[keyof T];
 
@@ -30,9 +32,11 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	private _listeners = {
 		mousemove: new Set<Listeners["mousemove"]>(),
 		click: new Set<Listeners["click"]>(),
+		tick: new Set<Listeners["click"]>(),
 	};
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
+	private transitions = new Set();
 
 	constructor(
 		private rootNode: Node2D,
@@ -200,7 +204,12 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 		this.tree.update();
 		this.processTree(this.tree.getVRoot(), deltaTime, frames);
+		this.dispatchEvent("tick", { deltaTime, frames });
 		this.walkTreeForRender(this.tree.getVRoot(), deltaTime, frames);
+	}
+
+	public registerTransition(transition: Transition<any>) {
+		this.transitions.add(transition);
 	}
 
 	isHovering(node: Node2D & WithPointerEvents): boolean {

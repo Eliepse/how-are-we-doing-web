@@ -18,9 +18,10 @@ import type { DeterminantKey } from "./types";
 import { type Context } from "./Context";
 import { BgDecorationManager } from "./Decoration/BgDecorationManager";
 import { Attribute } from "../Engine2D/Core/Attribute";
-import { type RenderType, RenderTypes } from "../Engine2D/Engine";
+import { Engine, type RenderType, RenderTypes } from "../Engine2D/Engine";
 import { Opacity } from "../Engine2D/ValueObject/Opacity";
-import { App } from "../App";
+import { AutoTransition } from "../Engine2D/Util/AutoTransition";
+import { interpolateOpacity } from "../Engine2D/Util/interpolations";
 
 export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
@@ -442,5 +443,6 @@ export class Diagram extends Node2D {
 }
 
 function transitionNodeOpacity(node: Node2D, duration: number, to: Opacity) {
-	App.transition(duration, node.getOpacity().get().ratio, to.ratio, (v) => node.setOpacity(new Opacity(v)));
+	const from = node.getOpacity().get();
+	Engine.registerTransition(new AutoTransition({ durationMs: duration }, (t) => node.setOpacity(interpolateOpacity(t.value, from, to))));
 }

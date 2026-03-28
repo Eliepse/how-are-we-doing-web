@@ -23,7 +23,6 @@ import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
 import { AutoTransition } from "./Engine2D/Util/AutoTransition";
-import { interpolateNumber } from "./Engine2D/Util/interpolations";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -64,7 +63,6 @@ export class App {
 
 		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1100, 1100), Config.Render.debug);
 		this.engine = new Engine(new Node2D(), renderer);
-		this.engine.addEventListener("tick", () => App.processTransition());
 
 		renderer.registerReferencable(blobPattern);
 		renderer.addNodeRenderer(new FacilityRenderer(renderer, this.engine, this));
@@ -278,20 +276,5 @@ export class App {
 
 	getMode(): AppMode {
 		return this.mode;
-	}
-
-	private static processTransition() {
-		for (const transition of App.transitions) {
-			transition.tick();
-		}
-	}
-
-	static transition(duration: number, from: number, to: number, clb: (value: number) => void) {
-		const transition = new AutoTransition({
-			durationMs: duration,
-			completed: () => App.transitions.delete(transition),
-		}, (t) => clb(interpolateNumber(t.value, from, to)));
-
-		App.transitions.add(transition);
 	}
 }

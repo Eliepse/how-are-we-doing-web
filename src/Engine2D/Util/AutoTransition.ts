@@ -15,4 +15,8 @@ export class AutoTransition extends Transition<number> {
 	tick() {
 		this.handle(this);
 	}
+
+	isCompleted() {
+		return this.completed;
+	}
 }

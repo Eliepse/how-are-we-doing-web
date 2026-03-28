@@ -26,6 +26,8 @@ export class FacilityRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
+		const opacity = node.getGlobalOpacity();
+		const status = node.status;
 
 		const element = shapes.get("sprite", () => new SVGSymbol(node.getShape()));
 
@@ -33,20 +35,19 @@ export class FacilityRenderer extends SVGNodeRenderer {
 			element.updateMesh(position.get(), rotation.get());
 		}
 
-		if (false === node.status.hasChanged() && false === node.getOpacity().hasChanged()) {
+		if (false === status.hasChanged() && false === opacity.hasChanged()) {
 			return;
 		}
 
-		const opacity = node.getGlobalOpacity().get();
 		let color = Color.White;
 
-		if ("selected" === node.status.get()) {
+		if ("selected" === status.get()) {
 			color = Color.Red;
-		} else if ("preview" === node.status.get()) {
+		} else if ("preview" === status.get()) {
 			color = colors.secondary;
 		}
 
-		element.updateStyle(new SVGStyle({ fill: color, opacity: opacity }));
+		element.updateStyle(new SVGStyle({ fill: color, opacity: opacity.get() }));
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

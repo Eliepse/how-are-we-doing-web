@@ -29,6 +29,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const edge = shapes.get("edge", () => new Circle(8));
 		const core = shapes.get("core", () => {
 			const shape = new Circle(5);
+			shape.updateStyle(new SVGStyle({ fill: colors.selected }));
 			shape.hide();
 			return shape;
 		});
@@ -42,6 +43,12 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		if (status.hasChanged() || opacity.hasChanged()) {
 			const color = this.getStatusColor(status.get()).alpha(opacity.get());
 			edge.updateStyle(new SVGStyle({ stroke: new Stroke(3, color) }));
+
+			if ("selected" === status.get()) {
+				core.show();
+			} else {
+				core.hide();
+			}
 		}
 
 		// if (isHovered) {
@@ -49,15 +56,6 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		// } else if (undefined !== selectedNode && node !== selectedNode) {
 		// 	edge.updateStyle(dimmedStyle);
 		// }
-
-		if (status.hasChanged()) {
-			if ("selected" === status.get()) {
-				core.updateStyle(new SVGStyle({ fill: colors.selected }));
-				core.show();
-			} else {
-				core.hide();
-			}
-		}
 	}
 
 	private getStatusColor(status: ActiveStatus | false): Color {

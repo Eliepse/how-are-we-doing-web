@@ -15,12 +15,17 @@ export class PathologyFamilyRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 		const size = vnode.node.getChildren().length;
 		const position = vnode.node.getGlobalPosition();
+		const opacity = vnode.node.getGlobalOpacity();
 
 		const blob = shapes.get("blob", () => new PathologyBlob(blobSize(size / 25)));
 
 		if (position.hasChanged()) {
 			// TODO: add time
 			blob.updateMesh(0, position.get());
+		}
+
+		if (opacity.hasChanged()) {
+			blob.updateOpacity(opacity.get());
 		}
 	}
 

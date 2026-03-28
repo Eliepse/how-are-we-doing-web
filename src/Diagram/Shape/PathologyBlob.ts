@@ -1,6 +1,7 @@
 import { SVGShape } from "../../SVGRenderer/Shape/SVGShape";
 import { Camera, Color, Mesh, PerspectiveCamera, Scene, ShaderMaterial, SphereGeometry, WebGLRenderer } from "three";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
+import type { Opacity } from "../../Engine2D/ValueObject/Opacity";
 
 // Slightly darker and saturated than the original color
 const blobColor = new Color().setHSL(357, 0.78, 0.75);
@@ -148,6 +149,10 @@ export class PathologyBlob extends SVGShape {
 		const aPos = position.sub(new Vector(this.radius, this.radius)).toAttributes();
 
 		this.dom.style.transform = `translate(${aPos.x}px, ${aPos.y}px)`;
+	}
+
+	updateOpacity(value: Opacity) {
+		this.dom.style.opacity = value.ratio.toFixed(2);
 	}
 
 	override mount(container: Element): void {

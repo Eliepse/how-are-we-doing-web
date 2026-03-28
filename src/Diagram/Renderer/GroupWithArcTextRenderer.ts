@@ -17,6 +17,7 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
+		const opacity = node.getGlobalOpacity();
 		const angleShift = node.getItemArc().div(2);
 
 		const arcText = shapes.get(
@@ -36,6 +37,10 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 				rotation.get().sub(angleShift),
 				rotation.get().sub(angleShift).add(node.getArc()),
 			);
+		}
+
+		if (opacity.hasChanged()) {
+			arcText.updateOpacity(opacity.get());
 		}
 	}
 

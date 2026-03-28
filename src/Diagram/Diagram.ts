@@ -19,8 +19,9 @@ import { type Context } from "./Context";
 import { BgDecorationManager } from "./Decoration/BgDecorationManager";
 import { Attribute } from "../Engine2D/Core/Attribute";
 import { type RenderType, RenderTypes } from "../Engine2D/Engine";
+import { Opacity } from "../Engine2D/ValueObject/Opacity";
 
-export type RingType = "pathology" | "determinant" | "facility";
+export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
 
 export type PathologiesData = (typeof db)["pathologies"];
@@ -41,8 +42,8 @@ export class Diagram extends Node2D {
 		{ pathologies: SourceList; facilities: SourceList }
 	>();
 	public backgroundBlobClock = new Attribute(0);
-	private decorations: BgDecorationManager;
-	private highlightedRings: RingType[] = [];
+	public decorations: BgDecorationManager;
+	private families: { [key in Family]: Node2D };
 
 	constructor(
 		pathologiesData: PathologiesData,
@@ -122,6 +123,12 @@ export class Diagram extends Node2D {
 		this.addChildren(pathologies);
 
 		this.addChildren(this.decorations = new BgDecorationManager());
+
+		this.families = {
+			determinant: determinants,
+			facility: facilities,
+			pathology: pathologies,
+		};
 	}
 
 	override onProcess(deltaTime: number): void {
@@ -401,6 +408,20 @@ export class Diagram extends Node2D {
 		}
 	}
 
+	focusFamily(type: Family | false) {
+		if (false === type) {
+			this.families.pathology.setOpacity(Opacity.Opaque);
+			this.families.determinant.setOpacity(Opacity.Opaque);
+			this.families.facility.setOpacity(Opacity.Opaque);
+			this.decorations.setOpacity(Opacity.Opaque);
+			return;
+		}
+
+		this.families.pathology.setOpacity("pathology" === type ? Opacity.Opaque : new Opacity(.1));
+		this.families.determinant.setOpacity("determinant" === type ? Opacity.Opaque : new Opacity(.1));
+		this.families.facility.setOpacity("facility" === type ? Opacity.Opaque : new Opacity(.1));
+		this.decorations.setOpacity("facility" === type ? Opacity.Opaque : new Opacity(.1));
+	}
 
 	override onRendered(_deltaTime: number) {
 		super.onRendered(_deltaTime);

@@ -8,10 +8,15 @@ export class DiagramBackgroundRenderer extends SVGNodeRenderer {
 		const shapes = this.getShapes(vnode);
 		const blob = shapes.get("background", () => new DiagramBlobBackground(260));
 		const position = vnode.node.getGlobalPosition();
+		const opacity = vnode.node.decorations.getGlobalOpacity();
 		const clock = vnode.node.backgroundBlobClock;
 
 		if (position.hasChanged() || clock.hasChanged()) {
 			blob.updateMesh(position.get(), clock.get());
+		}
+
+		if (opacity.hasChanged()) {
+			blob.updateOpacity(opacity.get());
 		}
 	}
 

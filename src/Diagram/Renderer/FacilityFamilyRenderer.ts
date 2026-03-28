@@ -14,14 +14,19 @@ export class FacilityFamilyRenderer extends SVGNodeRenderer {
 
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
+		const opacity = node.getGlobalOpacity();
 
-		const angleShift = node.getItemArc().div(2);
-		const endAngle = rotation.get().add(node.getArc()).sub(angleShift);
-		const start = position.get().add(Vector.Right.mul(node.getRadius() - 12).rot(endAngle));
-		const end = position.get().add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
+		if (position.hasChanged() || rotation.hasChanged()) {
+			const angleShift = node.getItemArc().div(2);
+			const endAngle = rotation.get().add(node.getArc()).sub(angleShift);
+			const start = position.get().add(Vector.Right.mul(node.getRadius() - 12).rot(endAngle));
+			const end = position.get().add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
+			separator.updateMesh(start, end);
+		}
 
-		separator.updateMesh(start, end);
-		separator.updateStyle(new SVGStyle({ stroke: new Stroke(1, colors.defaultWhite.alpha(.6)) }));
+		if (opacity.hasChanged()) {
+			separator.updateStyle(new SVGStyle({ stroke: new Stroke(1, colors.defaultWhite.alpha(opacity.get())) }));
+		}
 	}
 
 	override accepts(node: VirtualNode): boolean {

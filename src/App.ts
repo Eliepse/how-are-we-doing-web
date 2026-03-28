@@ -22,7 +22,8 @@ import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
-import type { Determinant } from "./Diagram/Items/Determinant/Determinant";
+
+type AppMode = "focus:determinant" | "default";
 
 export class App {
 	private readonly translator: Translator;
@@ -36,6 +37,7 @@ export class App {
 	private diagram?: Diagram;
 	private biblio: BiblioManager;
 	private loaded: boolean = false;
+	private mode: AppMode = "default";
 
 	public onContextChanged = (context: Context) => undefined;
 	public onSelectionChanged = (node: SelectableNode | undefined) => undefined;
@@ -253,5 +255,20 @@ export class App {
 
 	hideBibliography() {
 		this.biblio.close();
+	}
+
+	changeMode(mode: AppMode) {
+		this.mode = mode;
+
+		if ("focus:determinant" === mode) {
+			this.diagram?.focusFamily("determinant");
+			return;
+		}
+
+		this.diagram?.focusFamily(false);
+	}
+
+	getMode(): AppMode {
+		return this.mode;
 	}
 }

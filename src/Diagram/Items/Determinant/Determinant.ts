@@ -16,8 +16,8 @@ import type { ActiveStatus, DeterminantKey } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
 import { dimmedAlpha } from "../../colors";
 import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
-import { Transition } from "../../../Engine2D/Util/Transition";
-import { easeOutCubic, interpolateNumber } from "../../../Engine2D/Util/interpolations";
+import { Transition } from "../../../Engine2D/Time/Transition";
+import { easeOutCubic, interpolateNumber } from "../../../Engine2D/Time/interpolations";
 
 export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[] };

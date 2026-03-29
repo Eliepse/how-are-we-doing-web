@@ -20,8 +20,8 @@ import { BgDecorationManager } from "./Decoration/BgDecorationManager";
 import { Attribute } from "../Engine2D/Core/Attribute";
 import { Engine, type RenderType, RenderTypes } from "../Engine2D/Engine";
 import { Opacity } from "../Engine2D/ValueObject/Opacity";
-import { easeOutCubic, interpolateOpacity } from "../Engine2D/Util/interpolations";
-import { Transition } from "../Engine2D/Util/Transition";
+import { easeOutCubic, interpolateOpacity } from "../Engine2D/Time/interpolations";
+import { Transition } from "../Engine2D/Time/Transition";
 
 export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;

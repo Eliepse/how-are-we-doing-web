@@ -2,12 +2,12 @@ import type { WithLifecycle } from "./Contract/WithLifecycle";
 import type { WithPointerEvents } from "./Contract/WithPointerEvents";
 import type { Node2D } from "./Node/Node2D";
 import { Vector } from "./ValueObject/Vector";
-import { Clock } from "./Core/Clock";
+import { Clock } from "./Time/Clock";
 import { VirtualNode } from "./Core/VirtualNode";
 import { NodeEvent } from "./Core/NodeEvent";
 import { VirtualTree } from "./Core/VirtualTree";
 import type { Renderer } from "./Renderer/Renderer";
-import type { Transition } from "./Util/Transition";
+import type { Transition } from "./Time/Transition";
 
 export type EngineMouseEvent = { cursor: Vector };
 type Listener<TEvent extends object> = (event: TEvent) => void;

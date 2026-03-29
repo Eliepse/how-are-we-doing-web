@@ -43,6 +43,7 @@ async function main(withLoader = true) {
 	}
 
 	const app = new App(appDom, diagramDom);
+	window.app = app;
 	const translator = app.getTranslator();
 
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));

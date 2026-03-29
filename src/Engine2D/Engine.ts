@@ -31,7 +31,6 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	private _listeners = {
 		mousemove: new Set<Listeners["mousemove"]>(),
 		click: new Set<Listeners["click"]>(),
-		tick: new Set<Listeners["click"]>(),
 	};
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
@@ -203,7 +202,6 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 		this.tree.update();
 		this.processTree(this.tree.getVRoot(), deltaTime, frames);
-		this.dispatchEvent("tick", { deltaTime, frames });
 
 		for (const transition of Engine.transitions) {
 			transition.tick();

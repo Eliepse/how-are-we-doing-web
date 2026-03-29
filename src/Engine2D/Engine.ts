@@ -96,35 +96,6 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		this.renderer.unmountNode(vnode);
 	}
 
-	private processTree(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
-		vnode.node.onProcess(deltaTime);
-		vnode.children.forEach((child) => this.processTree(child, deltaTime, frames));
-	}
-
-	private renderNode(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
-		this.renderer.renderNode(vnode, deltaTime, frames);
-		vnode.node.onRendered(deltaTime);
-	}
-
-	private renderTree(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
-		this.renderNode(vnode, deltaTime, frames);
-		vnode.children.forEach((child) => this.renderTree(child, deltaTime, frames));
-	}
-
-	private walkTreeForRender(vnode: VirtualNode<Node2D & Partial<WithLifecycle>>, deltaTime: number, frames: number): void {
-		if (RenderTypes.Breaking === vnode.node.renderState()) {
-			this.renderTree(vnode, deltaTime, frames);
-			return;
-		}
-
-		if (RenderTypes.Paint === vnode.node.renderState()) {
-			this.renderNode(vnode, deltaTime, frames);
-		}
-
-		// Check children
-		vnode.children.forEach((child) => this.walkTreeForRender(child, deltaTime, frames));
-	}
-
 	addEventListener<TKey extends keyof Listeners>(
 		event: TKey,
 		callback: Listeners[TKey],
@@ -201,7 +172,12 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 
 		this.tree.update();
-		this.processTree(this.tree.getVRoot(), deltaTime, frames);
+
+		// Trigger onProcess method
+		// "for" loop prevent long callstack caused by recursive calls
+		for (const vnode of this.tree.getNodes()) {
+			vnode.node.onProcess(deltaTime);
+		}
 
 		for (const transition of Engine.transitions) {
 			transition.tick();
@@ -211,7 +187,14 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 			}
 		}
 
-		this.walkTreeForRender(this.tree.getVRoot(), deltaTime, frames);
+		// Trigger render if required
+		// "for" loop prevent long callstack caused by recursive calls
+		for (const vnode of this.tree.getNodes()) {
+			if (RenderTypes.Breaking === vnode.node.renderState() || RenderTypes.Paint === vnode.node.renderState()) {
+				this.renderer.renderNode(vnode, deltaTime, frames);
+				vnode.node.onRendered(deltaTime);
+			}
+		}
 	}
 
 	public static registerTransition(transition: Transition) {

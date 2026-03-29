@@ -5,6 +5,7 @@ const emptyFn = () => undefined;
 
 export class VirtualTree {
 	private rootVNode?: VirtualNode;
+	private store = new Set<VirtualNode>();
 
 	public onMount: (vnode: VirtualNode) => void = emptyFn;
 	public onUnmount: (vnode: VirtualNode) => void = emptyFn;
@@ -16,6 +17,7 @@ export class VirtualTree {
 		const virtualNode = new VirtualNode(node);
 
 		this.onMount(virtualNode);
+		this.store.add(virtualNode);
 
 		virtualNode.setChildren(node.getChildren().map((child) => this.mountTree(child)));
 		return virtualNode;
@@ -26,6 +28,7 @@ export class VirtualTree {
 			this.unmountTree(child);
 		}
 
+		this.store.delete(vnode);
 		this.onUnmount(vnode);
 	}
 
@@ -61,5 +64,9 @@ export class VirtualTree {
 		}
 
 		return this.rootVNode;
+	}
+
+	getNodes(): Set<VirtualNode> {
+		return this.store;
 	}
 }

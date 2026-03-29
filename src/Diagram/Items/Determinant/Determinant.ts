@@ -3,7 +3,7 @@ import type { Symbolic } from "../../../Engine2D/Contract/renderable";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
-import { type Engine, type RenderType, RenderTypes } from "../../../Engine2D/Engine";
+import { Engine, type RenderType, RenderTypes } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
 import { type Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
@@ -11,12 +11,13 @@ import { type SelectableNode } from "../../Diagram";
 import { Facility } from "../Facility/Facility";
 import { Pathology } from "../Pathology/Pathology";
 import { DeterminantSubFamily } from "./DeterminantSubFamily";
-import { CustomTransition } from "../../../Engine2D/Util/CustomTransition";
 import { interpolate } from "../../../helpers";
 import type { ActiveStatus, DeterminantKey } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
 import { dimmedAlpha } from "../../colors";
 import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
+import { Transition } from "../../../Engine2D/Util/Transition";
+import { easeOutCubic, interpolateNumber } from "../../../Engine2D/Util/interpolations";
 
 export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[] };
@@ -26,7 +27,6 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	private step = new Attribute<Steps>(2);
 	private applicable = new Attribute(true);
 	public status = new Attribute<ActiveStatus | false>(false);
-	private stepsTransition ?: CustomTransition<Steps>;
 
 	constructor(
 		public readonly id: number,
@@ -58,15 +58,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		);
 	}
 
-	override onProcess(deltaTime: number) {
-		super.onProcess(deltaTime);
-
-		if (this.stepsTransition) {
-			this.step.set(this.stepsTransition.value);
-		}
-	}
-
-	onUnmount(engine: Engine): void {
+	onUnmount(_engine: Engine): void {
 		//
 	}
 
@@ -90,9 +82,13 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 
 	setStep(step: Steps): void {
 		this.applicable.set(true);
-		this.stepsTransition = new CustomTransition(
-			{ durationMs: 350, from: this.step.get(), to: step, completed: () => this.stepsTransition = undefined },
-			(percent, from, to) => Math.round(interpolate(from, to, percent)) as Steps,
+		const from = this.step.get();
+		Engine.registerTransition(
+			new Transition(
+				350,
+				(v) => this.step.set(Math.round(interpolateNumber(v, from, step)) as Steps),
+				{ easeFn: easeOutCubic },
+			),
 		);
 	}
 

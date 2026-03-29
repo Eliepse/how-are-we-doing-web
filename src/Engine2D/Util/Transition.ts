@@ -1,44 +1,48 @@
-export interface TransitionConfig<TValue> {
-	durationMs: number,
-	from: TValue,
-	to: TValue
+import { linear } from "./interpolations";
+import { clamp } from "../math";
+
+export interface TransitionConfig {
 	delayMs?: number,
+	easeFn?: (x: number) => number,
 	completed?: () => void,
 }
 
-export abstract class Transition<TValue> {
+export class Transition {
 	private readonly startedAtMs: number;
-	private readonly durationMs: number;
-	protected readonly from: TValue;
-	protected readonly to: TValue;
-	protected completed: boolean = false;
+	private readonly easeFn = linear;
+	protected _finished: boolean = false;
 	protected onCompleted?: () => void;
 
-	protected constructor(config: TransitionConfig<TValue>) {
-		this.durationMs = config.durationMs;
-		this.from = config.from;
-		this.to = config.to;
+	constructor(
+		private readonly durationMs: number,
+		private readonly callback: (value: number) => void,
+		config: TransitionConfig,
+	) {
 		this.startedAtMs = Date.now() + (config.delayMs ?? 0);
+		this.easeFn = config.easeFn ?? linear;
 		this.onCompleted = config.completed;
 	}
 
-	abstract interpolate(percent: number): TValue;
-
-	get value(): TValue {
-		if (this.completed) {
-			return this.to;
+	tick() {
+		if (this._finished) {
+			return;
 		}
 
-		const elapsedTime = Date.now() - this.startedAtMs;
+		const now = Date.now();
+		if (now < this.startedAtMs) {
+			return;
+		}
 
-		if (0 >= elapsedTime) {
-			return this.from;
-		} else if (this.durationMs <= elapsedTime) {
-			this.completed = true;
+		const elapsedTime = now - this.startedAtMs;
+		this.callback(this.easeFn(clamp(0, elapsedTime / this.durationMs, 1)));
+
+		if (this.durationMs <= elapsedTime) {
+			this._finished = true;
 			this.onCompleted && this.onCompleted();
-			return this.to;
 		}
+	}
 
-		return this.interpolate(elapsedTime / this.durationMs);
+	get finished() {
+		return this._finished;
 	}
 }

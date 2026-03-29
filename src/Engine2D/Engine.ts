@@ -7,14 +7,13 @@ import { VirtualNode } from "./Core/VirtualNode";
 import { NodeEvent } from "./Core/NodeEvent";
 import { VirtualTree } from "./Core/VirtualTree";
 import type { Renderer } from "./Renderer/Renderer";
-import type { AutoTransition } from "./Util/AutoTransition";
+import type { Transition } from "./Util/Transition";
 
 export type EngineMouseEvent = { cursor: Vector };
 type Listener<TEvent extends object> = (event: TEvent) => void;
 type Listeners = {
 	mousemove: Listener<EngineMouseEvent>;
 	click: Listener<EngineMouseEvent>;
-	tick: Listener<{ deltaTime: number, frames: number }>;
 };
 type ValueOf<T> = T[keyof T];
 
@@ -36,7 +35,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	};
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
-	private static transitions = new Set<AutoTransition>();
+	private static transitions = new Set<Transition>();
 
 	constructor(
 		private rootNode: Node2D,
@@ -209,7 +208,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		for (const transition of Engine.transitions) {
 			transition.tick();
 
-			if (transition.isCompleted()) {
+			if (transition.finished) {
 				Engine.transitions.delete(transition);
 			}
 		}
@@ -217,7 +216,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		this.walkTreeForRender(this.tree.getVRoot(), deltaTime, frames);
 	}
 
-	public static registerTransition(transition: AutoTransition) {
+	public static registerTransition(transition: Transition) {
 		Engine.transitions.add(transition);
 	}
 

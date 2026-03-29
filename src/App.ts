@@ -22,7 +22,6 @@ import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
-import { AutoTransition } from "./Engine2D/Util/AutoTransition";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -34,7 +33,6 @@ export class App {
 	private contexts: Context[] = [];
 	private currentContext?: Context;
 	private database?: any;
-	static transitions = new Set<AutoTransition>();
 
 	private diagram?: Diagram;
 	private biblio: BiblioManager;

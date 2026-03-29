@@ -20,8 +20,8 @@ import { BgDecorationManager } from "./Decoration/BgDecorationManager";
 import { Attribute } from "../Engine2D/Core/Attribute";
 import { Engine, type RenderType, RenderTypes } from "../Engine2D/Engine";
 import { Opacity } from "../Engine2D/ValueObject/Opacity";
-import { AutoTransition } from "../Engine2D/Util/AutoTransition";
-import { interpolateOpacity } from "../Engine2D/Util/interpolations";
+import { easeOutCubic, interpolateOpacity } from "../Engine2D/Util/interpolations";
+import { Transition } from "../Engine2D/Util/Transition";
 
 export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
@@ -444,5 +444,7 @@ export class Diagram extends Node2D {
 
 function transitionNodeOpacity(node: Node2D, duration: number, to: Opacity) {
 	const from = node.getOpacity().get();
-	Engine.registerTransition(new AutoTransition({ durationMs: duration }, (t) => node.setOpacity(interpolateOpacity(t.value, from, to))));
+	Engine.registerTransition(
+		new Transition(duration, (v) => node.setOpacity(interpolateOpacity(v, from, to)), { easeFn: easeOutCubic }),
+	);
 }

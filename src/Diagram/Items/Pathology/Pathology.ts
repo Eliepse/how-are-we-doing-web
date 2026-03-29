@@ -29,7 +29,7 @@ export class Pathology extends Node2D implements WithPointerEvents {
 	) {
 		super();
 
-		this.time.set(Math.random() * 124.134).commit();
+		this.time.set(Math.random() * 124.134);
 	}
 
 	override onProcess(deltaTime: number) {

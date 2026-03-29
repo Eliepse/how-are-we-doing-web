@@ -127,7 +127,7 @@ export class Node2D extends Observable {
 		this.rerender = RenderTypes.Skip;
 		this.position.commit();
 		this.rotation.commit();
-		this.globalRotation.commit();
+		this.globalPosition.commit();
 		this.globalRotation.commit();
 		this.opacity.commit();
 	}

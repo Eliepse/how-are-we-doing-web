@@ -3,16 +3,17 @@ import { Noise } from "noisejs";
 import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { Vector } from "../../../Engine2D/ValueObject/Vector";
-import  { type Pathology } from "./Pathology";
+import { type Pathology } from "./Pathology";
 import { PI2 } from "../../../Engine2D/math";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
+import { type RenderType, RenderTypes } from "../../../Engine2D/Engine";
 
 export class PathologyFamily extends Node2D {
 	public paused = false;
 
 	private _noise: Noise;
 	private _noiseClock = 0;
-	private shiftedPosition = new Attribute(Vector.Zero, Vector.isDiff);
+	public origin = new Attribute(Vector.Zero, Vector.isDiff);
 
 	constructor(public readonly name: string, children: Array<Pathology>, private _size: number) {
 		super();
@@ -62,14 +63,19 @@ export class PathologyFamily extends Node2D {
 		return this._size;
 	}
 
-	override getPosition() {
-		return this.shiftedPosition;
+
+	override setPosition(value: Vector) {
+		this.origin.set(value);
 	}
 
 
+	override getGlobalPosition(): Attribute<Vector> {
+		return super.getGlobalPosition();
+	}
+
 	override onRendered(_deltaTime: number) {
 		super.onRendered(_deltaTime);
-		this.shiftedPosition.commit();
+		this.origin.commit();
 	}
 
 	updateShiftedPosition(time: number): void {
@@ -80,6 +86,17 @@ export class PathologyFamily extends Node2D {
 			this._noise.simplex2(scaledTime, 0) * 16,
 		);
 
-		this.shiftedPosition.set(this.position.get().add(shift));
+
+		this.position.set(this.origin.get().add(shift));
+	}
+
+	override renderState(): RenderType {
+		const parent = super.renderState();
+
+		if (RenderTypes.Breaking === parent) {
+			return parent;
+		}
+
+		return this.origin.hasChanged() ? RenderTypes.Paint : parent;
 	}
 }

@@ -53,20 +53,13 @@ export class Node2D extends Observable {
 			return this.position;
 		}
 
-		const parentPos = parent.getGlobalPosition();
+		// Rotate the position based on the parent position and rotation
+		const rotatedPosition = this.position.get().rot(parent.getGlobalRotation().get());
 
-		// Positions changed, recompute all!
-		if (parentPos.hasChanged() || this.position.hasChanged()) {
-			// Rotate the position based on the parent position and rotation
-			const rotatedPosition = this.getPosition().get().rot(parent.getGlobalRotation().get());
+		// Apply the rotated local position to the parent one
+		const newPosition = parent.getGlobalPosition().get().add(rotatedPosition);
 
-			// Apply the rotated local position to the parent one
-			const newPosition = parentPos.get().add(rotatedPosition);
-
-			// Cache the new position
-			this.globalPosition.set(newPosition);
-		}
-
+		this.globalPosition.set(newPosition);
 		return this.globalPosition;
 	}
 

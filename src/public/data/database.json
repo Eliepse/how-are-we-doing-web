@@ -5588,5 +5588,277 @@
         }
       ]
     }
+  ],
+  "associations": [
+    {
+      "from": {
+        "type": "determinant",
+        "id": 3
+      },
+      "to": {
+        "type": "determinant",
+        "id": 5
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 22
+      },
+      "to": {
+        "type": "determinant",
+        "id": 8
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 8
+      },
+      "to": {
+        "type": "determinant",
+        "id": 1
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 1
+      },
+      "to": {
+        "type": "determinant",
+        "id": 8
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 23
+      },
+      "to": {
+        "type": "determinant",
+        "id": 5
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 13
+      },
+      "to": {
+        "type": "determinant",
+        "id": 5
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 5
+      },
+      "to": {
+        "type": "determinant",
+        "id": 8
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 21
+      },
+      "to": {
+        "type": "determinant",
+        "id": 6
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 21
+      },
+      "to": {
+        "type": "determinant",
+        "id": 8
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 1
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 8
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 5
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 19
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 25
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 18
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 25
+      },
+      "to": {
+        "type": "determinant",
+        "id": 18
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 16
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 24
+      },
+      "to": {
+        "type": "determinant",
+        "id": 17
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 17
+      },
+      "to": {
+        "type": "determinant",
+        "id": 25
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 25
+      },
+      "to": {
+        "type": "determinant",
+        "id": 24
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 24
+      },
+      "to": {
+        "type": "determinant",
+        "id": 16
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 26
+      },
+      "to": {
+        "type": "determinant",
+        "id": 17
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 26
+      },
+      "to": {
+        "type": "determinant",
+        "id": 24
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 13
+      },
+      "to": {
+        "type": "determinant",
+        "id": 8
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 13
+      },
+      "to": {
+        "type": "determinant",
+        "id": 1
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 27
+      },
+      "to": {
+        "type": "determinant",
+        "id": 18
+      }
+    },
+    {
+      "from": {
+        "type": "determinant",
+        "id": 23
+      },
+      "to": {
+        "type": "determinant",
+        "id": 7
+      }
+    }
   ]
 }

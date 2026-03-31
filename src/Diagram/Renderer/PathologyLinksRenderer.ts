@@ -25,7 +25,7 @@ export class PathologyLinkRenderer extends SVGNodeRenderer {
 				const determinantActive = "selected" === determinant.status.get() || "preview" === determinant.status.get();
 				const shapeKey = `link:pathology:${pathology.id}-${determinant.id}`;
 
-				if (false === pathologyActive || false === determinantActive) {
+				if (false === pathologyActive || false === determinantActive || "pathologies" !== node.links) {
 					shapes.remove(shapeKey);
 					return;
 				}

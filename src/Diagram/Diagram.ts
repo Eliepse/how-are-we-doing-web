@@ -29,6 +29,7 @@ export type SelectableNode = Pathology | Determinant | Facility;
 export type PathologiesData = (typeof db)["pathologies"];
 export type FacilitiesData = (typeof db)["facilities"];
 export type DeterminantsData = (typeof db)["determinants"];
+export type AssociationsData = (typeof db)["associations"];
 
 type Source = { source: string; doi: string };
 type SourceList = Map<number, Array<Source>>;
@@ -46,11 +47,13 @@ export class Diagram extends Node2D {
 	public backgroundBlobClock = new Attribute(0);
 	public decorations: BgDecorationManager;
 	private families: { [key in Family]: Node2D };
+	public links: "pathologies" | "determinants" = "pathologies";
 
 	constructor(
 		pathologiesData: PathologiesData,
 		facilitiesData: FacilitiesData,
 		determinantsData: DeterminantsData,
+		associationData: AssociationsData,
 	) {
 		super();
 
@@ -81,7 +84,10 @@ export class Diagram extends Node2D {
 		facilities.setRotation(Angle.fromDeg(156));
 		this.addChildren(facilities);
 
-		const determinants = new DeterminantsRing(this.buildDeterminantFamilies(determinantsData));
+		const determinants = new DeterminantsRing(this.buildDeterminantFamilies(
+			determinantsData,
+			associationData.filter((asso) => "determinant" === asso.from.type)),
+		);
 		determinants.setRotation(Angle.fromDeg(266));
 		this.addChildren(determinants);
 
@@ -167,7 +173,7 @@ export class Diagram extends Node2D {
 		);
 	}
 
-	private buildDeterminantFamilies(data: DeterminantsData): Array<DeterminantFamily> {
+	private buildDeterminantFamilies(data: DeterminantsData, associations: AssociationsData): Array<DeterminantFamily> {
 		const totalDeterminants = data.reduce(
 			(sum, family) =>
 				family.children.reduce((sum, subFamily) => sum + subFamily.children.length, sum),
@@ -199,7 +205,11 @@ export class Diagram extends Node2D {
 							child.name,
 							asset,
 							{ arc: itemArc },
-							{ facilities: assoFacilities, pathologies: assoPathologies },
+							{
+								facilities: assoFacilities,
+								pathologies: assoPathologies,
+								determinants: associations.filter(asso => child.id === asso.from.id && "determinant" === asso.to.type).map(asso => asso.to.id),
+							},
 						);
 
 						this._determinants.set(determinant.id, determinant);
@@ -272,33 +282,57 @@ export class Diagram extends Node2D {
 	}
 
 	private updateNodesHighlight() {
-		const nodes = [
-			...this._determinants.values(),
-			...this._facilities.values(),
-			...this._pathologies.values(),
-		];
+		if ("determinants" === this.links) {
+			for (const node of [...this._facilities.values(), ...this._pathologies.values()]) {
+				node.setStatus(false);
+			}
 
-		for (const node of nodes) {
-			if (undefined !== this._selectedNode) {
-				if (node === this._selectedNode || node.isConnected(this._selectedNode)) {
+			for (const node of this._determinants.values()) {
+				if (node === this._selectedNode) {
 					node.setStatus("selected");
 					continue;
 				}
-			}
 
-			if (undefined !== this._previewedNode) {
-				if (node === this._previewedNode || node.isConnected(this._previewedNode)) {
+				if (this._selectedNode instanceof Determinant && node.isConnected(this._selectedNode)) {
 					node.setStatus("preview");
 					continue;
 				}
 
+				node.setStatus(undefined !== this._selectedNode ? "dimmed" : false);
 			}
 
-			if (undefined == this._selectedNode && undefined == this._previewedNode) {
-				node.setStatus(false);
-			} else {
-				node.setStatus("dimmed");
+			return;
+		}
+
+		const nodes = [...this._determinants.values(), ...this._facilities.values(), ...this._pathologies.values()];
+		const anyNodeActive = undefined === this._selectedNode && undefined === this._previewedNode;
+		for (const node of nodes) {
+			if (node === this._selectedNode) {
+				node.setStatus("selected");
+				continue;
 			}
+
+			if (node === this._previewedNode) {
+				node.setStatus("preview");
+				continue;
+			}
+
+			if (node instanceof Determinant && (this._selectedNode instanceof Determinant || this._previewedNode instanceof Determinant)) {
+				node.setStatus(anyNodeActive ? false : "dimmed");
+				continue;
+			}
+
+			if (undefined !== this._selectedNode && node.isConnected(this._selectedNode)) {
+				node.setStatus("selected");
+				continue;
+			}
+
+			if (undefined !== this._previewedNode && node.isConnected(this._previewedNode)) {
+				node.setStatus("preview");
+				continue;
+			}
+
+			node.setStatus(anyNodeActive ? false : "dimmed");
 		}
 	}
 
@@ -410,19 +444,26 @@ export class Diagram extends Node2D {
 		}
 	}
 
-	focusFamily(type: Family | false) {
-		if (false === type) {
-			transitionNodeOpacity(this.families.pathology, 500, Opacity.Opaque);
+	setLinksMode(type: "determinants" | "pathologies") {
+		this.links = type;
+
+		if ("determinants" === type) {
+			transitionNodeOpacity(this.families.pathology, 500, new Opacity(.1));
 			transitionNodeOpacity(this.families.determinant, 500, Opacity.Opaque);
-			transitionNodeOpacity(this.families.facility, 500, Opacity.Opaque);
-			transitionNodeOpacity(this.decorations, 500, Opacity.Opaque);
+			transitionNodeOpacity(this.families.facility, 500, new Opacity(.1));
+			transitionNodeOpacity(this.decorations, 500, new Opacity(.1));
+
+			this.updateNodesHighlight();
 			return;
 		}
 
-		transitionNodeOpacity(this.families.pathology, 500, "pathology" === type ? Opacity.Opaque : new Opacity(.1));
-		transitionNodeOpacity(this.families.determinant, 500, "determinant" === type ? Opacity.Opaque : new Opacity(.1));
-		transitionNodeOpacity(this.families.facility, 500, "facility" === type ? Opacity.Opaque : new Opacity(.1));
-		transitionNodeOpacity(this.decorations, 500, "facility" === type ? Opacity.Opaque : new Opacity(.1));
+		// Default
+		transitionNodeOpacity(this.families.pathology, 500, Opacity.Opaque);
+		transitionNodeOpacity(this.families.determinant, 500, Opacity.Opaque);
+		transitionNodeOpacity(this.families.facility, 500, Opacity.Opaque);
+		transitionNodeOpacity(this.decorations, 500, Opacity.Opaque);
+
+		this.updateNodesHighlight();
 	}
 
 	override onRendered(_deltaTime: number) {

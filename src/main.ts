@@ -110,7 +110,11 @@ async function main(withLoader = true) {
 	});
 
 	document.querySelectorAll("[data-action='mode:change']").forEach((el) => {
-		el.addEventListener("click", (e) => app.changeMode(el.dataset.mode));
+		el.addEventListener("click", (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+			app.changeMode(el.dataset.mode);
+		});
 	});
 
 	loaderDom.root && (loaderDom.root.style.opacity = "0");

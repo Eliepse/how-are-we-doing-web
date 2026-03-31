@@ -117,7 +117,12 @@ export class App {
 			await this.load();
 		}
 
-		this.diagram = new Diagram(this.database.pathologies, this.database.facilities, this.database.determinants);
+		this.diagram = new Diagram(
+			this.database.pathologies,
+			this.database.facilities,
+			this.database.determinants,
+			this.database.associations,
+		);
 
 		this.changeContext(this.contexts[0]);
 
@@ -258,18 +263,18 @@ export class App {
 	}
 
 	changeMode(mode: AppMode) {
-		if (mode === this.mode) {
+		if (mode === this.mode || !this.diagram) {
 			return;
 		}
 
 		this.mode = mode;
 
 		if ("focus:determinant" === mode) {
-			this.diagram?.focusFamily("determinant");
+			this.diagram.setLinksMode("determinants");
 			return;
 		}
 
-		this.diagram?.focusFamily(false);
+		this.diagram.setLinksMode("pathologies");
 	}
 
 	getMode(): AppMode {

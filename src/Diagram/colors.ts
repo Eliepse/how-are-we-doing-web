@@ -7,5 +7,6 @@ export const colors = {
 	defaultWhite: Color.White,
 	dimmedWhite: Color.White.alpha(dimmedAlpha),
 	selected: Color.Red,
-	secondary: new Color(237, 164, 198),
+	// secondary: new Color(237, 164, 198),
+	secondary: Color.White,
 } as const;

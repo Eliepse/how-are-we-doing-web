@@ -11,7 +11,6 @@ import { type SelectableNode } from "../../Diagram";
 import { Facility } from "../Facility/Facility";
 import { Pathology } from "../Pathology/Pathology";
 import { DeterminantSubFamily } from "./DeterminantSubFamily";
-import { interpolate } from "../../../helpers";
 import type { ActiveStatus, DeterminantKey } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
 import { dimmedAlpha } from "../../colors";
@@ -20,7 +19,7 @@ import { Transition } from "../../../Engine2D/Time/Transition";
 import { easeOutCubic, interpolateNumber } from "../../../Engine2D/Time/interpolations";
 
 export type Steps = 1 | 2 | 3 | 4;
-type Associations = { pathologies: number[]; facilities: number[] };
+type Associations = { pathologies: number[]; facilities: number[], determinants: number[] };
 
 export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
 	private _collider?: TorusCollider;
@@ -113,6 +112,10 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 
 		if (node instanceof Pathology) {
 			return this.associations.pathologies.includes(node.id);
+		}
+
+		if (node instanceof Determinant) {
+			return this.associations.determinants.includes(node.id);
 		}
 
 		return false;

@@ -240,6 +240,10 @@ export class Diagram extends Node2D {
 			return;
 		}
 
+		if("determinants" === this.links && !(node instanceof Determinant)) {
+			return;
+		}
+
 		// Stop pathology movement
 		if (this._selectedNode instanceof Pathology) {
 			const parent = this._selectedNode.getParent() as PathologyFamily;

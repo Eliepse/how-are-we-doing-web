@@ -22,6 +22,7 @@ import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
+import { Determinant } from "./Diagram/Items/Determinant/Determinant";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -132,6 +133,10 @@ export class App {
 
 		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
+
+			if("focus:determinant" === this.mode && !(node instanceof Determinant)) {
+				return;
+			}
 
 			if (undefined === node) {
 				this.labelManager.hide("selected");

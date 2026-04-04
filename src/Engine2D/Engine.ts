@@ -166,29 +166,25 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 		this.tree.update();
 
-		// Trigger onProcess method
 		// "for" loop prevent long callstack caused by recursive calls
 		for (const vnode of this.tree.getNodes()) {
+			// Trigger onProcess method
 			vnode.node.onProcess(deltaTime);
+
+			// Trigger render if needed
+			if (false === vnode.node.shouldRerender()) {
+				this.renderer.renderNode(vnode, deltaTime, frames);
+				vnode.node.onRendered(deltaTime);
+			}
 		}
 
+		// Process transitions
 		for (const transition of Engine.transitions) {
 			transition.tick();
 
 			if (transition.finished) {
 				Engine.transitions.delete(transition);
 			}
-		}
-
-		// Trigger render if required
-		// "for" loop prevent long callstack caused by recursive calls
-		for (const vnode of this.tree.getNodes()) {
-			if (false === vnode.node.shouldRerender()) {
-				continue;
-			}
-
-			this.renderer.renderNode(vnode, deltaTime, frames);
-			vnode.node.onRendered(deltaTime);
 		}
 	}
 

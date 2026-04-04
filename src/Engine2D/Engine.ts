@@ -172,7 +172,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 			vnode.node.onProcess(deltaTime);
 
 			// Trigger render if needed
-			if (false === vnode.node.shouldRerender()) {
+			if (vnode.node.shouldRerender()) {
 				this.renderer.renderNode(vnode, deltaTime, frames);
 				vnode.node.onRendered(deltaTime);
 			}

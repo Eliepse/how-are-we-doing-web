@@ -3,7 +3,7 @@ import type { Symbolic } from "../../../Engine2D/Contract/renderable";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
-import { Engine, type RenderType, RenderTypes } from "../../../Engine2D/Engine";
+import { Engine } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
 import { type Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
@@ -130,17 +130,11 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 	}
 
 
-	override renderState(): RenderType {
-		const parent = super.renderState();
-
-		if (RenderTypes.Breaking === parent) {
-			return parent;
+	override shouldRerender(): boolean {
+		if (super.shouldRerender()) {
+			return true;
 		}
 
-		if (this.status.hasChanged() || this.applicable.hasChanged() || this.step.hasChanged()) {
-			return RenderTypes.Paint;
-		}
-
-		return parent;
+		return this.status.hasChanged() || this.applicable.hasChanged() || this.step.hasChanged();
 	}
 }

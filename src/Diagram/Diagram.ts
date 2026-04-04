@@ -18,7 +18,7 @@ import type { DeterminantKey } from "./types";
 import { type Context } from "./Context";
 import { BgDecorationManager } from "./Decoration/BgDecorationManager";
 import { Attribute } from "../Engine2D/Core/Attribute";
-import { Engine, type RenderType, RenderTypes } from "../Engine2D/Engine";
+import { Engine } from "../Engine2D/Engine";
 import { Opacity } from "../Engine2D/ValueObject/Opacity";
 import { easeOutCubic, interpolateOpacity } from "../Engine2D/Time/interpolations";
 import { Transition } from "../Engine2D/Time/Transition";
@@ -240,7 +240,7 @@ export class Diagram extends Node2D {
 			return;
 		}
 
-		if("determinants" === this.links && !(node instanceof Determinant)) {
+		if ("determinants" === this.links && !(node instanceof Determinant)) {
 			return;
 		}
 
@@ -476,14 +476,12 @@ export class Diagram extends Node2D {
 	}
 
 
-	override renderState(): RenderType {
-		const parent = super.renderState();
-
-		if (RenderTypes.Breaking === parent) {
-			return parent;
+	override shouldRerender(): boolean {
+		if (super.shouldRerender()) {
+			return true;
 		}
 
-		return this.backgroundBlobClock.hasChanged() ? RenderTypes.Paint : parent;
+		return this.backgroundBlobClock.hasChanged();
 	}
 }
 

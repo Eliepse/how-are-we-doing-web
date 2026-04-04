@@ -1,7 +1,6 @@
 import { Angle } from "../ValueObject/Angle";
 import { Vector } from "../ValueObject/Vector";
 import { Observable } from "./Observable";
-import { type RenderType, RenderTypes } from "../Engine";
 import { Attribute } from "../Core/Attribute";
 import { Opacity } from "../ValueObject/Opacity";
 
@@ -17,7 +16,7 @@ export class Node2D extends Observable {
 	protected globalRotation = new Attribute(Angle.Zero, Angle.isDiff);
 	// Global opacity caches, used only in getGlobalRotation()
 	protected globalOpacity = new Attribute(Opacity.Opaque, Opacity.isDiff);
-	private rerender: RenderType = RenderTypes.Skip;
+	private dirty: boolean = true;
 
 	setParent(element: Node2D): void {
 		this._parent = element;
@@ -28,7 +27,7 @@ export class Node2D extends Observable {
 	}
 
 	addChildren(element: Node2D): void {
-		this.shouldRerender();
+		this.dirty = true;
 		this.children.push(element);
 		element.setParent(this);
 	}
@@ -117,7 +116,7 @@ export class Node2D extends Observable {
 	}
 
 	onRendered(_deltaTime: number): void {
-		this.rerender = RenderTypes.Skip;
+		this.dirty = false;
 		this.position.commit();
 		this.rotation.commit();
 		this.globalPosition.commit();
@@ -125,28 +124,24 @@ export class Node2D extends Observable {
 		this.opacity.commit();
 	}
 
-	protected shouldRerender(): void {
-		this.rerender = RenderTypes.Breaking;
-	}
-
-	renderState(): RenderType {
-		if (RenderTypes.Breaking === this.rerender) {
-			return this.rerender;
+	shouldRerender(): boolean {
+		if (this.dirty) {
+			return true;
 		}
 
 		if (this.position.hasChanged() || this.globalPosition.hasChanged()) {
-			return RenderTypes.Paint;
+			return true;
 		}
 
 		if (this.rotation.hasChanged() || this.globalRotation.hasChanged()) {
-			return RenderTypes.Paint;
+			return true;
 		}
 
 		if (this.opacity.hasChanged() || this.globalOpacity.hasChanged()) {
-			return RenderTypes.Paint;
+			return true;
 		}
 
-		return this.rerender;
+		return false;
 	}
 
 	static findParent(

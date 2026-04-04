@@ -6,7 +6,6 @@ import { Vector } from "../../../Engine2D/ValueObject/Vector";
 import { type Pathology } from "./Pathology";
 import { PI2 } from "../../../Engine2D/math";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
-import { type RenderType, RenderTypes } from "../../../Engine2D/Engine";
 
 export class PathologyFamily extends Node2D {
 	public paused = false;
@@ -90,13 +89,11 @@ export class PathologyFamily extends Node2D {
 		this.position.set(this.origin.get().add(shift));
 	}
 
-	override renderState(): RenderType {
-		const parent = super.renderState();
-
-		if (RenderTypes.Breaking === parent) {
-			return parent;
+	override shouldRerender(): boolean {
+		if (super.shouldRerender()) {
+			return true;
 		}
 
-		return this.origin.hasChanged() ? RenderTypes.Paint : parent;
+		return this.origin.hasChanged();
 	}
 }

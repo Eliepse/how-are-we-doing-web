@@ -9,7 +9,6 @@ import { Facility } from "../Facility/Facility";
 import { interpolate } from "../../../helpers";
 import type { ActiveStatus } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
-import { type RenderType, RenderTypes } from "../../../Engine2D/Engine";
 import { dimmedAlpha } from "../../colors";
 import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
 
@@ -72,17 +71,11 @@ export class Pathology extends Node2D implements WithPointerEvents {
 	}
 
 
-	override renderState(): RenderType {
-		const parent = super.renderState();
-
-		if (RenderTypes.Breaking === parent) {
-			return parent;
+	override shouldRerender(): boolean {
+		if (super.shouldRerender()) {
+			return true;
 		}
 
-		if (this.time.hasChanged() || this.status.hasChanged()) {
-			return RenderTypes.Paint;
-		}
-
-		return parent;
+		return this.time.hasChanged() || this.status.hasChanged();
 	}
 }

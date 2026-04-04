@@ -2,7 +2,7 @@ import type { Collider } from "../../../Engine2D/Physic/Collider";
 import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
-import { type Engine, type RenderType, RenderTypes } from "../../../Engine2D/Engine";
+import { type Engine } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
 import { type Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
@@ -93,13 +93,11 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 	}
 
 
-	override renderState(): RenderType {
-		const parent = super.renderState();
-
-		if (RenderTypes.Breaking === parent) {
-			return parent;
+	override shouldRerender(): boolean {
+		if (super.shouldRerender()) {
+			return true;
 		}
 
-		return this.status.hasChanged() ? RenderTypes.Paint : parent;
+		return this.status.hasChanged();
 	}
 }

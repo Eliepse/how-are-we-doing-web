@@ -17,13 +17,6 @@ type Listeners = {
 };
 type ValueOf<T> = T[keyof T];
 
-export const RenderTypes = {
-	Skip: 0, // Do not need to refresh visual
-	Paint: 1, // Render but don't force children
-	Breaking: 2, // Render and force children
-} as const;
-export type RenderType = ValueOf<typeof RenderTypes>;
-
 export class Engine<TRenderer extends Renderer = Renderer> {
 	private readonly tree: VirtualTree;
 	private clock: Clock;
@@ -190,10 +183,12 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		// Trigger render if required
 		// "for" loop prevent long callstack caused by recursive calls
 		for (const vnode of this.tree.getNodes()) {
-			if (RenderTypes.Breaking === vnode.node.renderState() || RenderTypes.Paint === vnode.node.renderState()) {
-				this.renderer.renderNode(vnode, deltaTime, frames);
-				vnode.node.onRendered(deltaTime);
+			if (false === vnode.node.shouldRerender()) {
+				continue;
 			}
+
+			this.renderer.renderNode(vnode, deltaTime, frames);
+			vnode.node.onRendered(deltaTime);
 		}
 	}
 

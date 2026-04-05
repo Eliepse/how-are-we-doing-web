@@ -14,7 +14,6 @@ import { PathologyRenderer } from "./Diagram/Renderer/PathologyRenderer";
 import { GroupWithArcTextRenderer } from "./Diagram/Renderer/GroupWithArcTextRenderer";
 import { FacilityFamilyRenderer } from "./Diagram/Renderer/FacilityFamilyRenderer";
 import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubFamilyRenderer";
-import { PathologyLinkRenderer } from "./Diagram/Renderer/PathologyLinksRenderer";
 import { PathologyFamilyRenderer } from "./Diagram/Renderer/PathologyFamilyRenderer";
 import { DiagramBackgroundRenderer } from "./Diagram/Renderer/DiagramBackgroundRenderer";
 import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
@@ -23,6 +22,7 @@ import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
 import { Determinant } from "./Diagram/Items/Determinant/Determinant";
+import { LinkRenderer } from "./Diagram/Renderer/LinkRenderer";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -70,7 +70,7 @@ export class App {
 		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.engine, this.translator));
 		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer, this.engine));
 		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new PathologyLinkRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new LinkRenderer(renderer, this.engine));
 		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer, this.engine));
 		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer, this.engine));
 		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer, this.engine));
@@ -134,7 +134,7 @@ export class App {
 		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
 
-			if("focus:determinant" === this.mode && !(node instanceof Determinant)) {
+			if ("focus:determinant" === this.mode && !(node instanceof Determinant)) {
 				return;
 			}
 

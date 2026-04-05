@@ -22,6 +22,7 @@ import { Engine } from "../Engine2D/Engine";
 import { Opacity } from "../Engine2D/ValueObject/Opacity";
 import { easeOutCubic, interpolateOpacity } from "../Engine2D/Time/interpolations";
 import { Transition } from "../Engine2D/Time/Transition";
+import { LinkManager } from "./Items/Link/LinkManager";
 
 export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
@@ -40,6 +41,7 @@ export class Diagram extends Node2D {
 	private _pathologies = new Map<number, Pathology>();
 	private _determinants = new Map<number, Determinant>();
 	private _facilities = new Map<number, Facility>();
+	private _linkManager: LinkManager;
 	private _linksSources = new Map<
 		Determinant["id"],
 		{ pathologies: SourceList; facilities: SourceList }
@@ -131,6 +133,7 @@ export class Diagram extends Node2D {
 		this.addChildren(pathologies);
 
 		this.addChildren(this.decorations = new BgDecorationManager());
+		this.addChildren(this._linkManager = new LinkManager(this._pathologies, this._determinants));
 
 		this.families = {
 			determinant: determinants,
@@ -286,9 +289,19 @@ export class Diagram extends Node2D {
 	}
 
 	private updateNodesHighlight() {
+		this._linkManager.clearLinks();
+
 		if ("determinants" === this.links) {
 			for (const node of [...this._facilities.values(), ...this._pathologies.values()]) {
 				node.setStatus(false);
+			}
+
+			if (this._previewedNode instanceof Determinant) {
+				this._linkManager.showInterDeterminantLinks(this._previewedNode, true);
+			}
+
+			if (this._selectedNode instanceof Determinant) {
+				this._linkManager.showInterDeterminantLinks(this._selectedNode);
 			}
 
 			for (const node of this._determinants.values()) {
@@ -306,6 +319,16 @@ export class Diagram extends Node2D {
 			}
 
 			return;
+		}
+
+		if (this._previewedNode instanceof Determinant) {
+			this._linkManager.showDeterminantPathologyLinks(this._previewedNode, true);
+		}
+
+		if (this._selectedNode instanceof Determinant) {
+			this._linkManager.showDeterminantPathologyLinks(this._selectedNode);
+		} else if (this._selectedNode instanceof Pathology) {
+			this._linkManager.showPathologyLinks(this._selectedNode);
 		}
 
 		const nodes = [...this._determinants.values(), ...this._facilities.values(), ...this._pathologies.values()];

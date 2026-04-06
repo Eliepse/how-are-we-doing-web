@@ -324,10 +324,13 @@ export class Diagram extends Node2D {
 					continue;
 				}
 
-				if ((this._selectedNode instanceof Determinant && node.isConnected(this._selectedNode)) || this._previewedNode === node) {
-					node.setStatus("preview");
-					continue;
+				if(this._selectedNode instanceof Determinant) {
+					if (this._selectedNode.isConnected(node) || node.isConnected(this._selectedNode) || this._previewedNode === node) {
+						node.setStatus("preview");
+						continue;
+					}
 				}
+
 
 				node.setStatus(undefined !== this._selectedNode ? "dimmed" : false);
 			}

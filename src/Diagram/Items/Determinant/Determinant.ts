@@ -105,7 +105,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		this.opacity.set("dimmed" === status ? dimmedAlpha : Opacity.Opaque);
 	}
 
-	isConnected(node: SelectableNode): boolean {
+	isConnected(node?: SelectableNode): boolean {
 		if (node instanceof Facility) {
 			return this.associations.facilities.includes(node.id);
 		}

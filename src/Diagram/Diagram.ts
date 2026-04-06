@@ -283,12 +283,12 @@ export class Diagram extends Node2D {
 
 	previewNode(node: SelectableNode | undefined): void {
 		// No changes
-		if (this._previewedNode === node) {
+		if (this._previewedNode && this._previewedNode === node) {
 			return;
 		}
 
 		// Do not change status if already selected
-		if (this._selectedNode === node) {
+		if (this._selectedNode && this._selectedNode === node) {
 			return;
 		}
 
@@ -307,7 +307,7 @@ export class Diagram extends Node2D {
 
 		if ("determinants" === this.links) {
 			for (const node of [...this._facilities.values(), ...this._pathologies.values()]) {
-				node.setStatus("dimmed");
+				node.setStatus(this._previewedNode ? "dimmed" : false);
 			}
 
 			if (this._previewedNode instanceof Determinant) {
@@ -324,15 +324,15 @@ export class Diagram extends Node2D {
 					continue;
 				}
 
-				if(this._selectedNode instanceof Determinant) {
-					if (this._selectedNode.isConnected(node) || node.isConnected(this._selectedNode) || this._previewedNode === node) {
+				if(this._selectedNode instanceof Determinant || this._previewedNode instanceof Determinant) {
+					if (this._selectedNode?.isConnected(node) || node.isConnected(this._selectedNode) || this._previewedNode === node) {
 						node.setStatus("preview");
 						continue;
 					}
 				}
 
 
-				node.setStatus(undefined !== this._selectedNode ? "dimmed" : false);
+				node.setStatus(this._selectedNode || this._previewedNode ? "dimmed" : false);
 			}
 
 			return;

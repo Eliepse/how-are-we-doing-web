@@ -243,6 +243,13 @@ export class Diagram extends Node2D {
 			return;
 		}
 
+		if (undefined === node) {
+			this._selectedNode = undefined;
+			this.updateNodesHighlight();
+			this.dispatchEvent(new NodeEvent("nodeSelected", undefined));
+			return;
+		}
+
 		if ("determinants" === this.links && !(node instanceof Determinant)) {
 			return;
 		}

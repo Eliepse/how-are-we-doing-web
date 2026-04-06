@@ -281,16 +281,23 @@ export class Diagram extends Node2D {
 		this.dispatchEvent(new NodeEvent("nodeSelected", this._selectedNode));
 	}
 
-	previewNode(previewNode: SelectableNode | undefined): void {
-		if (this._previewedNode === previewNode) {
+	previewNode(node: SelectableNode | undefined): void {
+		// No changes
+		if (this._previewedNode === node) {
 			return;
 		}
 
-		if (undefined !== previewNode && !(previewNode instanceof Determinant)) {
+		// Do not change status if already selected
+		if (this._selectedNode === node) {
 			return;
 		}
 
-		this._previewedNode = previewNode;
+		// Only preview determinants
+		if (node && !(node instanceof Determinant)) {
+			return;
+		}
+
+		this._previewedNode = node;
 		this.updateNodesHighlight();
 		this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
 	}
@@ -300,7 +307,7 @@ export class Diagram extends Node2D {
 
 		if ("determinants" === this.links) {
 			for (const node of [...this._facilities.values(), ...this._pathologies.values()]) {
-				node.setStatus(false);
+				node.setStatus("dimmed");
 			}
 
 			if (this._previewedNode instanceof Determinant) {
@@ -317,7 +324,7 @@ export class Diagram extends Node2D {
 					continue;
 				}
 
-				if (this._selectedNode instanceof Determinant && node.isConnected(this._selectedNode)) {
+				if ((this._selectedNode instanceof Determinant && node.isConnected(this._selectedNode)) || this._previewedNode === node) {
 					node.setStatus("preview");
 					continue;
 				}

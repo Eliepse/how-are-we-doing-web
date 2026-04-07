@@ -16,6 +16,18 @@ type Listeners = {
 	click: Listener<EngineMouseEvent>;
 };
 type ValueOf<T> = T[keyof T];
+type DebugProfile = {
+	nodesCount: number;
+	nodesMounted: number;
+	nodesUnmounted: number;
+	nodesRendered: number;
+	nodesSkippedRender: number;
+	frames: number;
+	frameTime: number;
+	fps: number;
+	transitionsCount: number;
+};
+type OnTickClb = (engine: Engine, profile: DebugProfile) => void;
 
 export class Engine<TRenderer extends Renderer = Renderer> {
 	private readonly tree: VirtualTree;
@@ -28,7 +40,20 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
 	private static transitions = new Set<Transition>();
+
 	private _debug = false;
+	public onTicked: OnTickClb = () => undefined;
+	private _profile: DebugProfile = {
+		nodesCount: 0,
+		nodesMounted: 0,
+		nodesUnmounted: 0,
+		nodesRendered: 0,
+		nodesSkippedRender: 0,
+		frames: 0,
+		frameTime: 0,
+		fps: 0,
+		transitionsCount: 0,
+	};
 
 	constructor(
 		private rootNode: Node2D,
@@ -75,6 +100,10 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 
 		this.renderer.mountNode(vnode);
+
+		if (this.debug) {
+			this._profile.nodesMounted++;
+		}
 	}
 
 	private handleOnUnmount(vnode: VirtualNode<Node2D & Partial<WithLifecycle & WithPointerEvents>>): void {
@@ -88,6 +117,10 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 
 		this.renderer.unmountNode(vnode);
+
+		if (this.debug) {
+			this._profile.nodesUnmounted++;
+		}
 	}
 
 	addEventListener<TKey extends keyof Listeners>(
@@ -176,6 +209,12 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 			if (vnode.node.shouldRerender()) {
 				this.renderer.renderNode(vnode, deltaTime, frames);
 				vnode.node.onRendered(deltaTime);
+
+				if (this.debug) {
+					this._profile.nodesRendered++;
+				}
+			} else if (this.debug) {
+				this._profile.nodesSkippedRender++;
 			}
 		}
 
@@ -186,6 +225,19 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 			if (transition.finished) {
 				Engine.transitions.delete(transition);
 			}
+		}
+
+		if (this.debug) {
+			this._profile.frames = frames;
+			this._profile.frameTime = deltaTime;
+			this._profile.fps = (1 / deltaTime);
+			this._profile.transitionsCount = Engine.transitions.size;
+			this._profile.nodesCount = this.tree.getNodes().size;
+			this.onTicked(this, this._profile);
+			this._profile.nodesMounted = 0;
+			this._profile.nodesUnmounted = 0;
+			this._profile.nodesRendered = 0;
+			this._profile.nodesSkippedRender = 0;
 		}
 	}
 

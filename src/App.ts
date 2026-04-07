@@ -230,6 +230,25 @@ export class App {
 
 	setDebug(value: boolean) {
 		this.engine.setDebug(value);
+
+		if (false === value) {
+			this.engine.onTicked = () => undefined;
+			document.querySelector("#profiling")?.remove();
+			return;
+		}
+
+		const debugEl = document.createElement("pre");
+		debugEl.id = "profiling";
+
+		this.engine.onTicked = (_engin, profile) => {
+			let content = "";
+			Object.entries(profile).forEach(([key, value]) => {
+				content += `${key.padEnd(24)}${value.toFixed(3)}\n`;
+			});
+			debugEl.innerHTML = content;
+		};
+
+		document.body.append(debugEl);
 	}
 
 	previousContext(): void {

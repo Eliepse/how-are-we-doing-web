@@ -43,6 +43,7 @@ async function main(withLoader = true) {
 	}
 
 	const app = new App(appDom, diagramDom);
+	// @ts-ignore
 	window.app = app;
 	const translator = app.getTranslator();
 
@@ -106,6 +107,12 @@ async function main(withLoader = true) {
 		if ("i" === e.key && nav && legend) {
 			nav.style.display = nav.style.display.trim() ? "" : "none";
 			legend.style.display = legend.style.display.trim() ? "" : "none";
+			return;
+		}
+
+		if("d" === e.key) {
+			app.setDebug(!app.debug);
+			return;
 		}
 	});
 

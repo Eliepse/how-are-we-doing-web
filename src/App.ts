@@ -224,6 +224,14 @@ export class App {
 		this.engine.start();
 	}
 
+	get debug() {
+		return this.engine.debug;
+	}
+
+	setDebug(value: boolean) {
+		this.engine.setDebug(value);
+	}
+
 	previousContext(): void {
 		if (undefined === this.currentContext) {
 			this.changeContext(this.contexts[0]);

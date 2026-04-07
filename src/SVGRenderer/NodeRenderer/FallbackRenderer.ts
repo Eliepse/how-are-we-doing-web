@@ -9,21 +9,23 @@ const style = new SVGStyle({ fill: Color.White, stroke: new Stroke(1, Color.Red)
 
 export class FallbackRenderer extends SVGNodeRenderer {
 	render(vnode: VirtualNode): void {
-		if (false === this.renderer.isDebug()) {
+		if (false === this.renderer.debug) {
 			return;
 		}
 
-		const shapes = this.getShapes(vnode);
-		const origin = shapes.get("debug:origin", () => {
-			const c = new Circle(2);
-			c.updateStyle(style);
-			return c;
-		});
-
-		origin.updateMesh(vnode.node.getGlobalPosition());
+		// const node = vnode.node;
+		// const position = node.getGlobalPosition();
+		// const shapes = this.getShapes(vnode);
+		// const origin = shapes.get("debug:origin", () => {
+		// 	const c = new Circle(2);
+		// 	c.updateStyle(style);
+		// 	return c;
+		// });
+		//
+		// origin.updateMesh(position.get());
 	}
 
 	accepts(node: VirtualNode): boolean {
-		return true;
+		return this.renderer.debug;
 	}
 }

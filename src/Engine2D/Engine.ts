@@ -28,6 +28,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
 	private static transitions = new Set<Transition>();
+	private _debug = false;
 
 	constructor(
 		private rootNode: Node2D,
@@ -210,5 +211,14 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 	render(): void {
 		this.clock.update();
+	}
+
+	get debug() {
+		return this._debug;
+	}
+
+	setDebug(value: boolean) {
+		this._debug = value;
+		this.renderer.setDebug(value);
 	}
 }

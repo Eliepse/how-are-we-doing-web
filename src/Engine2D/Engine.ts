@@ -1,4 +1,3 @@
-import type { WithLifecycle } from "./Contract/WithLifecycle";
 import type { WithPointerEvents } from "./Contract/WithPointerEvents";
 import type { Node2D } from "./Node/Node2D";
 import { Vector } from "./ValueObject/Vector";
@@ -87,7 +86,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		return this.renderer;
 	}
 
-	private handleOnMount(vnode: VirtualNode<Node2D & Partial<WithLifecycle & WithPointerEvents>>): void {
+	private handleOnMount(vnode: VirtualNode<Node2D & Partial<WithPointerEvents>>): void {
 		const node = vnode.node;
 		const callback = node.onMount ? node.onMount(this) : undefined;
 
@@ -106,7 +105,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 	}
 
-	private handleOnUnmount(vnode: VirtualNode<Node2D & Partial<WithLifecycle & WithPointerEvents>>): void {
+	private handleOnUnmount(vnode: VirtualNode<Node2D & Partial<WithPointerEvents>>): void {
 		const node = vnode.node;
 		const callback = this._lifecycleCallbacks.get(node);
 

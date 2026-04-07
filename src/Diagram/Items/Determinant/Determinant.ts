@@ -1,6 +1,5 @@
 import type { Collider } from "../../../Engine2D/Physic/Collider";
 import type { Symbolic } from "../../../Engine2D/Contract/renderable";
-import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
 import { Engine } from "../../../Engine2D/Engine";
@@ -21,7 +20,7 @@ import { easeOutCubic, interpolateNumber } from "../../../Engine2D/Time/interpol
 export type Steps = 1 | 2 | 3 | 4;
 type Associations = { pathologies: number[]; facilities: number[], determinants: number[] };
 
-export class Determinant extends VirtualShape implements WithPointerEvents, WithLifecycle {
+export class Determinant extends VirtualShape implements WithPointerEvents {
 	private _collider?: TorusCollider;
 	private step = new Attribute<Steps>(2);
 	private applicable = new Attribute(true);
@@ -38,7 +37,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 		super(asset);
 	}
 
-	onMount(_: Engine): void | (() => void) {
+	override onMount(_: Engine): void | (() => void) {
 		const parent = this.getParent();
 
 		if (!(parent instanceof DeterminantSubFamily)) {
@@ -55,10 +54,6 @@ export class Determinant extends VirtualShape implements WithPointerEvents, With
 			this._colliderConfig.arc,
 			this.getGlobalRotation().get().sub(this._colliderConfig.arc.div(2)),
 		);
-	}
-
-	onUnmount(_engine: Engine): void {
-		//
 	}
 
 	getPointerCollider(): Collider {

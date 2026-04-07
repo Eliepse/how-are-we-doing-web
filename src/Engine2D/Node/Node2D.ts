@@ -3,6 +3,7 @@ import { Vector } from "../ValueObject/Vector";
 import { Observable } from "./Observable";
 import { Attribute } from "../Core/Attribute";
 import { Opacity } from "../ValueObject/Opacity";
+import type { Engine } from "../Engine";
 
 export class Node2D extends Observable {
 	protected _parent?: Node2D = undefined;
@@ -107,6 +108,19 @@ export class Node2D extends Observable {
 		this.globalOpacity.set(parentOpacity.get().mul(this.opacity.get()));
 
 		return this.globalOpacity;
+	}
+
+	/**
+	 * Called when the node is mounted in the tree,
+	 * but before any rendering.
+	 * Returned function is executed when unmounted.
+	 */
+	onMount(engine: Engine): void | (() => void) {
+		//
+	}
+
+	onUnmount(engine: Engine): void {
+		//
 	}
 
 	onProcess(_deltaTime: number): void {

@@ -110,7 +110,7 @@ async function main(withLoader = true) {
 			return;
 		}
 
-		if("d" === e.key) {
+		if ("d" === e.key) {
 			app.setDebug(!app.debug);
 			return;
 		}
@@ -120,6 +120,7 @@ async function main(withLoader = true) {
 		el.addEventListener("click", (e) => {
 			e.stopPropagation();
 			e.preventDefault();
+			// @ts-ignore
 			app.changeMode(el.dataset.mode);
 		});
 	});
@@ -202,8 +203,6 @@ function setupCredits(): void {
 }
 
 function setupContextControls(app: App): void {
-	const translator = app.getTranslator();
-
 	document.addEventListener("keydown", (e) => {
 		if ("ArrowLeft" === e.key) {
 			app.previousContext();

@@ -1,5 +1,4 @@
 import type { Collider } from "../../../Engine2D/Physic/Collider";
-import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
 import { type Engine } from "../../../Engine2D/Engine";
@@ -18,7 +17,7 @@ import { dimmedAlpha } from "../../colors";
 
 type Associations = { determinants: number[] };
 
-export class Facility extends VirtualShape implements WithPointerEvents, WithLifecycle {
+export class Facility extends VirtualShape implements WithPointerEvents {
 	private _collider?: TorusCollider;
 	public status = new Attribute<ActiveStatus | false>(false);
 
@@ -31,7 +30,7 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		super(facilityShape);
 	}
 
-	onMount(engine: Engine): void | (() => void) {
+	override onMount(_engine: Engine): void | (() => void) {
 		const parent = this.getParent();
 
 		if (!(parent instanceof FacilityFamily)) {
@@ -48,10 +47,6 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 			this._arc,
 			this.getGlobalRotation().get().sub(this._arc.div(2)),
 		);
-	}
-
-	onUnmount(engine: Engine): void {
-		//
 	}
 
 	getPointerCollider(): Collider {
@@ -85,7 +80,6 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 
 		return false;
 	}
-
 
 	override onRendered(_deltaTime: number) {
 		super.onRendered(_deltaTime);

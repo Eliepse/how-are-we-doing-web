@@ -16,7 +16,7 @@ export class Opacity implements Parameter {
 	}
 
 	mul(factor: number | Opacity) {
-		return new Opacity(this.value * (factor instanceof Opacity ? factor.value : clamp(0, factor, 1)));
+		return new Opacity(this.value * (factor instanceof Opacity ? factor.value : factor));
 	}
 
 	isEqual(parameter: Parameter): boolean {
@@ -28,6 +28,6 @@ export class Opacity implements Parameter {
 	}
 
 	static isDiff(a: Opacity, b: Opacity): boolean {
-		return false === Opacity.isEqual(a, b);
+		return a.value !== b.value;
 	}
 }

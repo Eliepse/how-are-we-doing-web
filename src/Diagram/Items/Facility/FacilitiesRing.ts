@@ -2,7 +2,6 @@ import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Angle } from "../../../Engine2D/ValueObject/Angle";
 import { ArcGroup } from "../../ArcGroup";
 import type { Facility } from "./Facility";
-import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
 
 export class FacilitiesRing extends Node2D {
 	constructor(groups: Array<ArcGroup<Facility>>) {

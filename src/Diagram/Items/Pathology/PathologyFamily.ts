@@ -62,14 +62,8 @@ export class PathologyFamily extends Node2D {
 		return this._size;
 	}
 
-
 	override setPosition(value: Vector) {
 		this.origin.set(value);
-	}
-
-
-	override getGlobalPosition(): Attribute<Vector> {
-		return super.getGlobalPosition();
 	}
 
 	override onRendered(_deltaTime: number) {
@@ -90,10 +84,6 @@ export class PathologyFamily extends Node2D {
 	}
 
 	override shouldRerender(): boolean {
-		if (super.shouldRerender()) {
-			return true;
-		}
-
-		return this.origin.hasChanged();
+		return super.shouldRerender() || this.origin.hasChanged();
 	}
 }

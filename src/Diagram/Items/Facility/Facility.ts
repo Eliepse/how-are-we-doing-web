@@ -92,12 +92,7 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		this.status.commit();
 	}
 
-
 	override shouldRerender(): boolean {
-		if (super.shouldRerender()) {
-			return true;
-		}
-
-		return this.status.hasChanged();
+		return super.shouldRerender() || this.status.hasChanged();
 	}
 }

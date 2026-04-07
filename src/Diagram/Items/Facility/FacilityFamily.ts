@@ -14,5 +14,4 @@ export class FacilityFamily<T extends Node2D = Node2D> extends ArcGroup {
 		super(name, children, arc, radius, show);
 		this.opacity.set(new Opacity(.6));
 	}
-
 }

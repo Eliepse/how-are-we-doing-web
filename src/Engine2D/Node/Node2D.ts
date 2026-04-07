@@ -14,7 +14,7 @@ export class Node2D extends Observable {
 	protected globalPosition = new Attribute(Vector.Zero, Vector.isDiff);
 	// Global rotation caches, used only in getGlobalRotation()
 	protected globalRotation = new Attribute(Angle.Zero, Angle.isDiff);
-	// Global opacity caches, used only in getGlobalRotation()
+	// Global opacity caches, used only in getGlobalOpacity()
 	protected globalOpacity = new Attribute(Opacity.Opaque, Opacity.isDiff);
 	private dirty: boolean = true;
 
@@ -104,9 +104,7 @@ export class Node2D extends Observable {
 		}
 
 		const parentOpacity = parent.getGlobalOpacity();
-		if (parentOpacity.hasChanged() || this.opacity.hasChanged()) {
-			this.globalOpacity.set(parentOpacity.get().mul(this.opacity.get()));
-		}
+		this.globalOpacity.set(parentOpacity.get().mul(this.opacity.get()));
 
 		return this.globalOpacity;
 	}
@@ -119,9 +117,10 @@ export class Node2D extends Observable {
 		this.dirty = false;
 		this.position.commit();
 		this.rotation.commit();
+		this.opacity.commit();
 		this.globalPosition.commit();
 		this.globalRotation.commit();
-		this.opacity.commit();
+		this.globalOpacity.commit();
 	}
 
 	shouldRerender(): boolean {
@@ -129,15 +128,15 @@ export class Node2D extends Observable {
 			return true;
 		}
 
-		if (this.position.hasChanged() || this.globalPosition.hasChanged()) {
+		if (this.position.hasChanged() || this.getGlobalPosition().hasChanged()) {
 			return true;
 		}
 
-		if (this.rotation.hasChanged() || this.globalRotation.hasChanged()) {
+		if (this.rotation.hasChanged() || this.getGlobalRotation().hasChanged()) {
 			return true;
 		}
 
-		if (this.opacity.hasChanged() || this.globalOpacity.hasChanged()) {
+		if (this.opacity.hasChanged() || this.getGlobalOpacity().hasChanged()) {
 			return true;
 		}
 

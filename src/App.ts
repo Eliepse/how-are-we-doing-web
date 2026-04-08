@@ -23,6 +23,7 @@ import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer"
 import type { DeterminantKey } from "./Diagram/types";
 import { Determinant } from "./Diagram/Items/Determinant/Determinant";
 import { LinkRenderer } from "./Diagram/Renderer/LinkRenderer";
+import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -228,27 +229,33 @@ export class App {
 		return this.engine.debug;
 	}
 
+	private profiling: ProfilerDisplay;
+
 	setDebug(value: boolean) {
 		this.engine.setDebug(value);
 
 		if (false === value) {
 			this.engine.onTicked = () => undefined;
-			document.querySelector("#profiling")?.remove();
+			this.profiling.hide();
 			return;
 		}
 
-		const debugEl = document.createElement("pre");
-		debugEl.id = "profiling";
+		if (!this.profiling) {
+			const profilingDom = document.createElement("div");
+			profilingDom.id = "profiling";
+			document.body.append(profilingDom);
+			this.profiling = new ProfilerDisplay(profilingDom, 5, 12);
+		}
 
 		this.engine.onTicked = (_engin, profile) => {
-			let content = "";
-			Object.entries(profile).forEach(([key, value]) => {
-				content += `${key.padEnd(24)}${value.toFixed(3)}\n`;
-			});
-			debugEl.innerHTML = content;
+			this.profiling.stageStatValue("fps", profile.fps)
+			this.profiling.stageStatValue("frameTime", profile.frameTime)
+			this.profiling.stageStatValue("nodesRendered", profile.nodesRendered)
+			this.profiling.stageStatValue("nodesMounted", profile.nodesMounted)
+			this.profiling.stageStatValue("nodesUnmounted", profile.nodesUnmounted)
+			this.profiling.stageStatValue("transitionsCount", profile.transitionsCount)
 		};
-
-		document.body.append(debugEl);
+		this.profiling.show();
 	}
 
 	previousContext(): void {

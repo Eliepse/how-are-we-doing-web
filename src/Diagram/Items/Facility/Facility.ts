@@ -28,6 +28,7 @@ export class Facility extends VirtualShape implements WithPointerEvents {
 		private _arc: Angle,
 	) {
 		super(facilityShape);
+		this.tags.push("facility");
 	}
 
 	override onMount(_engine: Engine): void | (() => void) {

@@ -59,6 +59,8 @@ export class LinkManager extends Node2D {
 				this.addChildren(link);
 			});
 		}
+
+		this.setUname("link:manager")
 	}
 
 	showInterDeterminantLinks(node: Determinant, preview = false) {

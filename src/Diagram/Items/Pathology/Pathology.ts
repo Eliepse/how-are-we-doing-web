@@ -27,7 +27,7 @@ export class Pathology extends Node2D implements WithPointerEvents {
 		public readonly associations: Associations,
 	) {
 		super();
-
+		this.tags.push("pathology")
 		this.time.set(Math.random() * 124.134);
 	}
 

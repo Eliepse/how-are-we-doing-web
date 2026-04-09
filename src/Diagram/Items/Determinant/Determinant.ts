@@ -35,6 +35,7 @@ export class Determinant extends VirtualShape implements WithPointerEvents {
 		public readonly associations: Associations,
 	) {
 		super(asset);
+		this.tags.push("determinant");
 	}
 
 	override onMount(_: Engine): void | (() => void) {

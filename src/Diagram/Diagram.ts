@@ -41,7 +41,6 @@ export class Diagram extends Node2D {
 	private _pathologies = new Map<number, Pathology>();
 	private _determinants = new Map<number, Determinant>();
 	private _facilities = new Map<number, Facility>();
-	private _linkManager: LinkManager;
 	private _linksSources = new Map<
 		Determinant["id"],
 		{ pathologies: SourceList; facilities: SourceList }
@@ -133,7 +132,7 @@ export class Diagram extends Node2D {
 		this.addChildren(pathologies);
 
 		this.addChildren(this.decorations = new BgDecorationManager());
-		this.addChildren(this._linkManager = new LinkManager(this._pathologies, this._determinants));
+		this.addChildren(new LinkManager(this._pathologies, this._determinants));
 
 		this.families = {
 			determinant: determinants,
@@ -303,28 +302,33 @@ export class Diagram extends Node2D {
 	}
 
 	private updateNodesHighlight() {
-		this._linkManager.clearLinks();
+		const linkManager = Engine.nodeByUname<LinkManager>("link:manager");
+		const determinants = Engine.nodesByTag<Determinant>("determinant");
+		const facilities = Engine.nodesByTag<Facility>("facility");
+		const pathologies = Engine.nodesByTag<Pathology>("pathology");
+
+		linkManager?.clearLinks();
 
 		if ("determinants" === this.links) {
-			for (const node of [...this._facilities.values(), ...this._pathologies.values()]) {
+			for (const node of [...facilities.values(), ...pathologies.values()]) {
 				node.setStatus(this._previewedNode ? "dimmed" : false);
 			}
 
 			if (this._previewedNode instanceof Determinant) {
-				this._linkManager.showInterDeterminantLinks(this._previewedNode, true);
+				linkManager?.showInterDeterminantLinks(this._previewedNode, true);
 			}
 
 			if (this._selectedNode instanceof Determinant) {
-				this._linkManager.showInterDeterminantLinks(this._selectedNode);
+				linkManager?.showInterDeterminantLinks(this._selectedNode);
 			}
 
-			for (const node of this._determinants.values()) {
+			for (const node of determinants.values()) {
 				if (node === this._selectedNode) {
 					node.setStatus("selected");
 					continue;
 				}
 
-				if(this._selectedNode instanceof Determinant || this._previewedNode instanceof Determinant) {
+				if (this._selectedNode instanceof Determinant || this._previewedNode instanceof Determinant) {
 					if (this._selectedNode?.isConnected(node) || node.isConnected(this._selectedNode) || this._previewedNode === node) {
 						node.setStatus("preview");
 						continue;
@@ -339,16 +343,16 @@ export class Diagram extends Node2D {
 		}
 
 		if (this._previewedNode instanceof Determinant) {
-			this._linkManager.showDeterminantPathologyLinks(this._previewedNode, true);
+			linkManager?.showDeterminantPathologyLinks(this._previewedNode, true);
 		}
 
 		if (this._selectedNode instanceof Determinant) {
-			this._linkManager.showDeterminantPathologyLinks(this._selectedNode);
+			linkManager?.showDeterminantPathologyLinks(this._selectedNode);
 		} else if (this._selectedNode instanceof Pathology) {
-			this._linkManager.showPathologyLinks(this._selectedNode);
+			linkManager?.showPathologyLinks(this._selectedNode);
 		}
 
-		const nodes = [...this._determinants.values(), ...this._facilities.values(), ...this._pathologies.values()];
+		const nodes = [...determinants.values(), ...facilities.values(), ...pathologies.values()];
 		const anyNodeActive = undefined === this._selectedNode && undefined === this._previewedNode;
 		for (const node of nodes) {
 			if (node === this._selectedNode) {

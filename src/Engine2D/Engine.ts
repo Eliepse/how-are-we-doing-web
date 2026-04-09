@@ -30,6 +30,8 @@ type OnTickClb = (engine: Engine, profile: DebugProfile) => void;
 
 export class Engine<TRenderer extends Renderer = Renderer> {
 	private readonly tree: VirtualTree;
+	private static readonly _nodeByUname = new Map<string, Node2D>();
+	private static readonly _nodesByTag = new Map<string, Set<Node2D>>();
 	private clock: Clock;
 	private _lifecycleCallbacks = new WeakMap<Node2D, () => void>();
 	private _listeners = {
@@ -88,6 +90,26 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 	private handleOnMount(vnode: VirtualNode<Node2D & Partial<WithPointerEvents>>): void {
 		const node = vnode.node;
+
+		if (undefined !== node.uname) {
+			if (Engine._nodeByUname.has(node.uname)) {
+				console.warn(`Non-unique uname: ${node.uname}. Two nodes shouldn't share the same uname. Previous occurence is replaced.`);
+			}
+
+			Engine._nodeByUname.set(node.uname, node);
+		}
+
+		node.tags.forEach((tag) => {
+			const store = Engine._nodesByTag.get(tag);
+
+			if (store) {
+				store.add(node);
+				return;
+			}
+
+			Engine._nodesByTag.set(tag, new Set([node]));
+		});
+
 		const callback = node.onMount ? node.onMount(this) : undefined;
 
 		if ("function" === typeof callback) {
@@ -116,6 +138,16 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 
 		this.renderer.unmountNode(vnode);
+
+		if (undefined !== node.uname) {
+			if (false === Engine._nodeByUname.has(node.uname)) {
+				console.warn(`Undefined unique node: ${node.uname}. The uname doesn't match any node in the engine's store. Did it changed? Beware of memory leaks!`);
+			}
+
+			Engine._nodeByUname.delete(node.uname);
+		}
+
+		node.tags.forEach((tag) => Engine._nodesByTag.get(tag)?.delete(node));
 
 		if (this.debug) {
 			this._profile.nodesUnmounted++;
@@ -250,6 +282,14 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 	getHovering(): Array<Node2D & WithPointerEvents> {
 		return Array.from(this._hoveredNodes.values());
+	}
+
+	static nodeByUname<T extends Node2D>(uname: string): T | undefined {
+		return Engine._nodeByUname.get(uname) as T;
+	}
+
+	static nodesByTag<T extends Node2D>(tag: string): Set<T> {
+		return Engine._nodesByTag.get(tag) as Set<T> ?? new Set();
 	}
 
 	start(): void {

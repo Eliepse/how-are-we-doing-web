@@ -18,6 +18,16 @@ export class Node2D extends Observable {
 	// Global opacity caches, used only in getGlobalOpacity()
 	protected globalOpacity = new Attribute(Opacity.Opaque, Opacity.isDiff);
 	private dirty: boolean = true;
+	private _uname: string | undefined = undefined;
+	public readonly tags: string[] = [];
+
+	get uname() {
+		return this._uname;
+	}
+
+	setUname(name: string) {
+		this._uname ??= name;
+	}
 
 	setParent(element: Node2D): void {
 		this._parent = element;

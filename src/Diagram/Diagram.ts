@@ -47,7 +47,6 @@ export class Diagram extends Node2D {
 	>();
 	public backgroundBlobClock = new Attribute(0);
 	public decorations: BgDecorationManager;
-	private families: { [key in Family]: Node2D };
 	public links: "pathologies" | "determinants" = "pathologies";
 
 	constructor(
@@ -83,12 +82,14 @@ export class Diagram extends Node2D {
 
 		const facilities = new FacilitiesRing(this.buildFacilityGroups(facilitiesData));
 		facilities.setRotation(Angle.fromDeg(156));
+		facilities.setUname("group:facility");
 		this.addChildren(facilities);
 
 		const determinants = new DeterminantsRing(this.buildDeterminantFamilies(
 			determinantsData,
 			associationData.filter((asso) => "determinant" === asso.from.type)),
 		);
+		determinants.setUname("group:determinant");
 		determinants.setRotation(Angle.fromDeg(266));
 		this.addChildren(determinants);
 
@@ -115,6 +116,7 @@ export class Diagram extends Node2D {
 		);
 
 		const pathologies = new Node2D();
+		pathologies.setUname("group:pathology");
 		pathologiesData.forEach((familyData, index) => {
 			const children = familyData.children.map((child) => {
 				const associatedDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
@@ -133,12 +135,6 @@ export class Diagram extends Node2D {
 
 		this.addChildren(this.decorations = new BgDecorationManager());
 		this.addChildren(new LinkManager(this._pathologies, this._determinants));
-
-		this.families = {
-			determinant: determinants,
-			facility: facilities,
-			pathology: pathologies,
-		};
 	}
 
 	override onProcess(deltaTime: number): void {
@@ -494,11 +490,16 @@ export class Diagram extends Node2D {
 
 	setLinksMode(type: "determinants" | "pathologies") {
 		this.links = type;
+		const families = {
+			pathology: Engine.nodeByUname("group:pathologies"),
+			determinant: Engine.nodeByUname("group:determinant"),
+			facility: Engine.nodeByUname("group:facility"),
+		};
 
 		if ("determinants" === type) {
-			transitionNodeOpacity(this.families.pathology, 500, new Opacity(.1));
-			transitionNodeOpacity(this.families.determinant, 500, Opacity.Opaque);
-			transitionNodeOpacity(this.families.facility, 500, new Opacity(.1));
+			transitionNodeOpacity(families.pathology, 500, new Opacity(.1));
+			transitionNodeOpacity(families.determinant, 500, Opacity.Opaque);
+			transitionNodeOpacity(families.facility, 500, new Opacity(.1));
 			transitionNodeOpacity(this.decorations, 500, new Opacity(.1));
 
 			this.updateNodesHighlight();
@@ -506,9 +507,9 @@ export class Diagram extends Node2D {
 		}
 
 		// Default
-		transitionNodeOpacity(this.families.pathology, 500, Opacity.Opaque);
-		transitionNodeOpacity(this.families.determinant, 500, Opacity.Opaque);
-		transitionNodeOpacity(this.families.facility, 500, Opacity.Opaque);
+		transitionNodeOpacity(families.pathology, 500, Opacity.Opaque);
+		transitionNodeOpacity(families.determinant, 500, Opacity.Opaque);
+		transitionNodeOpacity(families.facility, 500, Opacity.Opaque);
 		transitionNodeOpacity(this.decorations, 500, Opacity.Opaque);
 
 		this.updateNodesHighlight();
@@ -529,7 +530,11 @@ export class Diagram extends Node2D {
 	}
 }
 
-function transitionNodeOpacity(node: Node2D, duration: number, to: Opacity) {
+function transitionNodeOpacity(node: Node2D | undefined, duration: number, to: Opacity) {
+	if (!node) {
+		return;
+	}
+
 	const from = node.getOpacity().get();
 	Engine.registerTransition(
 		new Transition(duration, (v) => node.setOpacity(interpolateOpacity(v, from, to)), { easeFn: easeOutCubic }),

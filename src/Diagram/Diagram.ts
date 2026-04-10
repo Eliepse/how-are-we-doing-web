@@ -311,62 +311,98 @@ export class Diagram extends Node2D {
 	}
 
 	previewNode(node: SelectableNode | undefined): void {
-		// No changes
-		if (this._previewedNode && this._previewedNode === node) {
+		if (this._previewedNode === node) {
 			return;
 		}
 
-		// Do not change status if already selected
-		if (this._selectedNode && this._selectedNode === node) {
-			return;
+		if (undefined === node || node instanceof Determinant) {
+			this._previewedNode = node;
+			this.updateNodesHighlight();
+			this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
 		}
-
-		// Only preview determinants
-		if (node && !(node instanceof Determinant)) {
-			return;
-		}
-
-		this._previewedNode = node;
-		this.updateNodesHighlight();
-		this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
 	}
 
 	private updateNodesHighlight() {
+		const isDetsMode = "determinants" === this.links;
 		const linkManager = Engine.nodeByUname<LinkManager>("link:manager");
 		const determinants = Engine.nodesByTag<Determinant>("determinant");
 		const facilities = Engine.nodesByTag<Facility>("facility");
 		const pathologies = Engine.nodesByTag<Pathology>("pathology");
+		const previewAssoc = this._previewedNode ? AssociationManager.getAssociations(this._previewedNode) : null;
+		const selectionAssoc = this._selectedNode ? AssociationManager.getAssociations(this._selectedNode) : null;
+		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
 
 		linkManager?.clearLinks();
 
-		if ("determinants" === this.links) {
-			for (const node of [...facilities.values(), ...pathologies.values()]) {
-				node.setStatus(this._previewedNode ? "dimmed" : false);
+		for (const determinant of determinants) {
+			if (this._selectedNode === determinant) {
+				determinant.setStatus("selected");
+				continue;
 			}
 
+			if (this._previewedNode === determinant) {
+				determinant.setStatus("preview");
+				continue;
+			}
+
+			if (this._selectedNode instanceof Determinant && !isDetsMode) {
+				determinant.setStatus(selectionAssoc?.determinant?.has(determinant.id) ? "preview" : "dimmed");
+				continue;
+			}
+
+			if (selectionAssoc?.determinant?.has(determinant.id) || previewAssoc?.determinant?.has(determinant.id)) {
+				determinant.setStatus(isDetsMode ? "preview" : "dimmed");
+				continue;
+			}
+
+			determinant.setStatus(hasActiveNode ? "dimmed" : false);
+		}
+
+		for (const facility of facilities) {
+			if (isDetsMode) {
+				facility.setStatus(false);
+				continue;
+			}
+
+			if (this._selectedNode === facility || selectionAssoc?.facility?.has(facility.id)) {
+				facility.setStatus("selected");
+				continue;
+			}
+
+			if (this._previewedNode === facility || previewAssoc?.facility?.has(facility.id)) {
+				facility.setStatus("preview");
+				continue;
+			}
+
+			facility.setStatus(hasActiveNode ? "dimmed" : false);
+		}
+
+		for (const pathology of pathologies) {
+			if (isDetsMode) {
+				pathology.setStatus(false);
+				continue;
+			}
+
+			if (this._selectedNode === pathology || selectionAssoc?.pathology?.has(pathology.id)) {
+				pathology.setStatus("selected");
+				continue;
+			}
+
+			if (this._previewedNode === pathology || previewAssoc?.pathology?.has(pathology.id)) {
+				pathology.setStatus("preview");
+				continue;
+			}
+
+			pathology.setStatus(hasActiveNode ? "dimmed" : false);
+		}
+
+		if (isDetsMode) {
 			if (this._previewedNode instanceof Determinant) {
 				linkManager?.showInterDeterminantLinks(this._previewedNode, true);
 			}
 
 			if (this._selectedNode instanceof Determinant) {
 				linkManager?.showInterDeterminantLinks(this._selectedNode);
-			}
-
-			for (const node of determinants.values()) {
-				if (node === this._selectedNode) {
-					node.setStatus("selected");
-					continue;
-				}
-
-				if (this._selectedNode instanceof Determinant || this._previewedNode instanceof Determinant) {
-					if (this._selectedNode?.isConnected(node) || node.isConnected(this._selectedNode) || this._previewedNode === node) {
-						node.setStatus("preview");
-						continue;
-					}
-				}
-
-
-				node.setStatus(this._selectedNode || this._previewedNode ? "dimmed" : false);
 			}
 
 			return;
@@ -380,37 +416,6 @@ export class Diagram extends Node2D {
 			linkManager?.showDeterminantPathologyLinks(this._selectedNode);
 		} else if (this._selectedNode instanceof Pathology) {
 			linkManager?.showPathologyLinks(this._selectedNode);
-		}
-
-		const nodes = [...determinants.values(), ...facilities.values(), ...pathologies.values()];
-		const anyNodeActive = undefined === this._selectedNode && undefined === this._previewedNode;
-		for (const node of nodes) {
-			if (node === this._selectedNode) {
-				node.setStatus("selected");
-				continue;
-			}
-
-			if (node === this._previewedNode) {
-				node.setStatus("preview");
-				continue;
-			}
-
-			if (node instanceof Determinant && (this._selectedNode instanceof Determinant || this._previewedNode instanceof Determinant)) {
-				node.setStatus(anyNodeActive ? false : "dimmed");
-				continue;
-			}
-
-			if (undefined !== this._selectedNode && node.isConnected(this._selectedNode)) {
-				node.setStatus("selected");
-				continue;
-			}
-
-			if (undefined !== this._previewedNode && node.isConnected(this._previewedNode)) {
-				node.setStatus("preview");
-				continue;
-			}
-
-			node.setStatus(anyNodeActive ? false : "dimmed");
 		}
 	}
 

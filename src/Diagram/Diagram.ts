@@ -491,7 +491,7 @@ export class Diagram extends Node2D {
 	setLinksMode(type: "determinants" | "pathologies") {
 		this.links = type;
 		const families = {
-			pathology: Engine.nodeByUname("group:pathologies"),
+			pathology: Engine.nodeByUname("group:pathology"),
 			determinant: Engine.nodeByUname("group:determinant"),
 			facility: Engine.nodeByUname("group:facility"),
 		};
@@ -520,13 +520,8 @@ export class Diagram extends Node2D {
 		this.backgroundBlobClock.commit();
 	}
 
-
 	override shouldRerender(): boolean {
-		if (super.shouldRerender()) {
-			return true;
-		}
-
-		return this.backgroundBlobClock.hasChanged();
+		return super.shouldRerender() || this.backgroundBlobClock.hasChanged();
 	}
 }
 

@@ -5,9 +5,9 @@ import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
 import { Facility } from "../Items/Facility/Facility";
-import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { App } from "../../App";
+import type { ActiveStatus } from "../types";
 
 const shapeStyle = {
 	default: new SVGStyle({ fill: Color.White }),
@@ -35,19 +35,22 @@ export class FacilityRenderer extends SVGNodeRenderer {
 			element.updateMesh(position.get(), rotation.get());
 		}
 
-		if (false === status.hasChanged() && false === opacity.hasChanged()) {
-			return;
+		if (status.hasChanged() || opacity.hasChanged()) {
+			element.updateStyle(new SVGStyle({ fill: this.getStatusColor(status.get()), opacity: opacity.get() }));
 		}
 
-		let color = Color.White;
+	}
 
-		if ("selected" === status.get()) {
-			color = Color.Red;
-		} else if ("preview" === status.get()) {
-			color = colors.secondary;
+	private getStatusColor(status: ActiveStatus | false): Color {
+		if ("selected" === status) {
+			return Color.Red;
 		}
 
-		element.updateStyle(new SVGStyle({ fill: color, opacity: opacity.get() }));
+		if ("dimmed" === status) {
+			return new Color(158, 185, 200);
+		}
+
+		return Color.White;
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

@@ -9,7 +9,6 @@ import { Facility } from "../Facility/Facility";
 import { interpolate } from "../../../helpers";
 import type { ActiveStatus } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
-import { dimmedAlpha } from "../../colors";
 import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
 
 export type PathologyEvents = { click: NodeEvent<Pathology> };
@@ -27,8 +26,9 @@ export class Pathology extends Node2D implements WithPointerEvents {
 		public readonly associations: Associations,
 	) {
 		super();
-		this.tags.push("pathology")
+		this.tags.push("pathology");
 		this.time.set(Math.random() * 124.134);
+		this.opacity.set(new Opacity(.6));
 	}
 
 	override onProcess(deltaTime: number) {
@@ -43,7 +43,7 @@ export class Pathology extends Node2D implements WithPointerEvents {
 
 	setStatus(status: ActiveStatus | false): void {
 		this.status.set(status);
-		this.opacity.set("dimmed" === status ? dimmedAlpha : Opacity.Opaque);
+		this.opacity.set(false === status ? new Opacity(.6) : Opacity.Opaque);
 	}
 
 	isConnected(node: SelectableNode): boolean {
@@ -72,10 +72,6 @@ export class Pathology extends Node2D implements WithPointerEvents {
 
 
 	override shouldRerender(): boolean {
-		if (super.shouldRerender()) {
-			return true;
-		}
-
-		return this.time.hasChanged() || this.status.hasChanged();
+		return super.shouldRerender() || this.time.hasChanged() || this.status.hasChanged();
 	}
 }

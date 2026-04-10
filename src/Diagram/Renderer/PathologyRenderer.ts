@@ -63,11 +63,11 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			return Color.Red;
 		}
 
-		if ("preview" === status) {
-			return colors.secondary;
+		if ("dimmed" === status) {
+			return new Color(158, 185, 200);
 		}
 
-		return new Color(158, 185, 200);
+		return Color.White;
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

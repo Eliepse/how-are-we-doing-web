@@ -13,7 +13,6 @@ import { facilityShape } from "./shapes";
 import type { ActiveStatus } from "../../types";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
 import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
-import { dimmedAlpha } from "../../colors";
 
 type Associations = { determinants: number[] };
 
@@ -29,6 +28,7 @@ export class Facility extends VirtualShape implements WithPointerEvents {
 	) {
 		super(facilityShape);
 		this.tags.push("facility");
+		this.opacity.set(new Opacity(.6));
 	}
 
 	override onMount(_engine: Engine): void | (() => void) {
@@ -66,7 +66,7 @@ export class Facility extends VirtualShape implements WithPointerEvents {
 
 	setStatus(status: ActiveStatus | false): void {
 		this.status.set(status);
-		this.opacity.set("dimmed" === status ? dimmedAlpha : Opacity.Opaque);
+		this.opacity.set(false === status ? new Opacity(.6) : Opacity.Opaque);
 	}
 
 	isConnected(node: SelectableNode): boolean {

@@ -23,6 +23,7 @@ import { Opacity } from "../Engine2D/ValueObject/Opacity";
 import { easeOutCubic, interpolateOpacity } from "../Engine2D/Time/interpolations";
 import { Transition } from "../Engine2D/Time/Transition";
 import { LinkManager } from "./Items/Link/LinkManager";
+import { AssociationManager, type AssoNodeType } from "./AssociationManager";
 
 export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
@@ -119,9 +120,16 @@ export class Diagram extends Node2D {
 		pathologies.setUname("group:pathology");
 		pathologiesData.forEach((familyData, index) => {
 			const children = familyData.children.map((child) => {
-				const associatedDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
+				const assoDeterminants = Object.keys(child.determinants).map((v) => parseInt(v));
+
+				// Register assocations
+				assoDeterminants.forEach((id) => AssociationManager.register(
+					{ type: "facility", id: child.id },
+					{ type: "determinant", id },
+				));
+
 				const pathology = new Pathology(child.id, child.name, {
-					determinants: associatedDeterminants,
+					determinants: assoDeterminants,
 				});
 				this._pathologies.set(pathology.id, pathology);
 				return pathology;
@@ -132,6 +140,14 @@ export class Diagram extends Node2D {
 			pathologies.addChildren(family);
 		});
 		this.addChildren(pathologies);
+
+		// Register associations
+		associationData.forEach((asso) => {
+			AssociationManager.register(
+				{ type: asso.from.type as AssoNodeType, id: asso.from.id },
+				{ type: asso.to.type as AssoNodeType, id: asso.to.id },
+			);
+		});
 
 		this.addChildren(this.decorations = new BgDecorationManager());
 		this.addChildren(new LinkManager(this._pathologies, this._determinants));
@@ -151,13 +167,20 @@ export class Diagram extends Node2D {
 				new FacilityFamily(
 					group.name,
 					group.children.map((child) => {
-						const associatedDeterminants = Object.keys(child.determinants).map((v) =>
+						const assoDeterminants = Object.keys(child.determinants).map((v) =>
 							parseInt(v),
 						);
+
+						// Register associations
+						assoDeterminants.forEach((id) => AssociationManager.register(
+							{ type: "facility", id: child.id },
+							{ type: "determinant", id },
+						));
+
 						const facility = new Facility(
 							child.id,
 							child.name,
-							{ determinants: associatedDeterminants },
+							{ determinants: assoDeterminants },
 							itemArc,
 						);
 
@@ -197,6 +220,17 @@ export class Diagram extends Node2D {
 					determinants.map((child) => {
 						const assoPathologies = Object.keys(child.pathologies).map((v) => parseInt(v));
 						const assoFacilities = Object.keys(child.facilities).map((v) => parseInt(v));
+
+						// Register associations
+						assoPathologies.forEach((id) => AssociationManager.register(
+							{ type: "determinant", id: child.id },
+							{ type: "pathology", id },
+						));
+						assoFacilities.forEach((id) => AssociationManager.register(
+							{ type: "determinant", id: child.id },
+							{ type: "facility", id },
+						));
+
 						const determinant = new Determinant(
 							child.id,
 							child.name as DeterminantKey,

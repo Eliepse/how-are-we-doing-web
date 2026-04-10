@@ -328,14 +328,19 @@ export class Diagram extends Node2D {
 		const determinants = Engine.nodesByTag<Determinant>("determinant");
 		const facilities = Engine.nodesByTag<Facility>("facility");
 		const pathologies = Engine.nodesByTag<Pathology>("pathology");
-		const previewAssoc = this._previewedNode ? AssociationManager.getAssociations(this._previewedNode) : null;
-		const selectionAssoc = this._selectedNode ? AssociationManager.getAssociations(this._selectedNode) : null;
+		const previewAssoc = this._previewedNode ? AssociationManager.getAllAssociations(this._previewedNode) : null;
+		const selectionAssoc = this._selectedNode ? AssociationManager.getAllAssociations(this._selectedNode) : null;
 		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
 
 		linkManager?.clearLinks();
 
 		for (const determinant of determinants) {
 			if (this._selectedNode === determinant) {
+				determinant.setStatus("selected");
+				continue;
+			}
+
+			if (selectionAssoc?.determinant?.has(determinant.id)) {
 				determinant.setStatus("selected");
 				continue;
 			}
@@ -350,8 +355,8 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			if (selectionAssoc?.determinant?.has(determinant.id) || previewAssoc?.determinant?.has(determinant.id)) {
-				determinant.setStatus(isDetsMode ? "preview" : "dimmed");
+			if(previewAssoc?.determinant?.has(determinant.id)) {
+				determinant.setStatus("preview");
 				continue;
 			}
 

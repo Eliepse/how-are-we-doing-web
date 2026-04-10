@@ -8,8 +8,8 @@ import { SVGImage } from "../Shape/SVGImage";
 export class BgDecorationsRenderer extends SVGNodeRenderer {
 	private shapes = { pathology: [] };
 
-	constructor(renderer: SVGRenderer, engine: Engine) {
-		super(renderer, engine);
+	constructor(renderer: SVGRenderer) {
+		super(renderer);
 	}
 
 	override render(vnode: VirtualNode<BgDecoration>): void {

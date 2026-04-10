@@ -8,8 +8,8 @@ import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 
 export class GroupWithArcTextRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, engine: Engine, private translator: Translator) {
-		super(renderer, engine);
+	constructor(renderer: SVGRenderer, private translator: Translator) {
+		super(renderer);
 	}
 
 	override render(vnode: VirtualNode<FacilityFamily | DeterminantSubFamily>): void {

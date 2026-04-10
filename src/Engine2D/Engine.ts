@@ -14,7 +14,7 @@ type Listeners = {
 	mousemove: Listener<EngineMouseEvent>;
 	click: Listener<EngineMouseEvent>;
 };
-type ValueOf<T> = T[keyof T];
+// type ValueOf<T> = T[keyof T];
 type DebugProfile = {
 	nodesCount: number;
 	nodesMounted: number;
@@ -29,9 +29,12 @@ type DebugProfile = {
 type OnTickClb = (engine: Engine, profile: DebugProfile) => void;
 
 export class Engine<TRenderer extends Renderer = Renderer> {
+	private static _instance: Engine;
+	public static onTicked: OnTickClb = () => undefined;
+
 	private readonly tree: VirtualTree;
-	private static readonly _nodeByUname = new Map<string, Node2D>();
-	private static readonly _nodesByTag = new Map<string, Set<Node2D>>();
+	private readonly _nodeByUname = new Map<string, Node2D>();
+	private readonly _nodesByTag = new Map<string, Set<Node2D>>();
 	private clock: Clock;
 	private _lifecycleCallbacks = new WeakMap<Node2D, () => void>();
 	private _listeners = {
@@ -40,10 +43,9 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	};
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
-	private static transitions = new Set<Transition>();
+	private transitions = new Set<Transition>();
 
 	private _debug = false;
-	public onTicked: OnTickClb = () => undefined;
 	private _profile: DebugProfile = {
 		nodesCount: 0,
 		nodesMounted: 0,
@@ -56,7 +58,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		transitionsCount: 0,
 	};
 
-	constructor(
+	private constructor(
 		private rootNode: Node2D,
 		private renderer: TRenderer,
 	) {
@@ -80,34 +82,34 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		});
 	}
 
-	get root(): Node2D {
-		return this.rootNode;
+	static get root(): Node2D {
+		return Engine._instance.rootNode;
 	}
 
-	getRenderer(): TRenderer {
-		return this.renderer;
+	static getRenderer<T extends Renderer>() {
+		return Engine._instance.renderer as T;
 	}
 
 	private handleOnMount(vnode: VirtualNode<Node2D & Partial<WithPointerEvents>>): void {
 		const node = vnode.node;
 
 		if (undefined !== node.uname) {
-			if (Engine._nodeByUname.has(node.uname)) {
+			if (Engine._instance._nodeByUname.has(node.uname)) {
 				console.warn(`Non-unique uname: ${node.uname}. Two nodes shouldn't share the same uname. Previous occurence is replaced.`);
 			}
 
-			Engine._nodeByUname.set(node.uname, node);
+			Engine._instance._nodeByUname.set(node.uname, node);
 		}
 
 		node.tags.forEach((tag) => {
-			const store = Engine._nodesByTag.get(tag);
+			const store = Engine._instance._nodesByTag.get(tag);
 
 			if (store) {
 				store.add(node);
 				return;
 			}
 
-			Engine._nodesByTag.set(tag, new Set([node]));
+			Engine._instance._nodesByTag.set(tag, new Set([node]));
 		});
 
 		const callback = node.onMount ? node.onMount(this) : undefined;
@@ -122,7 +124,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 		this.renderer.mountNode(vnode);
 
-		if (this.debug) {
+		if (Engine.debug) {
 			this._profile.nodesMounted++;
 		}
 	}
@@ -140,16 +142,16 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		this.renderer.unmountNode(vnode);
 
 		if (undefined !== node.uname) {
-			if (false === Engine._nodeByUname.has(node.uname)) {
+			if (false === Engine._instance._nodeByUname.has(node.uname)) {
 				console.warn(`Undefined unique node: ${node.uname}. The uname doesn't match any node in the engine's store. Did it changed? Beware of memory leaks!`);
 			}
 
-			Engine._nodeByUname.delete(node.uname);
+			Engine._instance._nodeByUname.delete(node.uname);
 		}
 
-		node.tags.forEach((tag) => Engine._nodesByTag.get(tag)?.delete(node));
+		node.tags.forEach((tag) => Engine._instance._nodesByTag.get(tag)?.delete(node));
 
-		if (this.debug) {
+		if (Engine.debug) {
 			this._profile.nodesUnmounted++;
 		}
 	}
@@ -241,30 +243,30 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 				this.renderer.renderNode(vnode, deltaTime, frames);
 				vnode.node.onRendered(deltaTime);
 
-				if (this.debug) {
+				if (Engine.debug) {
 					this._profile.nodesRendered++;
 				}
-			} else if (this.debug) {
+			} else if (Engine.debug) {
 				this._profile.nodesSkippedRender++;
 			}
 		}
 
 		// Process transitions
-		for (const transition of Engine.transitions) {
+		for (const transition of Engine._instance.transitions) {
 			transition.tick();
 
 			if (transition.finished) {
-				Engine.transitions.delete(transition);
+				Engine._instance.transitions.delete(transition);
 			}
 		}
 
-		if (this.debug) {
+		if (Engine.debug) {
 			this._profile.frames = frames;
 			this._profile.frameTime = deltaTime;
 			this._profile.fps = (1 / deltaTime);
-			this._profile.transitionsCount = Engine.transitions.size;
+			this._profile.transitionsCount = Engine._instance.transitions.size;
 			this._profile.nodesCount = this.tree.getNodes().size;
-			this.onTicked(this, this._profile);
+			Engine.onTicked(this, this._profile);
 			this._profile.nodesMounted = 0;
 			this._profile.nodesUnmounted = 0;
 			this._profile.nodesRendered = 0;
@@ -273,43 +275,44 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	}
 
 	public static registerTransition(transition: Transition) {
-		Engine.transitions.add(transition);
+		Engine._instance.transitions.add(transition);
 	}
 
-	isHovering(node: Node2D & WithPointerEvents): boolean {
-		return this._hoveredNodes.has(node);
+	static isHovering(node: Node2D & WithPointerEvents): boolean {
+		return Engine._instance._hoveredNodes.has(node);
 	}
 
-	getHovering(): Array<Node2D & WithPointerEvents> {
-		return Array.from(this._hoveredNodes.values());
+	static getHovering(): Array<Node2D & WithPointerEvents> {
+		return Array.from(Engine._instance._hoveredNodes.values());
 	}
 
 	static nodeByUname<T extends Node2D>(uname: string): T | undefined {
-		return Engine._nodeByUname.get(uname) as T;
+		return Engine._instance._nodeByUname.get(uname) as T;
 	}
 
 	static nodesByTag<T extends Node2D>(tag: string): Set<T> {
-		return Engine._nodesByTag.get(tag) as Set<T> ?? new Set();
+		return Engine._instance._nodesByTag.get(tag) as Set<T> ?? new Set();
 	}
 
-	start(): void {
-		this.clock.start();
+	static init(rootNode: Node2D, renderer: Renderer): Engine {
+		return Engine._instance = new Engine(rootNode, renderer);
 	}
 
-	pause(): void {
-		this.clock.pause();
+	static start(): void {
+		Engine._instance.clock.update();
+		Engine._instance.clock.start();
 	}
 
-	render(): void {
-		this.clock.update();
+	static pause(): void {
+		Engine._instance.clock.pause();
 	}
 
-	get debug() {
-		return this._debug;
+	static get debug() {
+		return Engine._instance._debug;
 	}
 
-	setDebug(value: boolean) {
-		this._debug = value;
-		this.renderer.setDebug(value);
+	static setDebug(value: boolean) {
+		Engine._instance._debug = value;
+		Engine._instance.renderer.setDebug(value);
 	}
 }

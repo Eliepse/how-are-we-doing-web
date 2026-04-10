@@ -30,7 +30,7 @@ type AppMode = "focus:determinant" | "default";
 export class App {
 	private readonly translator: Translator;
 	private readonly labelManager: FloatingLabelManager;
-	private readonly engine: Engine<SVGRenderer>;
+	private profiling?: ProfilerDisplay = undefined;
 
 	private contexts: Context[] = [];
 	private currentContext?: Context;
@@ -62,20 +62,20 @@ export class App {
 		this.biblio = new BiblioManager(rootDom, this.translator);
 
 		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1100, 1100), Config.Render.debug);
-		this.engine = new Engine(new Node2D(), renderer);
+		Engine.init(new Node2D(), renderer);
 
 		renderer.registerReferencable(blobPattern);
-		renderer.addNodeRenderer(new FacilityRenderer(renderer, this.engine, this));
-		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this.engine, this));
-		renderer.addNodeRenderer(new PathologyRenderer(renderer, this.engine, this));
-		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.engine, this.translator));
-		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new LinkRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new FallbackRenderer(renderer, this.engine));
+		renderer.addNodeRenderer(new FacilityRenderer(renderer, this));
+		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this));
+		renderer.addNodeRenderer(new PathologyRenderer(renderer, this));
+		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.translator));
+		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
+		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
+		renderer.addNodeRenderer(new LinkRenderer(renderer));
+		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer));
+		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer));
+		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer));
+		renderer.addNodeRenderer(new FallbackRenderer(renderer));
 	}
 
 	getDiagram(): Diagram {
@@ -129,8 +129,8 @@ export class App {
 		this.changeContext(this.contexts[0]);
 
 		// Center the diagram
-		this.engine.root.setPosition(this.engine.getRenderer().size.div(2));
-		this.engine.root.addChildren(this.diagram);
+		Engine.root.setPosition(Engine.getRenderer<SVGRenderer>().size.div(2));
+		Engine.root.addChildren(this.diagram);
 
 		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
@@ -150,18 +150,18 @@ export class App {
 			}
 
 			const nodePosition = node.getGlobalPosition().get();
-			const hSize = this.engine.getRenderer().size.div(2);
+			const hSize = Engine.getRenderer<SVGRenderer>().size.div(2);
 
 			this.labelManager.show(
 				"hover",
 				node.label,
-				this.engine.getRenderer().localPointToWindow(nodePosition),
+				Engine.getRenderer().localPointToWindow(nodePosition),
 				hSize.x > nodePosition.x ? "left" : "right",
 				16,
 			);
 		});
 
-		this.engine.root.addListener("click", () => {
+		Engine.root.addListener("click", () => {
 			this.diagram?.selectNode(undefined);
 		});
 
@@ -176,20 +176,20 @@ export class App {
 			}
 
 			const nodePosition = node.getGlobalPosition().get();
-			const hSize = this.engine.getRenderer().size.div(2);
+			const hSize = Engine.getRenderer<SVGRenderer>().size.div(2);
 
 			this.labelManager.hide("hover");
 			this.labelManager.show(
 				"selected",
 				node.label,
-				this.engine.getRenderer().localPointToWindow(nodePosition),
+				Engine.getRenderer().localPointToWindow(nodePosition),
 				hSize.x > nodePosition.x ? "left" : "right",
 				16,
 			);
 		});
 
 		this.diagram.addListener("mouseleave", () => {
-			if (0 !== this.engine.getHovering().length) {
+			if (0 !== Engine.getHovering().length) {
 				return;
 			}
 
@@ -221,22 +221,19 @@ export class App {
 		// this.diagram.addListener("nodePreviewed", (e: NodeEvent<Determinant | undefined>) => console.debug(e));
 
 		// Start the engine
-		this.engine.render();
-		this.engine.start();
+		Engine.start();
 	}
 
 	get debug() {
-		return this.engine.debug;
+		return Engine.debug;
 	}
 
-	private profiling: ProfilerDisplay;
-
 	setDebug(value: boolean) {
-		this.engine.setDebug(value);
+		Engine.setDebug(value);
 
 		if (false === value) {
-			this.engine.onTicked = () => undefined;
-			this.profiling.hide();
+			Engine.onTicked = () => undefined;
+			this.profiling?.hide();
 			return;
 		}
 
@@ -247,13 +244,13 @@ export class App {
 			this.profiling = new ProfilerDisplay(profilingDom, 5, 12);
 		}
 
-		this.engine.onTicked = (_engin, profile) => {
-			this.profiling.stageStatValue("fps", profile.fps)
-			this.profiling.stageStatValue("frameTime", profile.frameTime)
-			this.profiling.stageStatValue("nodesRendered", profile.nodesRendered)
-			this.profiling.stageStatValue("nodesMounted", profile.nodesMounted)
-			this.profiling.stageStatValue("nodesUnmounted", profile.nodesUnmounted)
-			this.profiling.stageStatValue("transitionsCount", profile.transitionsCount)
+		Engine.onTicked = (_engin, profile) => {
+			this.profiling?.stageStatValue("fps", profile.fps);
+			this.profiling?.stageStatValue("frameTime", profile.frameTime);
+			this.profiling?.stageStatValue("nodesRendered", profile.nodesRendered);
+			this.profiling?.stageStatValue("nodesMounted", profile.nodesMounted);
+			this.profiling?.stageStatValue("nodesUnmounted", profile.nodesUnmounted);
+			this.profiling?.stageStatValue("transitionsCount", profile.transitionsCount);
 		};
 		this.profiling.show();
 	}

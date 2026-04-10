@@ -26,8 +26,8 @@ const stepClipsOptimized: { [k in Steps]: ClipPath } = {
 };
 
 export class DeterminantRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, engine: Engine, private app: App) {
-		super(renderer, engine);
+	constructor(renderer: SVGRenderer, private app: App) {
+		super(renderer);
 	}
 
 	override render(vnode: VirtualNode<Determinant>): void {

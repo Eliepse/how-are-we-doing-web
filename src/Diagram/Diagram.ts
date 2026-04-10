@@ -429,18 +429,6 @@ export class Diagram extends Node2D {
 		return this._selectedNode;
 	}
 
-	getPathologies(): Map<number, Pathology> {
-		return this._pathologies;
-	}
-
-	getDeterminants(): Map<number, Determinant> {
-		return this._determinants;
-	}
-
-	getFacilities(): Map<number, Facility> {
-		return this._facilities;
-	}
-
 	getActiveNodes(): {
 		pathologies: Pathology[];
 		determinants: Determinant[];
@@ -546,6 +534,9 @@ export class Diagram extends Node2D {
 			transitionNodeOpacity(families.determinant, 500, Opacity.Opaque);
 			transitionNodeOpacity(families.facility, 500, new Opacity(.1));
 			transitionNodeOpacity(this.decorations, 500, new Opacity(.1));
+
+			this._selectedNode = this._selectedNode instanceof Determinant ? this._selectedNode : undefined;
+			this._previewedNode = this._previewedNode instanceof Determinant ? this._previewedNode : undefined;
 
 			this.updateNodesHighlight();
 			return;

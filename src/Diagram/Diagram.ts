@@ -289,22 +289,6 @@ export class Diagram extends Node2D {
 			parent.paused = false;
 		}
 
-		// Update decoration
-		if (node instanceof Pathology) {
-			const parent = node.getParent() as PathologyFamily;
-			parent.paused = true;
-
-			if ("social" === parent.name) {
-				this.decorations.select("social");
-			} else if ("mental" === parent.name) {
-				this.decorations.select("mental");
-			} else if ("physical" === parent.name) {
-				this.decorations.select("physical");
-			}
-		} else {
-			this.decorations.select(undefined);
-		}
-
 		this._selectedNode = node;
 		this.updateNodesHighlight();
 		this.dispatchEvent(new NodeEvent("nodeSelected", this._selectedNode));
@@ -401,6 +385,23 @@ export class Diagram extends Node2D {
 			pathology.setStatus(hasActiveNode ? "dimmed" : false);
 		}
 
+		// Update decoration
+		if (this._selectedNode instanceof Pathology) {
+			const parent = this._selectedNode.getParent() as PathologyFamily;
+			parent.paused = true;
+
+			if ("social" === parent.name) {
+				this.decorations.select("social");
+			} else if ("mental" === parent.name) {
+				this.decorations.select("mental");
+			} else if ("physical" === parent.name) {
+				this.decorations.select("physical");
+			}
+		} else {
+			this.decorations.select(undefined);
+		}
+
+		// Update links
 		if (isDetsMode) {
 			if (this._previewedNode instanceof Determinant) {
 				linkManager?.showInterDeterminantLinks(this._previewedNode, true);

@@ -40,10 +40,11 @@ export class LinkRenderer extends SVGNodeRenderer {
 			tempNode.setParent(link.to);
 			const from = tempNode.getGlobalPosition().get();
 
-			const fromAnchor = center.sub(from).rot(Angle.fromDeg(32)).mul(0.32).add(from);
-			const toAnchor = center.sub(to).rot(Angle.fromDeg(32)).mul(0.32).add(to);
+			const factor = to.sub(from).mag() * .58;
+			const fromAnchor = center.sub(from).normalize().mul(factor);
+			const toAnchor = center.sub(to).normalize().mul(factor);
 
-			path.updateMesh(from, fromAnchor, to, toAnchor);
+			path.updateMesh(from, from.add(fromAnchor), to, to.add(toAnchor));
 			return;
 		}
 

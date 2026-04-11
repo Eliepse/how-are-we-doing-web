@@ -9,6 +9,7 @@ export class Angle implements Parameter {
 	static Zero = new Angle(0);
 	static PI = new Angle(Math.PI);
 	static PI2 = new Angle(PI2);
+	static HALF_PI = new Angle(-Math.PI);
 
 	private readonly radian: number;
 

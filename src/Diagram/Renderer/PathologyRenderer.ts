@@ -42,7 +42,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 
 		if (status.hasChanged() || opacity.hasChanged()) {
 			const color = this.getStatusColor(status.get()).alpha(opacity.get());
-			edge.updateStyle(new SVGStyle({ stroke: new Stroke(3, color) }));
+			edge.updateStyle(new SVGStyle({ stroke: new Stroke({ width: 3, color }) }));
 
 			if ("selected" === status.get()) {
 				core.show();

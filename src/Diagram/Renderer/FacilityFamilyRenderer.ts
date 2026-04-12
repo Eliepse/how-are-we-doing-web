@@ -25,7 +25,7 @@ export class FacilityFamilyRenderer extends SVGNodeRenderer {
 		}
 
 		if (opacity.hasChanged()) {
-			separator.updateStyle(new SVGStyle({ stroke: new Stroke(1, colors.defaultWhite.alpha(opacity.get())) }));
+			separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: colors.defaultWhite.alpha(opacity.get()) }) }));
 		}
 	}
 

@@ -69,7 +69,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		if (status.hasChanged() || step.hasChanged() || opacity.hasChanged()) {
 			const color = this.getStatusColor(status.get());
 			element.updateStyle(new SVGStyle({ fill: color, opacity: opacity.get() }), stepClipsOptimized[step.get()]);
-			circle.updateStyle(new SVGStyle({ stroke: new Stroke(2, color.alpha(anchorOpacity)) }));
+			circle.updateStyle(new SVGStyle({ stroke: new Stroke({ width: 2, color: color.alpha(anchorOpacity) }) }));
 			circleCore.updateStyle(new SVGStyle({ fill: color }));
 
 			if ("selected" === status.get() || "preview" === status.get()) {

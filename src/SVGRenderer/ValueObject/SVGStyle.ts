@@ -34,6 +34,12 @@ export class SVGStyle {
 			element.removeAttribute("stroke-width");
 		}
 
+		if(this.stroke?.strokeDash) {
+			element.setAttribute("stroke-dasharray", this.stroke.strokeDash.join(" "));
+		} else {
+			element.removeAttribute("stroke-dasharray");
+		}
+
 		element.style.opacity = this.opacity.toFixed(2);
 	}
 }

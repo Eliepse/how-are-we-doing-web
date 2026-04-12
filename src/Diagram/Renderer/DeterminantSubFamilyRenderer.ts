@@ -21,7 +21,7 @@ export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {
 		const end = position.get().add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
 
 		separator.updateMesh(start, end);
-		separator.updateStyle(new SVGStyle({ stroke: new Stroke(1, colors.defaultWhite.alpha(.6)) }));
+		separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: colors.defaultWhite.alpha(.6) }) }));
 	}
 
 	override accepts(node: VirtualNode): boolean {

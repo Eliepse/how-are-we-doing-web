@@ -1,11 +1,12 @@
 import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
+import { Dir, type Direction } from "../../AssociationManager";
 
 type Status = "selected" | "preview";
 
 export class Link extends Node2D {
 	private _hidden = new Attribute(false);
-	public bidirectional = false;
+	public direction: Direction = Dir.Bidirectional;
 	public readonly status = new Attribute<Status>("selected");
 
 	constructor(

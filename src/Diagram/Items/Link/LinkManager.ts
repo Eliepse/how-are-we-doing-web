@@ -26,7 +26,7 @@ export class LinkManager extends Node2D {
 				}
 
 				const link = new Link(determinant, pathology, nodeKey);
-				link.bidirectional = true;
+				// link.bidirectional = true;
 				link.hide();
 				this.links.set(nodeKey, link);
 				this.links.set(invertedKey, link);
@@ -44,7 +44,7 @@ export class LinkManager extends Node2D {
 				// Prevent duplicates from inversed size associations
 				const linkInverted = this.links.get(invertedKey);
 				if (undefined !== linkInverted) {
-					linkInverted.bidirectional = true;
+					// linkInverted.bidirectional = true;
 					return;
 				}
 
@@ -66,12 +66,18 @@ export class LinkManager extends Node2D {
 
 	showInterDeterminantLinks(node: Determinant, preview = false) {
 		const associations = AssociationManager.getDirectAssociations(node).determinant;
-		console.debug(associations);
 
-		for (const determinantId of associations.keys()) {
-			const link = this.links.get(`d${node.id}-d${determinantId}`);
-			link?.show();
-			link?.status?.set(preview ? "preview" : "selected");
+		for (const [detId, direction] of associations.entries()) {
+			const link = this.links.get(`d${node.id}-d${detId}`);
+
+			if (undefined === link) {
+				console.warn(`Unable to find link for asso: d${node.id}-d${detId}`);
+				continue;
+			}
+
+			link.direction = direction;
+			link.status?.set(preview ? "preview" : "selected");
+			link.show();
 		}
 	}
 

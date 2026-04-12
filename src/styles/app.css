@@ -58,6 +58,29 @@
     /*letter-spacing: -.015em;*/
 }
 
+path.source,
+path.target {
+    stroke-dasharray: 10 5;
+    animation-name: moveLinkDash;
+    animation-duration: 2s;
+    animation-direction: normal;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+path.target {
+    animation-direction: reverse;
+}
+
+@keyframes moveLinkDash {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: 15;
+    }
+}
+
 /*
 | --------------------------------
 | Labels
@@ -237,6 +260,7 @@
     max-width: 40rem;
     font-size: 1rem;
 }
+
 .credit-modal h3 {
     max-width: 30rem;
     margin-bottom: .5rem;

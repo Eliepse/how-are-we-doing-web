@@ -7,12 +7,12 @@ export const Dir = {
 	Target: 2,
 	Bidirectional: 4,
 } as const;
-type TDirection = (typeof Dir)[keyof typeof Dir];
+export type Direction = (typeof Dir)[keyof typeof Dir];
 export type AssoNodeType = "facility" | "determinant" | "pathology";
 type Associations = {
-	facility: Map<number, TDirection>,
-	determinant: Map<number, TDirection>,
-	pathology: Map<number, TDirection>,
+	facility: Map<number, Direction>,
+	determinant: Map<number, Direction>,
+	pathology: Map<number, Direction>,
 };
 type NodeRef = { type: AssoNodeType, id: number };
 type Association = [NodeRef, NodeRef];
@@ -59,9 +59,9 @@ export class AssociationManager {
 	static getDirectAssociations(source: SelectableNode): Associations {
 		const type = this.getNodeType(source);
 		const associations = {
-			facility: new Map<number, TDirection>(),
-			determinant: new Map<number, TDirection>(),
-			pathology: new Map<number, TDirection>(),
+			facility: new Map<number, Direction>(),
+			determinant: new Map<number, Direction>(),
+			pathology: new Map<number, Direction>(),
 		};
 
 		for (const asso of this.registry) {

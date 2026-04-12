@@ -126,6 +126,7 @@ export class Diagram extends Node2D {
 				assoDeterminants.forEach((id) => AssociationManager.register(
 					{ type: "facility", id: child.id },
 					{ type: "determinant", id },
+					true,
 				));
 
 				const pathology = new Pathology(child.id, child.name, {
@@ -146,6 +147,7 @@ export class Diagram extends Node2D {
 			AssociationManager.register(
 				{ type: asso.from.type as AssoNodeType, id: asso.from.id },
 				{ type: asso.to.type as AssoNodeType, id: asso.to.id },
+				false,
 			);
 		});
 
@@ -175,6 +177,7 @@ export class Diagram extends Node2D {
 						assoDeterminants.forEach((id) => AssociationManager.register(
 							{ type: "facility", id: child.id },
 							{ type: "determinant", id },
+							true,
 						));
 
 						const facility = new Facility(
@@ -225,10 +228,12 @@ export class Diagram extends Node2D {
 						assoPathologies.forEach((id) => AssociationManager.register(
 							{ type: "determinant", id: child.id },
 							{ type: "pathology", id },
+							true,
 						));
 						assoFacilities.forEach((id) => AssociationManager.register(
 							{ type: "determinant", id: child.id },
 							{ type: "facility", id },
+							true,
 						));
 
 						const determinant = new Determinant(
@@ -339,7 +344,7 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			if(previewAssoc?.determinant?.has(determinant.id)) {
+			if (previewAssoc?.determinant?.has(determinant.id)) {
 				determinant.setStatus("preview");
 				continue;
 			}

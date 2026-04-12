@@ -3,7 +3,7 @@ import { Determinant } from "./Items/Determinant/Determinant";
 import { Pathology } from "./Items/Pathology/Pathology";
 
 export type AssoNodeType = "facility" | "determinant" | "pathology";
-type AssociationDirection = "source" | "target" | "both";
+type Direction = "source" | "target" | "both";
 type Associations = {
 	facility: Set<number>,
 	determinant: Set<number>,
@@ -12,11 +12,31 @@ type Associations = {
 type NodeRef = { type: AssoNodeType, id: number };
 type Association = [NodeRef, NodeRef];
 
-export class AssociationManager {
-	static registry: Association[] = [];
 
-	static register(source: NodeRef, target: NodeRef) {
-		this.registry.push([source, target]);
+export class AssociationManager {
+	// Keep track of all associations to prevents duplicates
+	private static index = new Set<string>();
+	private static registry: Association[] = [];
+
+	static register(source: NodeRef, target: NodeRef, addInverse = false) {
+		const key = this.makeAssoKey(source, target);
+		if (false === this.index.has(key)) {
+			this.registry.push([source, target]);
+			this.index.add(key);
+		}
+
+		// Also register inverse side for bi-direction
+		if (addInverse) {
+			const inverseKey = this.makeAssoKey(target, source);
+			if (false === this.index.has(inverseKey)) {
+				this.registry.push([target, source]);
+				this.index.add(inverseKey);
+			}
+		}
+	}
+
+	private static makeAssoKey(source: NodeRef, target: NodeRef): string {
+		return `${source.type[0]}${source.id}.${target.type[0]}${target.id}`;
 	}
 
 	static getNodeType(node: SelectableNode): AssoNodeType {

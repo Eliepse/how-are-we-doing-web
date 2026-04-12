@@ -65,17 +65,19 @@ export class AssociationManager {
 		};
 
 		for (const asso of this.registry) {
+			// Check if match as a source
 			if (type === asso[0].type && source.id === asso[0].id) {
-				const inverseKey = this.makeAssoKey(asso[1], asso[0]);
-				const isBidirectional = this.index.has(inverseKey);
-				associations[asso[1].type].set(asso[1].id, isBidirectional ? Dir.Bidirectional : Dir.Target);
+				// Check if the relation exists in the other way
+				const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
+				associations[asso[1].type].set(asso[1].id, isBidirectional ? Dir.Bidirectional : Dir.Source);
 				continue;
 			}
 
+			// Check if it matches as a target
 			if (type === asso[1].type && source.id === asso[1].id) {
-				const inverseKey = this.makeAssoKey(asso[0], asso[1]);
-				const isBidirectional = this.index.has(inverseKey);
-				associations[asso[0].type].set(asso[0].id, isBidirectional ? Dir.Bidirectional : Dir.Source);
+				// Check if the relation exists in the other way
+				const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
+				associations[asso[0].type].set(asso[0].id, isBidirectional ? Dir.Bidirectional : Dir.Target);
 			}
 		}
 

@@ -7,9 +7,6 @@ import { LinkPath, style } from "../Shape/LinkPath";
 import { Link } from "../Items/Link/Link";
 import { Determinant } from "../Items/Determinant/Determinant";
 import { Pathology } from "../Items/Pathology/Pathology";
-import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
-import { colors } from "../colors";
-import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Dir } from "../AssociationManager";
 
 export class LinkRenderer extends SVGNodeRenderer {

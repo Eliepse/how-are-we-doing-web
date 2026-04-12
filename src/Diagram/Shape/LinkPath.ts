@@ -26,6 +26,10 @@ export class LinkPath extends SVGShape {
 		style.updateElement(this.dom);
 	}
 
+	get classList() {
+		return this.dom.classList;
+	}
+
 	override mount(container: Element): void {
 		container.append(this.dom);
 	}

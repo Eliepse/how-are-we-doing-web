@@ -2,12 +2,17 @@ import type { SelectableNode } from "./Diagram";
 import { Determinant } from "./Items/Determinant/Determinant";
 import { Pathology } from "./Items/Pathology/Pathology";
 
+export const Dir = {
+	Source: 0,
+	Target: 2,
+	Bidirectional: 4,
+} as const;
+type TDirection = (typeof Dir)[keyof typeof Dir];
 export type AssoNodeType = "facility" | "determinant" | "pathology";
-type Direction = "source" | "target" | "both";
 type Associations = {
-	facility: Set<number>,
-	determinant: Set<number>,
-	pathology: Set<number>,
+	facility: Map<number, TDirection>,
+	determinant: Map<number, TDirection>,
+	pathology: Map<number, TDirection>,
 };
 type NodeRef = { type: AssoNodeType, id: number };
 type Association = [NodeRef, NodeRef];
@@ -54,19 +59,23 @@ export class AssociationManager {
 	static getDirectAssociations(source: SelectableNode): Associations {
 		const type = this.getNodeType(source);
 		const associations = {
-			facility: new Set<number>(),
-			determinant: new Set<number>(),
-			pathology: new Set<number>(),
+			facility: new Map<number, TDirection>(),
+			determinant: new Map<number, TDirection>(),
+			pathology: new Map<number, TDirection>(),
 		};
 
 		for (const asso of this.registry) {
 			if (type === asso[0].type && source.id === asso[0].id) {
-				associations[asso[1].type].add(asso[1].id);
+				const inverseKey = this.makeAssoKey(asso[1], asso[0]);
+				const isBidirectional = this.index.has(inverseKey);
+				associations[asso[1].type].set(asso[1].id, isBidirectional ? Dir.Bidirectional : Dir.Target);
 				continue;
 			}
 
 			if (type === asso[1].type && source.id === asso[1].id) {
-				associations[asso[0].type].add(asso[0].id);
+				const inverseKey = this.makeAssoKey(asso[0], asso[1]);
+				const isBidirectional = this.index.has(inverseKey);
+				associations[asso[0].type].set(asso[0].id, isBidirectional ? Dir.Bidirectional : Dir.Source);
 			}
 		}
 
@@ -90,7 +99,9 @@ export class AssociationManager {
 					continue;
 				}
 
-				associations[asso[1].type].add(asso[1].id);
+				const inverseKey = this.makeAssoKey(asso[1], asso[0]);
+				const isBidirectional = this.index.has(inverseKey);
+				associations[asso[1].type].set(asso[1].id, isBidirectional ? Dir.Bidirectional : Dir.Target);
 				continue;
 			}
 
@@ -100,7 +111,9 @@ export class AssociationManager {
 					continue;
 				}
 
-				associations[asso[0].type].add(asso[0].id);
+				const inverseKey = this.makeAssoKey(asso[0], asso[1]);
+				const isBidirectional = this.index.has(inverseKey);
+				associations[asso[0].type].set(asso[0].id, isBidirectional ? Dir.Bidirectional : Dir.Source);
 			}
 		}
 

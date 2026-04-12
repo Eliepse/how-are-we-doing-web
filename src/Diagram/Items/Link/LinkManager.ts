@@ -2,6 +2,7 @@ import { Node2D } from "../../../Engine2D/Node/Node2D";
 import type { Pathology } from "../Pathology/Pathology";
 import type { Determinant } from "../Determinant/Determinant";
 import { Link } from "./Link";
+import { AssociationManager } from "../../AssociationManager";
 
 export class LinkManager extends Node2D {
 	private links = new Map<string, Link>();
@@ -60,25 +61,25 @@ export class LinkManager extends Node2D {
 			});
 		}
 
-		this.setUname("link:manager")
+		this.setUname("link:manager");
 	}
 
 	showInterDeterminantLinks(node: Determinant, preview = false) {
-		for (const determinant of this.determinants.values()) {
-			if (determinant === node) {
-				continue;
-			}
+		const associations = AssociationManager.getDirectAssociations(node).determinant;
+		console.debug(associations);
 
-			if (node.isConnected(determinant) || determinant.isConnected(node)) {
-				const link = this.links.get(`d${node.id}-d${determinant.id}`);
-				link?.show();
-				link?.status?.set(preview ? "preview" : "selected");
-			}
+		for (const determinantId of associations.keys()) {
+			const link = this.links.get(`d${node.id}-d${determinantId}`);
+			link?.show();
+			link?.status?.set(preview ? "preview" : "selected");
 		}
 	}
 
 	showDeterminantPathologyLinks(node: Determinant, preview = false) {
-		for (const pathologyId of node.associations.pathologies) {
+		const associations = AssociationManager.getDirectAssociations(node).pathology;
+
+		// Use keys as we don't need to know the real direction (all displayed as bidirectional)
+		for (const pathologyId of associations.keys()) {
 			const link = this.links.get(`d${node.id}-p${pathologyId}`);
 			link?.show();
 			link?.status?.set(preview ? "preview" : "selected");
@@ -86,7 +87,10 @@ export class LinkManager extends Node2D {
 	}
 
 	showPathologyLinks(node: Pathology) {
-		for (const determinantId of node.associations.determinants) {
+		const associations = AssociationManager.getDirectAssociations(node).determinant;
+
+		// Use keys as we don't need to know the real direction (all displayed as bidirectional)
+		for (const determinantId of associations.keys()) {
 			const link = this.links.get(`d${determinantId}-p${node.id}`);
 			link?.show();
 			link?.status?.set("selected");

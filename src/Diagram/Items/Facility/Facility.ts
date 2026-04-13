@@ -1,22 +1,24 @@
 import type { Collider } from "../../../Engine2D/Physic/Collider";
-import type { WithLifecycle } from "../../../Engine2D/Contract/WithLifecycle";
 import type { WithPointerEvents } from "../../../Engine2D/Contract/WithPointerEvents";
 import { ConstantCollider } from "../../../Engine2D/Physic/ConstantCollider";
-import type { Engine } from "../../../Engine2D/Engine";
+import { type Engine } from "../../../Engine2D/Engine";
 import { TorusCollider } from "../../../Engine2D/Physic/TorusCollider";
-import type { Angle } from "../../../Engine2D/ValueObject/Angle";
+import { type Angle } from "../../../Engine2D/ValueObject/Angle";
 import { VirtualShape } from "../../../Engine2D/Node/VirtualShape";
 import { type SelectableNode } from "../../Diagram";
 import { Determinant } from "../Determinant/Determinant";
 import { Pathology } from "../Pathology/Pathology";
 import { FacilityFamily } from "./FacilityFamily";
 import { facilityShape } from "./shapes";
+import type { ActiveStatus } from "../../types";
+import { Attribute } from "../../../Engine2D/Core/Attribute";
+import { Opacity } from "../../../Engine2D/ValueObject/Opacity";
 
 type Associations = { determinants: number[] };
 
-export class Facility extends VirtualShape implements WithPointerEvents, WithLifecycle {
+export class Facility extends VirtualShape implements WithPointerEvents {
 	private _collider?: TorusCollider;
-	public active = false;
+	public status = new Attribute<ActiveStatus | false>(false);
 
 	constructor(
 		public readonly id: number,
@@ -25,9 +27,11 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		private _arc: Angle,
 	) {
 		super(facilityShape);
+		this.tags.push("facility");
+		this.opacity.set(new Opacity(.6));
 	}
 
-	onMount(engine: Engine): void | (() => void) {
+	override onMount(_engine: Engine): void | (() => void) {
 		const parent = this.getParent();
 
 		if (!(parent instanceof FacilityFamily)) {
@@ -38,16 +42,12 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		const torusWidth = 24;
 
 		this._collider = new TorusCollider(
-			parent.getGlobalPosition(),
+			parent.getGlobalPosition().get(),
 			outerRadius - torusWidth / 2,
 			torusWidth,
 			this._arc,
-			this.getGlobalRotation().sub(this._arc.div(2)),
+			this.getGlobalRotation().get().sub(this._arc.div(2)),
 		);
-	}
-
-	onUnmount(engine: Engine): void {
-		//
 	}
 
 	getPointerCollider(): Collider {
@@ -58,15 +58,15 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		const position = this.getParent()?.getGlobalPosition();
 
 		if (position) {
-			this._collider.setCenter(position);
+			this._collider.setCenter(position.get());
 		}
 
 		return this._collider;
 	}
 
-	setActive(state: boolean): void {
-		this.active = state;
-		this.shouldRepaint();
+	setStatus(status: ActiveStatus | false): void {
+		this.status.set(status);
+		this.opacity.set(false === status ? new Opacity(.6) : Opacity.Opaque);
 	}
 
 	isConnected(node: SelectableNode): boolean {
@@ -80,5 +80,14 @@ export class Facility extends VirtualShape implements WithPointerEvents, WithLif
 		}
 
 		return false;
+	}
+
+	override onRendered(_deltaTime: number) {
+		super.onRendered(_deltaTime);
+		this.status.commit();
+	}
+
+	override shouldRerender(): boolean {
+		return super.shouldRerender() || this.status.hasChanged();
 	}
 }

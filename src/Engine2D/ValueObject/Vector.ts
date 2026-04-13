@@ -60,6 +60,16 @@ export class Vector {
 		return new Vector(this.x / ratio, this.y / ratio);
 	}
 
+	normalize(): Vector {
+		const len = this.mag();
+
+		if (len === 0) {
+			return this.clone();
+		}
+
+		return this.mul(1 / len);
+	}
+
 	magSq(): number {
 		return this.x * this.x + this.y * this.y;
 	}
@@ -99,7 +109,7 @@ export class Vector {
 	}
 
 	isEqual(vector: Vector): boolean {
-		return this.x === vector.x && this.y === vector.y;
+		return Vector.isEqual(this, vector);
 	}
 
 	toAttributes() {
@@ -116,5 +126,13 @@ export class Vector {
 
 	static rand(size: number = 1) {
 		return new Vector((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2).mul(size);
+	}
+
+	static isEqual(a: Vector, b: Vector): boolean {
+		return a.x === b.x && a.y === b.y;
+	}
+
+	static isDiff(a: Vector, b: Vector): boolean {
+		return !Vector.isEqual(a, b);
 	}
 }

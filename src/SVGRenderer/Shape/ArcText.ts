@@ -1,6 +1,7 @@
 import type { Angle } from "../../Engine2D/ValueObject/Angle";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { SVGShape } from "./SVGShape";
+import type { Opacity } from "../../Engine2D/ValueObject/Opacity";
 
 const arcIndexGenerator = (function* () {
 	let i = 0;
@@ -47,6 +48,10 @@ export class ArcText extends SVGShape {
 		const end = new Vector(endAngle.cos * radius, endAngle.sin * radius).add(center);
 
 		this.pathDom.setAttribute("d", `M ${start} A ${radius} ${radius} 0 ${largeArc} 1 ${end}`);
+	}
+
+	updateOpacity(value: Opacity) {
+		this.textDom.style.opacity = value.ratio.toFixed(2);
 	}
 
 	override mount(container: Element): void {

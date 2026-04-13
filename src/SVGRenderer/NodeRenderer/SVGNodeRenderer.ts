@@ -6,7 +6,7 @@ import type { SVGRenderer } from "../SVGRenderer";
 export abstract class SVGNodeRenderer {
 	private shapesByVNode = new WeakMap<VirtualNode, ShapeCollection>();
 
-	constructor(protected renderer: SVGRenderer, protected engine: Engine) {
+	constructor(protected renderer: SVGRenderer) {
 	}
 
 	getShapes(vnode: VirtualNode): ShapeCollection {

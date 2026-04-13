@@ -8,16 +8,20 @@ import { SVGImage } from "../Shape/SVGImage";
 export class BgDecorationsRenderer extends SVGNodeRenderer {
 	private shapes = { pathology: [] };
 
-	constructor(renderer: SVGRenderer, engine: Engine) {
-		super(renderer, engine);
+	constructor(renderer: SVGRenderer) {
+		super(renderer);
 	}
 
 	override render(vnode: VirtualNode<BgDecoration>): void {
 		const shapes = this.getShapes(vnode);
 		const node = vnode.node;
 		const sprite = shapes.get("sprite", () => new SVGImage(node.symbol, -1));
+		const position = node.getGlobalPosition();
+		const rotation = node.getGlobalRotation();
 
-		sprite.updateMesh(node.getGlobalPosition(), node.scale, node.getGlobalRotation());
+		if (position || rotation) {
+			sprite.updateMesh(position.get(), node.scale, rotation.get());
+		}
 		// blob.updateStyle(new SVGStyle({ fill: genRef }));
 	}
 

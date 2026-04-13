@@ -1,14 +1,33 @@
 import { Angle } from "../ValueObject/Angle";
 import { Vector } from "../ValueObject/Vector";
 import { Observable } from "./Observable";
-import { type RenderType, RenderTypes } from "../Engine";
+import { Attribute } from "../Core/Attribute";
+import { Opacity } from "../ValueObject/Opacity";
+import type { Engine } from "../Engine";
 
 export class Node2D extends Observable {
 	protected _parent?: Node2D = undefined;
 	protected children: Array<Node2D> = [];
-	protected position = Vector.Zero;
-	protected rotation = Angle.Zero;
-	private rerender: RenderType = RenderTypes.Skip;
+	protected position = new Attribute(Vector.Zero, Vector.isDiff);
+	protected rotation = new Attribute(Angle.Zero, Angle.isDiff);
+	protected opacity = new Attribute(Opacity.Opaque, Opacity.isDiff);
+	// Global position caches, used only in getGlobalPosition()
+	protected globalPosition = new Attribute(Vector.Zero, Vector.isDiff);
+	// Global rotation caches, used only in getGlobalRotation()
+	protected globalRotation = new Attribute(Angle.Zero, Angle.isDiff);
+	// Global opacity caches, used only in getGlobalOpacity()
+	protected globalOpacity = new Attribute(Opacity.Opaque, Opacity.isDiff);
+	private dirty: boolean = true;
+	private _uname: string | undefined = undefined;
+	public readonly tags: string[] = [];
+
+	get uname() {
+		return this._uname;
+	}
+
+	setUname(name: string) {
+		this._uname ??= name;
+	}
 
 	setParent(element: Node2D): void {
 		this._parent = element;
@@ -19,7 +38,7 @@ export class Node2D extends Observable {
 	}
 
 	addChildren(element: Node2D): void {
-		this.shouldRerender();
+		this.dirty = true;
 		this.children.push(element);
 		element.setParent(this);
 	}
@@ -29,58 +48,123 @@ export class Node2D extends Observable {
 	}
 
 	setPosition(value: Vector): void {
-		this.shouldRerender();
-		this.position = value;
+		this.position.set(value);
 	}
 
-	getPosition(): Vector {
+	getPosition() {
 		return this.position;
 	}
 
-	getGlobalPosition(): Vector {
-		const parentPosition = this.getParent()?.getGlobalPosition() ?? Vector.Zero;
-		const position = this.getPosition().rot(
-			this.getParent()?.getGlobalRotation() ?? Angle.Zero,
-		);
-		return parentPosition.add(position);
+	getGlobalPosition() {
+		const parent = this.getParent();
+
+		// Current node is root, therefore the local position is the reference
+		if (undefined === parent) {
+			return this.position;
+		}
+
+		// Rotate the position based on the parent position and rotation
+		const rotatedPosition = this.position.get().rot(parent.getGlobalRotation().get());
+
+		// Apply the rotated local position to the parent one
+		const newPosition = parent.getGlobalPosition().get().add(rotatedPosition);
+
+		this.globalPosition.set(newPosition);
+		return this.globalPosition;
 	}
 
 	setRotation(value: Angle): void {
-		this.shouldRerender();
-		this.rotation = value;
+		this.rotation.set(value);
 	}
 
-	getRotation(): Angle {
+	getRotation() {
 		return this.rotation;
 	}
 
-	getGlobalRotation(): Angle {
-		return (this.getParent()?.getGlobalRotation() ?? Angle.Zero).add(this.getRotation());
+	getGlobalRotation() {
+		const parent = this.getParent();
+
+		// Current node is root, therefore the local rotation is the reference
+		if (undefined === parent) {
+			return this.rotation;
+		}
+
+		const parentRot = parent.getGlobalRotation();
+
+		if (parentRot.hasChanged() || this.rotation.hasChanged()) {
+			this.globalRotation.set(parentRot.get().add(this.rotation.get()));
+		}
+
+		return this.globalRotation;
 	}
 
-	onProcess(deltaTime: number): void {
+	setOpacity(value: Opacity) {
+		this.opacity.set(value);
+	}
+
+	getOpacity() {
+		return this.opacity;
+	}
+
+	getGlobalOpacity() {
+		const parent = this.getParent();
+
+		// Current node is root, therefore the local opacity is the reference
+		if (undefined === parent) {
+			return this.opacity;
+		}
+
+		const parentOpacity = parent.getGlobalOpacity();
+		this.globalOpacity.set(parentOpacity.get().mul(this.opacity.get()));
+
+		return this.globalOpacity;
+	}
+
+	/**
+	 * Called when the node is mounted in the tree,
+	 * but before any rendering.
+	 * Returned function is executed when unmounted.
+	 */
+	onMount(engine: Engine): void | (() => void) {
 		//
 	}
 
-	onRendered(deltaTime: number): void {
-		this.rerender = RenderTypes.Skip;
+	onUnmount(engine: Engine): void {
+		//
 	}
 
-	protected shouldRepaint(): void {
-		if (RenderTypes.Breaking === this.rerender) {
-			// Prevent rolling back to lower rendering state
-			return;
+	onProcess(_deltaTime: number): void {
+		//
+	}
+
+	onRendered(_deltaTime: number): void {
+		this.dirty = false;
+		this.position.commit();
+		this.rotation.commit();
+		this.opacity.commit();
+		this.globalPosition.commit();
+		this.globalRotation.commit();
+		this.globalOpacity.commit();
+	}
+
+	shouldRerender(): boolean {
+		if (this.dirty) {
+			return true;
 		}
 
-		this.rerender = RenderTypes.Paint;
-	}
+		if (this.position.hasChanged() || this.getGlobalPosition().hasChanged()) {
+			return true;
+		}
 
-	protected shouldRerender(): void {
-		this.rerender = RenderTypes.Breaking;
-	}
+		if (this.rotation.hasChanged() || this.getGlobalRotation().hasChanged()) {
+			return true;
+		}
 
-	renderState(): RenderType {
-		return this.rerender;
+		if (this.opacity.hasChanged() || this.getGlobalOpacity().hasChanged()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	static findParent(

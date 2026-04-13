@@ -1,3 +1,15 @@
 import { ArcGroup } from "../../ArcGroup";
+import { Angle } from "../../../Engine2D/ValueObject/Angle";
+import { Node2D } from "../../../Engine2D/Node/Node2D";
 
-export class FacilityFamily extends ArcGroup {}
+export class FacilityFamily<T extends Node2D = Node2D> extends ArcGroup {
+	constructor(
+		name: string,
+		children: Array<T>,
+		arc: Angle,
+		radius: number = 100,
+		show: boolean = true,
+	) {
+		super(name, children, arc, radius, show);
+	}
+}

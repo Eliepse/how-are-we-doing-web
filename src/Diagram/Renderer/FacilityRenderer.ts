@@ -5,37 +5,52 @@ import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
 import { Facility } from "../Items/Facility/Facility";
-import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { App } from "../../App";
+import type { ActiveStatus } from "../types";
 
 const shapeStyle = {
 	default: new SVGStyle({ fill: Color.White }),
 	selected: new SVGStyle({ fill: Color.Red }),
 	dimmed: new SVGStyle({ fill: colors.dimmedWhite }),
+	secondary: new SVGStyle({ fill: colors.secondary }),
 } as const;
 
 export class FacilityRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, engine: Engine, private app: App) {
-		super(renderer, engine);
+	constructor(renderer: SVGRenderer, private app: App) {
+		super(renderer);
 	}
 
 	override render(vnode: VirtualNode<Facility>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const selectedNode = this.app.getDiagram().getSelectedNode();
-		const isHovering = this.engine.isHovering(node);
+		const position = node.getGlobalPosition();
+		const rotation = node.getGlobalRotation();
+		const opacity = node.getGlobalOpacity();
+		const status = node.status;
 
 		const element = shapes.get("sprite", () => new SVGSymbol(node.getShape()));
-		element.updateMesh(node.getGlobalPosition(), node.getGlobalRotation());
 
-		if (node.active) {
-			element.updateStyle(shapeStyle.selected);
-		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
-			element.updateStyle(shapeStyle.dimmed);
-		} else {
-			element.updateStyle(shapeStyle.default);
+		if (position.hasChanged() || rotation.hasChanged()) {
+			element.updateMesh(position.get(), rotation.get());
 		}
+
+		if (status.hasChanged() || opacity.hasChanged()) {
+			element.updateStyle(new SVGStyle({ fill: this.getStatusColor(status.get()), opacity: opacity.get() }));
+		}
+
+	}
+
+	private getStatusColor(status: ActiveStatus | false): Color {
+		if ("selected" === status) {
+			return Color.Red;
+		}
+
+		if ("dimmed" === status) {
+			return new Color(158, 185, 200);
+		}
+
+		return Color.White;
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

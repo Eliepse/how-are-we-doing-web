@@ -13,23 +13,11 @@ import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import { ClipPath } from "../../Engine2D/ValueObject/Clip";
 import type { App } from "../../App";
+import { Opacity } from "../../Engine2D/ValueObject/Opacity";
+import type { ActiveStatus } from "../types";
 
-const shapeStyle = {
-	default: new SVGStyle({ fill: colors.defaultWhite }),
-	selected: new SVGStyle({ fill: colors.selected }),
-	dimmed: new SVGStyle({ fill: colors.dimmedWhite }),
-} as const;
-
-const anchorStyle = {
-	default: new SVGStyle({ stroke: new Stroke(2, Color.White.alpha(0.67)) }),
-	selected: new SVGStyle({ stroke: new Stroke(2, colors.selected) }),
-	dimmed: new SVGStyle({ stroke: new Stroke(2, colors.dimmedWhite) }),
-} as const;
-
-const anchorCoreStyle = new SVGStyle({ fill: colors.selected });
-
+const anchorOpacity = new Opacity(.67);
 export const determinantAnchorOffset = new Vector(-128, 0);
-
 const stepClipsOptimized: { [k in Steps]: ClipPath } = {
 	1: ClipPath.rect("0", "100%", "25%", "0"),
 	2: ClipPath.rect("0", "100%", "50%", "0"),
@@ -38,49 +26,70 @@ const stepClipsOptimized: { [k in Steps]: ClipPath } = {
 };
 
 export class DeterminantRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, engine: Engine, private app: App) {
-		super(renderer, engine);
+	constructor(renderer: SVGRenderer, private app: App) {
+		super(renderer);
 	}
 
 	override render(vnode: VirtualNode<Determinant>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const selectedNode = this.app.getDiagram().getSelectedNode();
-
-		// Create a temporary node to compute the position
-		const anchor = new Node2D();
-		anchor.setParent(node);
-		anchor.setPosition(determinantAnchorOffset);
-		const anchorPosition = anchor.getGlobalPosition();
-		const isHovering = this.engine.isHovering(node);
-
 		const circle = shapes.get("anchor", () => new Circle(5));
-		const circleCore = shapes.get("anchor:core", () => new Circle(3));
 		const element = shapes.get("virtualShape", () => new SVGSymbol(node.getShape()));
+		const circleCore = shapes.get("anchor:core", () => {
+			const shape = new Circle(3);
+			shape.updateStyle(new SVGStyle({ fill: colors.selected }));
+			shape.hide();
+			return shape;
+		});
 
-		element.updateMesh(node.getGlobalPosition(), node.getGlobalRotation());
-		circle.updateMesh(anchorPosition);
-		circleCore.hide();
+		const status = node.status;
+		const step = node.getStep();
+		const opacity = node.getGlobalOpacity();
+		const nodePosition = node.getGlobalPosition();
+		const nodeRotation = node.getGlobalRotation();
 
-		if(false === node.isApplicable()) {
-			element.blur(4);
-		} else {
-			element.blur(0);
+		if (nodePosition.hasChanged() || nodeRotation.hasChanged()) {
+			element.updateMesh(nodePosition.get(), nodeRotation.get());
+
+			// Create a temporary node to compute the position
+			const anchor = new Node2D();
+			anchor.setParent(node);
+			anchor.setPosition(determinantAnchorOffset);
+			const anchorPosition = anchor.getGlobalPosition();
+
+			circle.updateMesh(anchorPosition.get());
+			circleCore.updateMesh(anchorPosition.get());
 		}
 
-		if (node.active) {
-			element.updateStyle(shapeStyle.selected, stepClipsOptimized[node.getStep()]);
-			circle.updateStyle(anchorStyle.selected);
-			circleCore.updateMesh(anchorPosition);
-			circleCore.updateStyle(anchorCoreStyle);
-			circleCore.show();
-		} else if (undefined !== selectedNode && node !== selectedNode && false === isHovering) {
-			element.updateStyle(shapeStyle.dimmed, stepClipsOptimized[node.getStep()]);
-			circle.updateStyle(anchorStyle.dimmed);
-		} else {
-			element.updateStyle(shapeStyle.default, stepClipsOptimized[node.getStep()]);
-			circle.updateStyle(anchorStyle.default);
+		if (node.isApplicable().hasChanged()) {
+			element.blur(node.isApplicable().get() ? 0 : 4);
 		}
+
+		// Pattern and anchor rim
+		if (status.hasChanged() || step.hasChanged() || opacity.hasChanged()) {
+			const color = this.getStatusColor(status.get());
+			element.updateStyle(new SVGStyle({ fill: color, opacity: opacity.get() }), stepClipsOptimized[step.get()]);
+			circle.updateStyle(new SVGStyle({ stroke: new Stroke({ width: 2, color: color.alpha(anchorOpacity) }) }));
+			circleCore.updateStyle(new SVGStyle({ fill: color }));
+
+			if ("selected" === status.get() || "preview" === status.get()) {
+				circleCore.show();
+			} else {
+				circleCore.hide();
+			}
+		}
+	}
+
+	private getStatusColor(status: ActiveStatus | false): Color {
+		if ("selected" === status) {
+			return Color.Red;
+		}
+
+		if ("preview" === status) {
+			return colors.secondary;
+		}
+
+		return Color.White;
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

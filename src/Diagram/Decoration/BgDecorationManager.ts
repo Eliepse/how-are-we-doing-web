@@ -75,8 +75,6 @@ export class BgDecorationManager extends Node2D {
 			node.setPosition(new Vector(Math.cos(PI2 * angle) * radius, Math.sin(PI2 * angle) * radius));
 			node.setRotation(Angle.PI2.mul(rotation));
 		});
-
-		this.shouldRerender();
 	}
 
 	select(type: "social" | "mental" | "physical" | undefined): void {

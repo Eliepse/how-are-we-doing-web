@@ -427,6 +427,8 @@ export class Diagram extends Node2D {
 			linkManager?.showDeterminantPathologyLinks(this._selectedNode);
 		} else if (this._selectedNode instanceof Pathology) {
 			linkManager?.showPathologyLinks(this._selectedNode);
+		} else if (this._selectedNode instanceof Facility) {
+			linkManager?.showDeterminantPathologyLinksFromFacility(this._selectedNode);
 		}
 	}
 

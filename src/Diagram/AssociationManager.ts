@@ -95,6 +95,11 @@ export class AssociationManager {
 
 		// Use determinants as pivot to get the last connected type (n+2)
 		for (const asso of this.registry) {
+			// Skip reference to same circle (ex: determinant <-> determinant)
+			if (asso[0].type === asso[1].type) {
+				continue;
+			}
+
 			if ("determinant" === asso[0].type && associations.determinant.has(asso[0].id)) {
 				// Only check last type, prevents looping back
 				if (type === asso[1].type) {

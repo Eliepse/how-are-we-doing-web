@@ -3,6 +3,7 @@ import type { Pathology } from "../Pathology/Pathology";
 import type { Determinant } from "../Determinant/Determinant";
 import { Link } from "./Link";
 import { AssociationManager } from "../../AssociationManager";
+import type { Facility } from "../Facility/Facility";
 
 export class LinkManager extends Node2D {
 	private links = new Map<string, Link>();
@@ -89,6 +90,19 @@ export class LinkManager extends Node2D {
 			const link = this.links.get(`d${node.id}-p${pathologyId}`);
 			link?.show();
 			link?.status?.set(preview ? "preview" : "selected");
+		}
+	}
+
+	showDeterminantPathologyLinksFromFacility(node: Facility) {
+		const { determinant, pathology } = AssociationManager.getAllAssociations(node);
+
+		// Use keys as we don't need to know the real direction (all displayed as bidirectional)
+		for (const [detId] of determinant) {
+			for (const [pathologyId] of pathology) {
+				const link = this.links.get(`d${detId}-p${pathologyId}`);
+				link?.show();
+				link?.status?.set("selected");
+			}
 		}
 	}
 

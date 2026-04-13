@@ -330,7 +330,7 @@ export class Diagram extends Node2D {
 			}
 
 			if (selectionAssoc?.determinant?.has(determinant.id)) {
-				determinant.setStatus("preview");
+				determinant.setStatus(this._selectedNode instanceof Determinant ? "preview" : "selected");
 				continue;
 			}
 

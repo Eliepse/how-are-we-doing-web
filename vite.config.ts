@@ -17,6 +17,7 @@ export default defineConfig({
 			output: {
 				codeSplitting: {
 					groups: [
+						{ name: "threejs", test: "three", priority: 110 },
 						{ name: "vendor", test: "node_modules", priority: 100 },
 						{ name: "engine", test: "Engine2D", priority: 50 },
 						{ name: "renderer", test: "SVGRenderer", priority: 30 },

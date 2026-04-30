@@ -6,6 +6,7 @@ import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer"
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { colors } from "../colors";
+import { Color } from "../../Engine2D/ValueObject/Color";
 
 export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<DeterminantSubFamily>): void {
@@ -21,7 +22,7 @@ export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {
 		const end = position.get().add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
 
 		separator.updateMesh(start, end);
-		separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: colors.defaultWhite.alpha(.6) }) }));
+		separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: Color.White.alpha(.6) }) }));
 	}
 
 	override accepts(node: VirtualNode): boolean {

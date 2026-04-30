@@ -37,7 +37,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		const element = shapes.get("virtualShape", () => new SVGSymbol(node.getShape()));
 		const circleCore = shapes.get("anchor:core", () => {
 			const shape = new Circle(3);
-			shape.updateStyle(new SVGStyle({ fill: colors.selected }));
+			shape.updateStyle(new SVGStyle({ fill: colors.primary }));
 			shape.hide();
 			return shape;
 		});
@@ -86,7 +86,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		}
 
 		if ("preview" === status) {
-			return colors.secondary;
+			return Color.White;
 		}
 
 		return Color.White;

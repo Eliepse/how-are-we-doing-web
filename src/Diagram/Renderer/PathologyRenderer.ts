@@ -29,7 +29,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const edge = shapes.get("edge", () => new Circle(8));
 		const core = shapes.get("core", () => {
 			const shape = new Circle(5);
-			shape.updateStyle(new SVGStyle({ fill: colors.selected }));
+			shape.updateStyle(new SVGStyle({ fill: colors.primary }));
 			shape.hide();
 			return shape;
 		});

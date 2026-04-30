@@ -9,13 +9,6 @@ import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer"
 import type { App } from "../../App";
 import type { ActiveStatus } from "../types";
 
-const shapeStyle = {
-	default: new SVGStyle({ fill: Color.White }),
-	selected: new SVGStyle({ fill: Color.Red }),
-	dimmed: new SVGStyle({ fill: colors.dimmedWhite }),
-	secondary: new SVGStyle({ fill: colors.secondary }),
-} as const;
-
 export class FacilityRenderer extends SVGNodeRenderer {
 	constructor(renderer: SVGRenderer, private app: App) {
 		super(renderer);

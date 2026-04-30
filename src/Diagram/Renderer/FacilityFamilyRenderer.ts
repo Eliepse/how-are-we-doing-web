@@ -6,6 +6,7 @@ import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { colors } from "../colors";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
+import { Color } from "../../Engine2D/ValueObject/Color";
 
 export class FacilityFamilyRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<FacilityFamily>): void {
@@ -25,7 +26,7 @@ export class FacilityFamilyRenderer extends SVGNodeRenderer {
 		}
 
 		if (opacity.hasChanged()) {
-			separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: colors.defaultWhite.alpha(opacity.get()) }) }));
+			separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: Color.White.alpha(opacity.get()) }) }));
 		}
 	}
 

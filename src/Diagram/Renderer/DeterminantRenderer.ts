@@ -89,6 +89,10 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 			return Color.White;
 		}
 
+		if ("n+1" === status) {
+			return colors.secondary;
+		}
+
 		return Color.White;
 	}
 

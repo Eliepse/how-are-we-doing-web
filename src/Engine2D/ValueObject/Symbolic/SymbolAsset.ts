@@ -3,8 +3,8 @@ import { Angle } from "../Angle";
 import { Vector } from "../Vector";
 
 export class SymbolAsset implements Symbolic {
-	private size: Vector;
-	private pivot: Vector;
+	private readonly size: Vector;
+	private readonly pivot: Vector;
 
 	constructor(private href: string, size: Vector, pivot?: Vector) {
 		this.pivot = pivot ?? size.div(2);

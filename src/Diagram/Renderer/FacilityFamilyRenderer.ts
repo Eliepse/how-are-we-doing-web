@@ -4,7 +4,6 @@ import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { FacilityFamily } from "../Items/Facility/FacilityFamily";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
-import { colors } from "../colors";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import { Color } from "../../Engine2D/ValueObject/Color";
 

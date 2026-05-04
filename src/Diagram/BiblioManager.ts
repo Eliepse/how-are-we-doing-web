@@ -12,7 +12,7 @@ export class BiblioManager {
 	private readonly facilitySources: SourceBox;
 	private readonly pathologySources: SourceBox;
 
-	constructor(container: Element, private readonly translator: Translator) {
+	constructor(_container: Element, private readonly translator: Translator) {
 		const root = document.querySelector<HTMLDivElement>("#biblioRoot");
 
 		if (null === root) {
@@ -116,7 +116,7 @@ class SourceBox {
 	private readonly root: HTMLDivElement;
 	private readonly sources = new Set<string>();
 
-	constructor(container: Element, private translator: Translator) {
+	constructor(container: Element, private _translator: Translator) {
 		this.root = document.createElement("div");
 		this.root.classList.add("biblio-links");
 		container.append(this.root);

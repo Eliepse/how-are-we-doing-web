@@ -4,10 +4,10 @@ import { Vector } from "../ValueObject/Vector";
 import { isInRange } from "../math";
 
 export class TorusCollider implements Collider {
-	private torusInnerRadiusSq: number;
-	private torusOuterRadiusSq: number;
-	private torusOffset: Angle = Angle.Zero;
-	private angleSize: Angle = Angle.PI2;
+	private readonly torusInnerRadiusSq: number;
+	private readonly torusOuterRadiusSq: number;
+	private readonly torusOffset: Angle = Angle.Zero;
+	private readonly angleSize: Angle = Angle.PI2;
 
 	constructor(
 		private _torusCenter: Vector,

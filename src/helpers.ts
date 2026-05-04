@@ -12,7 +12,7 @@ export function wait(delayMs: number): Promise<void> {
 
 export function pickRandom<T>(array: Array<T>): T {
 	const index = Math.floor(Math.random() * array.length);
-	return array[index];
+	return array[index] as T;
 }
 
 /**
@@ -21,7 +21,7 @@ export function pickRandom<T>(array: Array<T>): T {
  * @see https://bost.ocks.org/mike/shuffle/
  */
 export function shuffle<T>(array: Array<T>): Array<T> {
-	var m = array.length, t, i;
+	let m = array.length, t, i;
 
 	// While there remain elements to shuffle…
 	while (m) {
@@ -30,8 +30,8 @@ export function shuffle<T>(array: Array<T>): Array<T> {
 
 		// And swap it with the current element.
 		t = array[m];
-		array[m] = array[i];
-		array[i] = t;
+		array[m] = array[i] as T;
+		array[i] = t as T;
 	}
 
 	return array;

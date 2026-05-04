@@ -3,14 +3,13 @@ import { Color } from "../../Engine2D/ValueObject/Color";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
-import { colors } from "../colors";
 import { Facility } from "../Items/Facility/Facility";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { App } from "../../App";
 import type { ActiveStatus } from "../types";
 
 export class FacilityRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private app: App) {
+	constructor(renderer: SVGRenderer, private _app: App) {
 		super(renderer);
 	}
 

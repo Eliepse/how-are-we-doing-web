@@ -5,25 +5,22 @@ import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
 import { Pathology } from "../Items/Pathology/Pathology";
-import { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { App } from "../../App";
 import { Color } from "../../Engine2D/ValueObject/Color";
 import type { ActiveStatus } from "../types";
 
 export class PathologyRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private app: App) {
+	constructor(renderer: SVGRenderer, private _app: App) {
 		super(renderer);
 	}
 
 	override render(vnode: VirtualNode<Pathology>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const selectedNode = this.app.getDiagram().getSelectedNode();
 		const position = node.getGlobalPosition();
 		const opacity = node.getGlobalOpacity();
 		const status = node.status;
-		const isHovered = Engine.isHovering(node);
 		const isActive = "selected" === node.status.get() || "preview" === node.status.get();
 
 		const edge = shapes.get("edge", () => new Circle(8));

@@ -125,11 +125,11 @@ export class Node2D extends Observable {
 	 * but before any rendering.
 	 * Returned function is executed when unmounted.
 	 */
-	onMount(engine: Engine): void | (() => void) {
+	onMount(_engine: Engine): void | (() => void) {
 		//
 	}
 
-	onUnmount(engine: Engine): void {
+	onUnmount(_engine: Engine): void {
 		//
 	}
 

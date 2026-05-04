@@ -51,8 +51,6 @@ export class FloatingLabelManager {
 				offset = boxSize.mul(new Vector(0, -0.5)).add(new Vector(margin, 0));
 		}
 
-		const offsetAttr = offset.toAttributes();
-
 		const containerBBox = this.container.getBoundingClientRect();
 		const centerAsAbsolute = new Vector(containerBBox.width, containerBBox.height)
 			.div(2)

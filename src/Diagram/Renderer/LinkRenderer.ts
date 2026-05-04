@@ -45,9 +45,6 @@ export class LinkRenderer extends SVGNodeRenderer {
 			const destToCenter = center.sub(dest).normalize();
 			const sourceToCenter = center.sub(source).normalize();
 
-			const sourceAnchor = sourceToCenter.mul(factor);
-			const destAnchor = destToCenter.mul(factor);
-
 			path.updateMesh(
 				source,
 				source.add(sourceToCenter.mul(factor)), // Source anchor

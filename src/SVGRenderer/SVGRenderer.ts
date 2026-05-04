@@ -14,10 +14,9 @@ type NodeDOMStore = Map<string, Element>;
 export class SVGRenderer extends Renderer {
 	public readonly dom: SVGElement;
 	private _nodesStore = new WeakMap<Node2D, NodeDOMStore>();
-	private _stats = { lastFrameTime: 0 };
 	private _shapes = new Map<SymbolShape, Element>();
 	private references = new Map<string, [Referencable, SVGElement]>();
-	private defsDom: SVGDefsElement;
+	private readonly defsDom: SVGDefsElement;
 	private renderers = new Set<SVGNodeRenderer>();
 	private renderersByNode = new WeakMap<VirtualNode, SVGNodeRenderer[]>();
 	private layers = new Map<number, SVGLayer>();

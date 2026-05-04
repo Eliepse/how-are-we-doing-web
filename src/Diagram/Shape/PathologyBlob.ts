@@ -138,7 +138,7 @@ export class PathologyBlob extends SVGShape {
 		return mesh;
 	}
 
-	updateMesh(time: number, position: Vector): void {
+	updateMesh(_time: number, position: Vector): void {
 		if (undefined !== this.material.uniforms.time) {
 			this.material.uniforms.time.value += 0.05;
 		}

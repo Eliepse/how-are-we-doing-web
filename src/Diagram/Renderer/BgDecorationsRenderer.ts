@@ -1,13 +1,10 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
-import type { Engine } from "../../Engine2D/Engine";
 import { BgDecoration } from "../Decoration/BgDecoration";
 import { SVGImage } from "../Shape/SVGImage";
 
 export class BgDecorationsRenderer extends SVGNodeRenderer {
-	private shapes = { pathology: [] };
-
 	constructor(renderer: SVGRenderer) {
 		super(renderer);
 	}

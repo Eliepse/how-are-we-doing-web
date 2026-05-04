@@ -5,7 +5,6 @@ import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily"
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
-import { colors } from "../colors";
 import { Color } from "../../Engine2D/ValueObject/Color";
 
 export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {

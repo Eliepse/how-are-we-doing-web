@@ -42,9 +42,9 @@ export class App {
 	private loaded: boolean = false;
 	private mode: AppMode = "default";
 
-	public onContextChanged = (context: Context) => undefined;
-	public onSelectionChanged = (node: SelectableNode | undefined) => undefined;
-	public onPreviewChanged = (node: SelectableNode | undefined) => undefined;
+	public onContextChanged = (_context: Context) => undefined;
+	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
+	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
 
 	constructor(
 		rootDom: Element,

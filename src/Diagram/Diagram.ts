@@ -289,7 +289,7 @@ export class Diagram extends Node2D {
 			return;
 		}
 
-		if("determinants" === this.links && node instanceof Determinant) {
+		if ("determinants" === this.links && node instanceof Determinant) {
 			linkGradient.setCenter(node.getGlobalPosition().get());
 		}
 
@@ -467,13 +467,16 @@ export class Diagram extends Node2D {
 				const pathologies = this._determinants.get(id)?.associations?.pathologies;
 				pathologies?.forEach((patId) => pathologiesId.push(patId));
 			});
-		} else if (selectedNode instanceof Pathology) {
-			pathologiesId = [selectedNode.id];
-			determinantsId = selectedNode.associations.determinants;
-			selectedNode.associations.determinants.forEach((id) => {
-				const facilities = this._determinants.get(id)?.associations?.facilities;
-				facilities?.forEach((facId) => facilitiesId.push(facId));
-			});
+		} else {
+			// noinspection SuspiciousTypeOfGuard
+			if (selectedNode instanceof Pathology) {
+				pathologiesId = [selectedNode.id];
+				determinantsId = selectedNode.associations.determinants;
+				selectedNode.associations.determinants.forEach((id) => {
+					const facilities = this._determinants.get(id)?.associations?.facilities;
+					facilities?.forEach((facId) => facilitiesId.push(facId));
+				});
+			}
 		}
 
 		return {

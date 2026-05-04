@@ -1,13 +1,10 @@
 import { VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import { Color } from "../../Engine2D/ValueObject/Color";
-import { SVGStyle } from "../ValueObject/SVGStyle";
-import { Stroke } from "../ValueObject/Stroke";
 import { SVGNodeRenderer } from "./SVGNodeRenderer";
 
-const style = new SVGStyle({ fill: Color.White, stroke: new Stroke({ color: Color.Red }) });
+// const style = new SVGStyle({ fill: Color.White, stroke: new Stroke({ color: Color.Red }) });
 
 export class FallbackRenderer extends SVGNodeRenderer {
-	render(vnode: VirtualNode): void {
+	render(_vnode: VirtualNode): void {
 		if (false === this.renderer.debug) {
 			return;
 		}
@@ -24,7 +21,7 @@ export class FallbackRenderer extends SVGNodeRenderer {
 		// origin.updateMesh(position.get());
 	}
 
-	accepts(node: VirtualNode): boolean {
+	accepts(_node: VirtualNode): boolean {
 		return this.renderer.debug;
 	}
 }

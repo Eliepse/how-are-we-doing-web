@@ -9,7 +9,6 @@ import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
 import { Determinant, type Steps } from "../Items/Determinant/Determinant";
-import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import { ClipPath } from "../../Engine2D/ValueObject/Clip";
 import type { App } from "../../App";
@@ -26,7 +25,7 @@ const stepClipsOptimized: { [k in Steps]: ClipPath } = {
 };
 
 export class DeterminantRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private app: App) {
+	constructor(renderer: SVGRenderer, private _app: App) {
 		super(renderer);
 	}
 

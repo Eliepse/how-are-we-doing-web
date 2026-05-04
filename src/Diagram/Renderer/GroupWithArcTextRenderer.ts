@@ -4,7 +4,6 @@ import { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily";
 import { FacilityFamily } from "../Items/Facility/FacilityFamily";
 import type { Translator } from "../Translation/Translator";
-import type { Engine } from "../../Engine2D/Engine";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 
 export class GroupWithArcTextRenderer extends SVGNodeRenderer {

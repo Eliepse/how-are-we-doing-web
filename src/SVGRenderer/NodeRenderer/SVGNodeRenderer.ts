@@ -1,5 +1,4 @@
 import { type VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import type { Engine } from "../../Engine2D/Engine";
 import { ShapeCollection } from "../ValueObject/ShapeCollection";
 import type { SVGRenderer } from "../SVGRenderer";
 

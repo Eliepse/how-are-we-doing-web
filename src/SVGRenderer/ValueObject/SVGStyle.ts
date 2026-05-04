@@ -26,15 +26,21 @@ export class SVGStyle {
 			element.setAttribute("fill", "none");
 		}
 
-		if (this.stroke) {
+		if (this.stroke?.color instanceof Color) {
 			element.setAttribute("stroke", this.stroke.color.toHexAlpha());
-			element.setAttribute("stroke-width", this.stroke.width.toFixed(Config.Render.precision));
+		} else if (this.stroke?.color && "getRefID" in this.stroke.color) {
+			element.setAttribute("stroke", `url(#${this.stroke.color.getRefID()})`);
 		} else {
 			element.removeAttribute("stroke");
+		}
+
+		if (this.stroke?.width) {
+			element.setAttribute("stroke-width", this.stroke.width.toFixed(Config.Render.precision));
+		} else {
 			element.removeAttribute("stroke-width");
 		}
 
-		if(this.stroke?.strokeDash) {
+		if (this.stroke?.strokeDash) {
 			element.setAttribute("stroke-dasharray", this.stroke.strokeDash.join(" "));
 		} else {
 			element.removeAttribute("stroke-dasharray");

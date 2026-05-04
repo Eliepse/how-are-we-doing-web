@@ -1,14 +1,15 @@
 import type { Color } from "../../Engine2D/ValueObject/Color";
+import type { Referencable } from "../Referencable/Referencable";
 
 export class Stroke {
 	public width: number;
-	public color: Color;
+	public color: Color | Referencable;
 	public strokeDash?: number[];
 
 	constructor(
 		config: {
 			width?: number,
-			color: Color,
+			color: Color | Referencable,
 			strokeDash?: number[],
 		},
 	) {

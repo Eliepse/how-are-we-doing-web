@@ -25,6 +25,7 @@ import { Determinant } from "./Diagram/Items/Determinant/Determinant";
 import { LinkRenderer } from "./Diagram/Renderer/LinkRenderer";
 import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
 import { linkGradient } from "./Diagram/Shape/LinkGradient";
+import { linkArrow } from "./Diagram/Shape/LinkArrow";
 
 type AppMode = "focus:determinant" | "default";
 
@@ -67,6 +68,7 @@ export class App {
 
 		renderer.registerReferencable(blobPattern);
 		renderer.registerReferencable(linkGradient);
+		renderer.registerSymbolic(linkArrow);
 		renderer.addNodeRenderer(new FacilityRenderer(renderer, this));
 		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this));
 		renderer.addNodeRenderer(new PathologyRenderer(renderer, this));

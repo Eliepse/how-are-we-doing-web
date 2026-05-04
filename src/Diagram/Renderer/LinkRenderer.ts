@@ -35,22 +35,32 @@ export class LinkRenderer extends SVGNodeRenderer {
 			const tempNode = new Node2D();
 			tempNode.setPosition(determinantAnchorOffset);
 
-			tempNode.setParent(link.from);
-			const to = tempNode.getGlobalPosition().get();
+			tempNode.setParent(link.getSource());
+			const source = tempNode.getGlobalPosition().get();
 
-			tempNode.setParent(link.to);
-			const from = tempNode.getGlobalPosition().get();
+			tempNode.setParent(link.getDestination());
+			const dest = tempNode.getGlobalPosition().get();
 
-			const factor = to.sub(from).mag() * .58;
-			const fromAnchor = center.sub(from).normalize().mul(factor);
-			const toAnchor = center.sub(to).normalize().mul(factor);
+			const factor = dest.sub(source).mag() * .58;
+			const destToCenter = center.sub(dest).normalize();
+			const sourceToCenter = center.sub(source).normalize();
 
-			path.updateMesh(from, from.add(fromAnchor), to, to.add(toAnchor));
+			const sourceAnchor = sourceToCenter.mul(factor);
+			const destAnchor = destToCenter.mul(factor);
 
-			path.classList.remove("source", "target");
+			path.updateMesh(
+				source,
+				source.add(sourceToCenter.mul(factor)), // Source anchor
+				Dir.Bidirectional !== link.direction ? dest.add(destToCenter.mul(16)) : dest,
+				dest.add(destToCenter.mul(factor)), // Dest anchor
+			);
+
 			if (Dir.Bidirectional !== link.direction) {
-				path.classList.add(Dir.Target === link.direction ? "target" : "source");
+				path.classList.add("target");
+			} else {
+				path.classList.remove("target");
 			}
+
 			return;
 		}
 

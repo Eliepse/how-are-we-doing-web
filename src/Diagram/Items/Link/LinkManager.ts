@@ -2,7 +2,7 @@ import { Node2D } from "../../../Engine2D/Node/Node2D";
 import type { Pathology } from "../Pathology/Pathology";
 import type { Determinant } from "../Determinant/Determinant";
 import { Link } from "./Link";
-import { AssociationManager } from "../../AssociationManager";
+import { AssociationManager, Dir } from "../../AssociationManager";
 import type { Facility } from "../Facility/Facility";
 
 export class LinkManager extends Node2D {
@@ -67,16 +67,18 @@ export class LinkManager extends Node2D {
 
 	showInterDeterminantLinks(node: Determinant, preview = false) {
 		const associations = AssociationManager.getDirectAssociations(node).determinant;
+		console.debug(associations);
 
 		for (const [detId, direction] of associations.entries()) {
-			const link = this.links.get(`d${node.id}-d${detId}`);
+			const nodeKey = Dir.Source === direction ? `d${detId}-d${node.id}` : `d${node.id}-d${detId}`;
+			const link = this.links.get(nodeKey);
 
 			if (undefined === link) {
 				console.warn(`Unable to find link for asso: d${node.id}-d${detId}`);
 				continue;
 			}
 
-			link.direction = direction;
+			link.direction = Dir.Bidirectional === direction ? Dir.Bidirectional : Dir.Target;
 			link.status?.set(preview ? "preview" : "selected");
 			link.show();
 		}

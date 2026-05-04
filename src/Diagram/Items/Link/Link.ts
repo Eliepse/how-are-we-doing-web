@@ -44,4 +44,26 @@ export class Link extends Node2D {
 	hide() {
 		this._hidden.set(true);
 	}
+
+	/**
+	 * Return the source of the link according to the direction
+	 */
+	getSource() {
+		if (Dir.Source === this.direction) {
+			return this.to;
+		}
+
+		return this.from;
+	}
+
+	/**
+	 * Return the destination of the link according to the direction
+	 */
+	getDestination() {
+		if (Dir.Source === this.direction) {
+			return this.from;
+		}
+
+		return this.to;
+	}
 }

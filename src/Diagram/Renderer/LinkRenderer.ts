@@ -65,9 +65,8 @@ export class LinkRenderer extends SVGNodeRenderer {
 				path.classList.remove("target");
 			}
 
-
 			const arrow = shapes.get(`${link.key}-arrow`, () => new SVGSymbol(linkArrow, 60));
-			arrow.updateMesh(dest.add(destToCenter.mul(24)), link.getDestination().getGlobalRotation().get().add(Angle.HALF_PI));
+			arrow.updateMesh(dest.add(destToCenter.mul(20)), link.getDestination().getGlobalRotation().get().add(Angle.HALF_PI));
 			arrow.updateStyle(new SVGStyle({ fill: "selected" === link.status.get() ? colors.secondary : Color.White }));
 
 			return;

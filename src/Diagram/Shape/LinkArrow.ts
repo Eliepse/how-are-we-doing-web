@@ -3,7 +3,7 @@ import svg from "../../assets/link-arrow.svg?raw";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { SymbolShape } from "../../Engine2D/ValueObject/Symbolic/SymbolShape";
 
-const size = new Vector(16, 16);
+const size = new Vector(14, 14);
 const svgDom = document.createElement("div");
 svgDom.innerHTML = svg;
 

@@ -544,6 +544,7 @@ export class Diagram extends Node2D {
 
 			this.selectNode(this._selectedNode instanceof Determinant ? this._selectedNode : undefined);
 			this.previewNode(this._previewedNode instanceof Determinant ? this._previewedNode : undefined);
+			this.updateNodesHighlight();
 
 			return;
 		}

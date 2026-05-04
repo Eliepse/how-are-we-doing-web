@@ -22,12 +22,12 @@ export class LinkRenderer extends SVGNodeRenderer {
 		const center = this.renderer.size.div(2);
 		const path = shapes.get(link.key, () => {
 			const p = new LinkPath();
-			p.updateStyle("selected" === link.status.get() ? style.selected : style.preview);
+			p.updateStyle(this.getLinkStyle(link));
 			return p;
 		});
 
 		if (link.status.hasChanged()) {
-			path.updateStyle("selected" === link.status.get() ? style.selected : style.preview);
+			path.updateStyle(this.getLinkStyle(link));
 		}
 
 		if (link.from instanceof Determinant && link.to instanceof Determinant) {
@@ -68,6 +68,14 @@ export class LinkRenderer extends SVGNodeRenderer {
 
 			path.updateMesh(from.get(), fromAnchor, to.get(), toAnchor);
 		}
+	}
+
+	private getLinkStyle(link: Link) {
+		if (link.from instanceof Determinant && link.to instanceof Determinant) {
+			return "selected" === link.status.get() ? style.selectedDeterminantMode : style.preview;
+		}
+
+		return "selected" === link.status.get() ? style.selected : style.preview;
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

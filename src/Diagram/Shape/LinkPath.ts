@@ -4,9 +4,11 @@ import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { colors } from "../colors";
 import type { Vector } from "../../Engine2D/ValueObject/Vector";
 import { Color } from "../../Engine2D/ValueObject/Color";
+import { linkGradient } from "./LinkGradient";
 
 export const style = {
 	selected: new SVGStyle({ stroke: new Stroke({ width: 2, color: colors.primary.alpha(0.6) }) }),
+	selectedDeterminantMode: new SVGStyle({ stroke: new Stroke({ width: 2, color: linkGradient }) }),
 	preview: new SVGStyle({ stroke: new Stroke({ width: 2, color: Color.White.alpha(0.6) }) }),
 }
 

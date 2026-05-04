@@ -68,6 +68,10 @@ path.target {
     animation-iteration-count: infinite;
 }
 
+path.target {
+    animation-direction: reverse;
+}
+
 @keyframes moveLinkDash {
     from {
         stroke-dashoffset: 0;

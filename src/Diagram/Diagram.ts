@@ -24,6 +24,7 @@ import { easeOutCubic, interpolateOpacity } from "../Engine2D/Time/interpolation
 import { Transition } from "../Engine2D/Time/Transition";
 import { LinkManager } from "./Items/Link/LinkManager";
 import { AssociationManager, type AssoNodeType } from "./AssociationManager";
+import { linkGradient } from "./Shape/LinkGradient";
 
 export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
@@ -286,6 +287,10 @@ export class Diagram extends Node2D {
 
 		if ("determinants" === this.links && !(node instanceof Determinant)) {
 			return;
+		}
+
+		if("determinants" === this.links && node instanceof Determinant) {
+			linkGradient.setCenter(node.getGlobalPosition().get());
 		}
 
 		// Stop pathology movement

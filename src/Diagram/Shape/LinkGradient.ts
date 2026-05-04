@@ -4,9 +4,9 @@ import { colors } from "../colors";
 
 export const linkGradient = new Gradient(
 	"gradient-link",
-	"linear",
 	{
-		0: Color.White.alpha(.6),
-		50: colors.primary.alpha(.8),
+		60: colors.primary,
+		70: colors.secondary,
 	},
+	{ type: "radial", gradientUnits: "userSpaceOnUse" },
 );

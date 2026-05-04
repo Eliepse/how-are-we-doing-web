@@ -22,7 +22,7 @@ export class SVGSymbol extends SVGShape {
 
 		this.dom.setAttribute("x", domPosition.x);
 		this.dom.setAttribute("y", domPosition.y);
-		this.dom.setAttribute("transform", `rotate(${degrees}, ${position.toString(true)})`);
+		this.dom.setAttribute("transform", `rotate(${degrees} ${position.toString(true)})`);
 
 	}
 

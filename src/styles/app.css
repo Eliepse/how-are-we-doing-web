@@ -14,7 +14,8 @@
 }
 
 #navigation {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
     align-items: center;
     grid-column: span 2;
     grid-row: 1 / 2;
@@ -299,11 +300,11 @@ path.target {
 }
 
 #modes {
-    margin: auto;
     padding: 0;
     display: flex;
     gap: .5rem;
     list-style: none;
+    justify-self: center;
 }
 
 #modes li {

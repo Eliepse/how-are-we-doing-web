@@ -330,7 +330,7 @@ export class Diagram extends Node2D {
 			}
 
 			if (selectionAssoc?.determinant?.has(determinant.id)) {
-				determinant.setStatus(this._selectedNode instanceof Determinant ? "preview" : "selected");
+				determinant.setStatus(this._selectedNode instanceof Determinant ? "n+1" : "selected");
 				continue;
 			}
 
@@ -345,7 +345,7 @@ export class Diagram extends Node2D {
 			}
 
 			if (previewAssoc?.determinant?.has(determinant.id)) {
-				determinant.setStatus("preview");
+				determinant.setStatus("n+1");
 				continue;
 			}
 
@@ -544,6 +544,7 @@ export class Diagram extends Node2D {
 
 			this.selectNode(this._selectedNode instanceof Determinant ? this._selectedNode : undefined);
 			this.previewNode(this._previewedNode instanceof Determinant ? this._previewedNode : undefined);
+			this.updateNodesHighlight();
 
 			return;
 		}

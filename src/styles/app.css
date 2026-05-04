@@ -300,6 +300,7 @@ path.target {
 }
 
 #modes {
+    margin: 0;
     padding: 0;
     display: flex;
     gap: .5rem;

@@ -61,7 +61,7 @@
 
 path.source,
 path.target {
-    stroke-dasharray: 10 5;
+    stroke-dasharray: 6 3;
     /*animation-name: moveLinkDash;*/
     animation-duration: 2s;
     animation-direction: normal;

@@ -33,12 +33,13 @@ export class Pathology extends Node2D implements WithPointerEvents {
 
 	override onProcess(deltaTime: number) {
 		super.onProcess(deltaTime);
-		this.time.set((_, current) => current + deltaTime);
+		// this.time.set((_, current) => current + deltaTime);
 	}
 
 	getRadius(): number {
-		const factor = (Math.cos(this.time.get() / 3) + 1) / 2;
-		return interpolate(Pathology.minRadius, Pathology.maxRadius, factor);
+		// const factor = (Math.cos(this.time.get() / 3) + 1) / 2;
+		// return interpolate(Pathology.minRadius, Pathology.maxRadius, factor);
+		return 6;
 	}
 
 	setStatus(status: ActiveStatus | false): void {

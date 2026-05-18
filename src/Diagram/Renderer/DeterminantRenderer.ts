@@ -32,7 +32,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Determinant>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
-		const circle = shapes.get("anchor", () => new Circle(5));
+		const circle = shapes.get("anchor", () => new Circle(3));
 		const element = shapes.get("virtualShape", () => new SVGSymbol(node.getShape()));
 		const circleCore = shapes.get("anchor:core", () => {
 			const shape = new Circle(3);

@@ -90,7 +90,14 @@ export class LinkManager extends Node2D {
 		for (const pathologyId of associations.keys()) {
 			const link = this.links.get(`d${node.id}-p${pathologyId}`);
 			link?.show();
-			link?.status?.set(preview ? "preview" : "selected");
+
+			if("n+1" === node.status.get()) {
+				link?.status?.set("n+1");
+			} else if(preview) {
+				link?.status?.set("preview");
+			}else {
+				link?.status?.set("selected");
+			}
 		}
 	}
 

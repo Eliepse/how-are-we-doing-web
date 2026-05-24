@@ -99,6 +99,10 @@ export class LinkRenderer extends SVGNodeRenderer {
 			return "selected" === link.status.get() ? style.selectedDeterminantMode : style.previewDeterminantMode;
 		}
 
+		if("n+1" === link.status.get()) {
+			return style.secondary;
+		}
+
 		return "selected" === link.status.get() ? style.selected : style.preview;
 	}
 

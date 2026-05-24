@@ -3,7 +3,7 @@ import { Attribute } from "../../../Engine2D/Core/Attribute";
 import { Dir, type Direction } from "../../AssociationManager";
 import { Pathology } from "../Pathology/Pathology";
 
-type Status = "selected" | "preview";
+type Status = "selected" | "n+1" | "preview";
 
 export class Link extends Node2D {
 	private _hidden = new Attribute(false);

@@ -162,6 +162,7 @@ export class App {
 				Engine.getRenderer().localPointToWindow(nodePosition),
 				hSize.x > nodePosition.x ? "left" : "right",
 				16,
+				"n+1" === node.status.get() ? "secondary" : "white",
 			);
 		});
 

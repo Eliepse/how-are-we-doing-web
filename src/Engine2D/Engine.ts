@@ -282,8 +282,8 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		return Engine._instance._hoveredNodes.has(node);
 	}
 
-	static getHovering(): Array<Node2D & WithPointerEvents> {
-		return Array.from(Engine._instance._hoveredNodes.values());
+	static getHovering() {
+		return Engine._instance._hoveredNodes;
 	}
 
 	static nodeByUname<T extends Node2D>(uname: string): T | undefined {

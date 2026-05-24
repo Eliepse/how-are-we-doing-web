@@ -193,7 +193,7 @@ export class App {
 		});
 
 		this.diagram.addListener("mouseleave", () => {
-			if (0 !== Engine.getHovering().length) {
+			if (0 !== Engine.getHovering().size) {
 				return;
 			}
 

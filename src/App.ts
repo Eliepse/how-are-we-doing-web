@@ -75,7 +75,7 @@ export class App {
 		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.translator));
 		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
 		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
-		renderer.addNodeRenderer(new LinkRenderer(renderer));
+		renderer.addNodeRenderer(new LinkRenderer(renderer, this));
 		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer));
 		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer));
 		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer));

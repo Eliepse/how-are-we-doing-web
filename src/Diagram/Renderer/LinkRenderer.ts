@@ -13,11 +13,18 @@ import { linkArrow } from "../Shape/LinkArrow";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { colors } from "../colors";
 import { Color } from "../../Engine2D/ValueObject/Color";
+import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
+import type { App } from "../../App";
 
 export class LinkRenderer extends SVGNodeRenderer {
+	constructor(renderer: SVGRenderer, private _app: App) {
+		super(renderer);
+	}
+
 	override render(vnode: VirtualNode): void {
 		const link = vnode.node as Link;
 		const shapes = this.getShapes(vnode);
+		const selected = this._app.getDiagram().getSelectedNode();
 
 		if (link.hidden) {
 			shapes.remove(link.key);
@@ -37,6 +44,8 @@ export class LinkRenderer extends SVGNodeRenderer {
 		}
 
 		if (link.from instanceof Determinant && link.to instanceof Determinant) {
+			const destination = link.getDestination();
+
 			// Create a temporary node to compute the position
 			const tempNode = new Node2D();
 			tempNode.setPosition(determinantAnchorOffset);
@@ -44,7 +53,7 @@ export class LinkRenderer extends SVGNodeRenderer {
 			tempNode.setParent(link.getSource());
 			const source = tempNode.getGlobalPosition().get();
 
-			tempNode.setParent(link.getDestination());
+			tempNode.setParent(destination);
 			const dest = tempNode.getGlobalPosition().get();
 
 			const factor = dest.sub(source).mag() * .54;
@@ -59,10 +68,11 @@ export class LinkRenderer extends SVGNodeRenderer {
 				offsetDest.add(destToCenter.mul(factor)), // Dest anchor
 			);
 
-			if(Dir.Bidirectional !== link.direction) {
+			if (Dir.Bidirectional !== link.direction) {
 				const arrow = shapes.get(`${link.key}-arrow`, () => new SVGSymbol(linkArrow, 60));
-				arrow.updateMesh(dest.add(destToCenter.mul(20)), link.getDestination().getGlobalRotation().get().add(Angle.HALF_PI));
-				arrow.updateStyle(new SVGStyle({ fill: "selected" === link.status.get() ? colors.secondary : Color.White }));
+				arrow.updateMesh(dest.add(destToCenter.mul(20)), destination.getGlobalRotation().get().add(Angle.HALF_PI));
+				const selectedColor = destination === selected ? colors.primary : colors.secondary;
+				arrow.updateStyle(new SVGStyle({ fill: "selected" === link.status.get() ? selectedColor : Color.White }));
 			}
 
 			return;

@@ -1,3 +1,5 @@
+export type ActiveStatus = "selected" | "hover" | "n+1" | "preview" | "dimmed";
+
 export type DeterminantKey =
 	"social cohesion and involvement"
 	| "social mixity, equity and solidarity"

@@ -16,6 +16,10 @@ export class ShapeCollection {
 		return shape;
 	}
 
+	has(key: string): boolean {
+		return this.shapes.has(key);
+	}
+
 	remove(key: string): void {
 		const shape = this.shapes.get(key);
 

@@ -18,6 +18,7 @@ export class FloatingLabelManager {
 		position: Vector,
 		placement: "top" | "right" | "bottom" | "left" = "top",
 		margin = 8,
+		color: "white" | "secondary" = "white",
 	): void {
 		let dom = this._labels.get(key);
 		let dynText = this._labelsTranslations.get(key);
@@ -51,8 +52,6 @@ export class FloatingLabelManager {
 				offset = boxSize.mul(new Vector(0, -0.5)).add(new Vector(margin, 0));
 		}
 
-		const offsetAttr = offset.toAttributes();
-
 		const containerBBox = this.container.getBoundingClientRect();
 		const centerAsAbsolute = new Vector(containerBBox.width, containerBBox.height)
 			.div(2)
@@ -67,6 +66,9 @@ export class FloatingLabelManager {
 		dom.style.left = "50%";
 		dom.style.top = "50%";
 		dom.style.transform = `translate(${relativeToCenter.x}px, ${relativeToCenter.y}px)`;
+
+		dom.classList.remove("white", "secondary");
+		dom.classList.add(color);
 	}
 
 	hide(key: string): void {

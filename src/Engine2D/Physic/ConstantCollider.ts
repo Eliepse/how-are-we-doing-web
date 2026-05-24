@@ -7,7 +7,7 @@ export class ConstantCollider implements Collider {
 
 	constructor(private _value: boolean) {}
 
-	isInside(point: Vector): boolean {
+	isInside(_point: Vector): boolean {
 		return this._value;
 	}
 }

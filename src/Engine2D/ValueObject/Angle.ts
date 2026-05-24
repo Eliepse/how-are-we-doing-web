@@ -9,6 +9,7 @@ export class Angle implements Parameter {
 	static Zero = new Angle(0);
 	static PI = new Angle(Math.PI);
 	static PI2 = new Angle(PI2);
+	static HALF_PI = new Angle(-Math.PI);
 
 	private readonly radian: number;
 
@@ -75,10 +76,18 @@ export class Angle implements Parameter {
 	}
 
 	isEqual(parameter: Parameter): boolean {
-		return parameter instanceof Angle && parameter.rad === this.rad;
+		return parameter instanceof Angle && Angle.isEqual(this, parameter);
 	}
 
 	static fromDeg(degrees: number) {
 		return new Angle(degToRadRatio * (degrees % 360));
+	}
+
+	static isEqual(a: Angle, b: Angle) {
+		return a.rad === b.rad;
+	}
+
+	static isDiff(a: Angle, b: Angle) {
+		return !Angle.isEqual(a, b);
 	}
 }

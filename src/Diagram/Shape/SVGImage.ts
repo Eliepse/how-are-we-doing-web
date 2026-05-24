@@ -5,7 +5,7 @@ import type { Angle } from "../../Engine2D/ValueObject/Angle";
 import { Config } from "../../config";
 
 export class SVGImage extends SVGShape {
-	private dom: SVGImageElement;
+	private readonly dom: SVGImageElement;
 
 	constructor(private readonly symbol: SymbolAsset, layer?: number) {
 		super(layer ?? 1);

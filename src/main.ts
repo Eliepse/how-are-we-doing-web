@@ -43,6 +43,8 @@ async function main(withLoader = true) {
 	}
 
 	const app = new App(appDom, diagramDom);
+	// @ts-ignore
+	window.app = app;
 	const translator = app.getTranslator();
 
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));
@@ -96,6 +98,32 @@ async function main(withLoader = true) {
 	setupBibliography(app);
 	setupCredits();
 	setupContextControls(app);
+
+	// Toggle the interface visibility
+	document.addEventListener("keydown", (e) => {
+		const nav = document.querySelector<HTMLElement>("#navigation");
+		const legend = document.querySelector<HTMLElement>(".legend");
+
+		if ("i" === e.key && nav && legend) {
+			nav.style.display = nav.style.display.trim() ? "" : "none";
+			legend.style.display = legend.style.display.trim() ? "" : "none";
+			return;
+		}
+
+		if ("d" === e.key) {
+			app.setDebug(!app.debug);
+			return;
+		}
+	});
+
+	document.querySelectorAll("[data-action='mode:change']").forEach((el) => {
+		el.addEventListener("click", (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+			// @ts-ignore
+			app.changeMode(el.dataset.mode);
+		});
+	});
 
 	loaderDom.root && (loaderDom.root.style.opacity = "0");
 	await wait(1000);
@@ -175,8 +203,6 @@ function setupCredits(): void {
 }
 
 function setupContextControls(app: App): void {
-	const translator = app.getTranslator();
-
 	document.addEventListener("keydown", (e) => {
 		if ("ArrowLeft" === e.key) {
 			app.previousContext();

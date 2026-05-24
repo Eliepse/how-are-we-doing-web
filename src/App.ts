@@ -14,7 +14,6 @@ import { PathologyRenderer } from "./Diagram/Renderer/PathologyRenderer";
 import { GroupWithArcTextRenderer } from "./Diagram/Renderer/GroupWithArcTextRenderer";
 import { FacilityFamilyRenderer } from "./Diagram/Renderer/FacilityFamilyRenderer";
 import { DeterminantSubFamilyRenderer } from "./Diagram/Renderer/DeterminantSubFamilyRenderer";
-import { PathologyLinkRenderer } from "./Diagram/Renderer/PathologyLinksRenderer";
 import { PathologyFamilyRenderer } from "./Diagram/Renderer/PathologyFamilyRenderer";
 import { DiagramBackgroundRenderer } from "./Diagram/Renderer/DiagramBackgroundRenderer";
 import { FallbackRenderer } from "./SVGRenderer/NodeRenderer/FallbackRenderer";
@@ -22,11 +21,18 @@ import type { NodeEvent } from "./Engine2D/Core/NodeEvent";
 import { BiblioManager } from "./Diagram/BiblioManager";
 import { BgDecorationsRenderer } from "./Diagram/Renderer/BgDecorationsRenderer";
 import type { DeterminantKey } from "./Diagram/types";
+import { Determinant } from "./Diagram/Items/Determinant/Determinant";
+import { LinkRenderer } from "./Diagram/Renderer/LinkRenderer";
+import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
+import { linkGradient } from "./Diagram/Shape/LinkGradient";
+import { linkArrow } from "./Diagram/Shape/LinkArrow";
+
+type AppMode = "focus:determinant" | "default";
 
 export class App {
 	private readonly translator: Translator;
 	private readonly labelManager: FloatingLabelManager;
-	private readonly engine: Engine<SVGRenderer>;
+	private profiling?: ProfilerDisplay = undefined;
 
 	private contexts: Context[] = [];
 	private currentContext?: Context;
@@ -35,9 +41,11 @@ export class App {
 	private diagram?: Diagram;
 	private biblio: BiblioManager;
 	private loaded: boolean = false;
+	private mode: AppMode = "default";
 
-	public onContextChanged = (context: Context) => undefined;
-	public onSelectionChanged = (node: SelectableNode | undefined) => undefined;
+	public onContextChanged = (_context: Context) => undefined;
+	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
+	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
 
 	constructor(
 		rootDom: Element,
@@ -56,20 +64,22 @@ export class App {
 		this.biblio = new BiblioManager(rootDom, this.translator);
 
 		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1100, 1100), Config.Render.debug);
-		this.engine = new Engine(new Node2D(), renderer);
+		Engine.init(new Node2D(), renderer);
 
 		renderer.registerReferencable(blobPattern);
-		renderer.addNodeRenderer(new FacilityRenderer(renderer, this.engine, this));
-		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this.engine, this));
-		renderer.addNodeRenderer(new PathologyRenderer(renderer, this.engine, this));
-		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.engine, this.translator));
-		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new PathologyLinkRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer, this.engine));
-		renderer.addNodeRenderer(new FallbackRenderer(renderer, this.engine));
+		renderer.registerReferencable(linkGradient);
+		renderer.registerSymbolic(linkArrow);
+		renderer.addNodeRenderer(new FacilityRenderer(renderer, this));
+		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this));
+		renderer.addNodeRenderer(new PathologyRenderer(renderer, this));
+		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.translator));
+		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
+		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
+		renderer.addNodeRenderer(new LinkRenderer(renderer, this));
+		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer));
+		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer));
+		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer));
+		renderer.addNodeRenderer(new FallbackRenderer(renderer));
 	}
 
 	getDiagram(): Diagram {
@@ -113,16 +123,25 @@ export class App {
 			await this.load();
 		}
 
-		this.diagram = new Diagram(this.database.pathologies, this.database.facilities, this.database.determinants);
+		this.diagram = new Diagram(
+			this.database.pathologies,
+			this.database.facilities,
+			this.database.determinants,
+			this.database.associations,
+		);
 
 		this.changeContext(this.contexts[0]);
 
 		// Center the diagram
-		this.engine.root.setPosition(this.engine.getRenderer().size.div(2));
-		this.engine.root.addChildren(this.diagram);
+		Engine.root.setPosition(Engine.getRenderer<SVGRenderer>().size.div(2));
+		Engine.root.addChildren(this.diagram);
 
 		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
+
+			if ("focus:determinant" === this.mode && !(node instanceof Determinant)) {
+				return;
+			}
 
 			if (undefined === node) {
 				this.labelManager.hide("selected");
@@ -134,19 +153,20 @@ export class App {
 				return;
 			}
 
-			const nodePosition = node.getGlobalPosition();
-			const hSize = this.engine.getRenderer().size.div(2);
+			const nodePosition = node.getGlobalPosition().get();
+			const hSize = Engine.getRenderer<SVGRenderer>().size.div(2);
 
 			this.labelManager.show(
 				"hover",
 				node.label,
-				this.engine.getRenderer().localPointToWindow(nodePosition),
+				Engine.getRenderer().localPointToWindow(nodePosition),
 				hSize.x > nodePosition.x ? "left" : "right",
 				16,
+				"n+1" === node.status.get() ? "secondary" : "white",
 			);
 		});
 
-		this.engine.root.addListener("click", () => {
+		Engine.root.addListener("click", () => {
 			this.diagram?.selectNode(undefined);
 		});
 
@@ -160,21 +180,21 @@ export class App {
 				return;
 			}
 
-			const nodePosition = node.getGlobalPosition();
-			const hSize = this.engine.getRenderer().size.div(2);
+			const nodePosition = node.getGlobalPosition().get();
+			const hSize = Engine.getRenderer<SVGRenderer>().size.div(2);
 
 			this.labelManager.hide("hover");
 			this.labelManager.show(
 				"selected",
 				node.label,
-				this.engine.getRenderer().localPointToWindow(nodePosition),
+				Engine.getRenderer().localPointToWindow(nodePosition),
 				hSize.x > nodePosition.x ? "left" : "right",
 				16,
 			);
 		});
 
 		this.diagram.addListener("mouseleave", () => {
-			if (0 !== this.engine.getHovering().length) {
+			if (0 !== Engine.getHovering().size) {
 				return;
 			}
 
@@ -204,8 +224,38 @@ export class App {
 		});
 
 		// Start the engine
-		this.engine.render();
-		this.engine.start();
+		Engine.start();
+	}
+
+	get debug() {
+		return Engine.debug;
+	}
+
+	setDebug(value: boolean) {
+		Engine.setDebug(value);
+
+		if (false === value) {
+			Engine.onTicked = () => undefined;
+			this.profiling?.hide();
+			return;
+		}
+
+		if (!this.profiling) {
+			const profilingDom = document.createElement("div");
+			profilingDom.id = "profiling";
+			document.body.append(profilingDom);
+			this.profiling = new ProfilerDisplay(profilingDom, 5, 12);
+		}
+
+		Engine.onTicked = (_engin, profile) => {
+			this.profiling?.stageStatValue("fps", profile.fps);
+			this.profiling?.stageStatValue("frameTime", profile.frameTime);
+			this.profiling?.stageStatValue("nodesRendered", profile.nodesRendered);
+			this.profiling?.stageStatValue("nodesMounted", profile.nodesMounted);
+			this.profiling?.stageStatValue("nodesUnmounted", profile.nodesUnmounted);
+			this.profiling?.stageStatValue("transitionsCount", profile.transitionsCount);
+		};
+		this.profiling.show();
 	}
 
 	previousContext(): void {
@@ -249,5 +299,24 @@ export class App {
 
 	hideBibliography() {
 		this.biblio.close();
+	}
+
+	changeMode(mode: AppMode) {
+		if (mode === this.mode || !this.diagram) {
+			return;
+		}
+
+		this.mode = mode;
+
+		if ("focus:determinant" === mode) {
+			this.diagram.setLinksMode("determinants");
+			return;
+		}
+
+		this.diagram.setLinksMode("pathologies");
+	}
+
+	getMode(): AppMode {
+		return this.mode;
 	}
 }

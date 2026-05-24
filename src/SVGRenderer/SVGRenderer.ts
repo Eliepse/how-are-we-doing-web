@@ -14,10 +14,9 @@ type NodeDOMStore = Map<string, Element>;
 export class SVGRenderer extends Renderer {
 	public readonly dom: SVGElement;
 	private _nodesStore = new WeakMap<Node2D, NodeDOMStore>();
-	private _stats = { lastFrameTime: 0 };
 	private _shapes = new Map<SymbolShape, Element>();
 	private references = new Map<string, [Referencable, SVGElement]>();
-	private defsDom: SVGDefsElement;
+	private readonly defsDom: SVGDefsElement;
 	private renderers = new Set<SVGNodeRenderer>();
 	private renderersByNode = new WeakMap<VirtualNode, SVGNodeRenderer[]>();
 	private layers = new Map<number, SVGLayer>();
@@ -26,10 +25,10 @@ export class SVGRenderer extends Renderer {
 		public readonly key: string,
 		private _container: Element,
 		public readonly size: Vector,
-		private debug: boolean = false,
+		debug: boolean = false,
 	) {
 		super();
-
+		this._debug = debug;
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 		const w = this.size.x.toFixed();
 		const h = this.size.y.toFixed();
@@ -75,7 +74,7 @@ export class SVGRenderer extends Renderer {
 		this._nodesStore.get(vnode.node)?.forEach((element: Element) => element.remove());
 		const renderers = this.renderersByNode.get(vnode);
 
-		if(undefined === renderers) {
+		if (undefined === renderers) {
 			return;
 		}
 
@@ -145,9 +144,5 @@ export class SVGRenderer extends Renderer {
 		const bbox = this.dom.getBoundingClientRect();
 		const scaleFactor = new Vector(this.size.x / bbox.width, this.size.y / bbox.height);
 		return new Vector((point.x - bbox.x) * scaleFactor.x, (point.y - bbox.y) * scaleFactor.y);
-	}
-
-	isDebug(): boolean {
-		return this.debug;
 	}
 }

@@ -2,7 +2,7 @@ import type { Parameter } from "./Parameter";
 import { Vector } from "./Vector";
 
 export class Size implements Parameter {
-  private value: Vector;
+  private readonly value: Vector;
 
   constructor(width: number, height: number) {
     this.value = new Vector(width, height);

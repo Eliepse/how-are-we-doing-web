@@ -1,12 +1,11 @@
 import { type VirtualNode } from "../../Engine2D/Core/VirtualNode";
-import type { Engine } from "../../Engine2D/Engine";
 import { ShapeCollection } from "../ValueObject/ShapeCollection";
 import type { SVGRenderer } from "../SVGRenderer";
 
 export abstract class SVGNodeRenderer {
 	private shapesByVNode = new WeakMap<VirtualNode, ShapeCollection>();
 
-	constructor(protected renderer: SVGRenderer, protected engine: Engine) {
+	constructor(protected renderer: SVGRenderer) {
 	}
 
 	getShapes(vnode: VirtualNode): ShapeCollection {

@@ -4,8 +4,9 @@ import { SVGShape } from "../../SVGRenderer/Shape/SVGShape";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { blobPattern } from "./BlobPattern";
+import type { Opacity } from "../../Engine2D/ValueObject/Opacity";
 
-const style = new SVGStyle({ fill: blobPattern });
+const defaultStyleCfg = { fill: blobPattern };
 
 export class DiagramBlobBackground extends SVGShape {
 	private readonly dom: SVGPathElement;
@@ -21,7 +22,7 @@ export class DiagramBlobBackground extends SVGShape {
 		super(-2);
 		this.dom = document.createElementNS("http://www.w3.org/2000/svg", "path");
 		this.noise = new Noise(Math.random() * 4321);
-		this.updateStyle(style);
+		this.updateStyle(new SVGStyle(defaultStyleCfg));
 	}
 
 	updateMesh(center: Vector, time: number): void {
@@ -46,6 +47,10 @@ export class DiagramBlobBackground extends SVGShape {
 
 	updateStyle(style: SVGStyle): void {
 		style.updateElement(this.dom);
+	}
+
+	updateOpacity(opacity: Opacity) {
+		this.updateStyle(new SVGStyle({ ...defaultStyleCfg, opacity }));
 	}
 
 	override mount(container: Element): void {

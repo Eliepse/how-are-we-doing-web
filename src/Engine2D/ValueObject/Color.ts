@@ -1,3 +1,5 @@
+import { Opacity } from "./Opacity";
+
 export class Color {
 	static Black = new Color(0, 0, 0);
 	static White = new Color(255, 255, 255);
@@ -17,8 +19,8 @@ export class Color {
 		this.a = Math.min(1, Math.max(0, alpha));
 	}
 
-	alpha(value: number): Color {
-		return new Color(this.r, this.g, this.b, value);
+	alpha(value: number | Opacity): Color {
+		return new Color(this.r, this.g, this.b, value instanceof Opacity ? value.ratio : value);
 	}
 
 	toCSS(): string {

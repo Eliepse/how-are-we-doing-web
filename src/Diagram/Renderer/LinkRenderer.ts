@@ -59,12 +59,6 @@ export class LinkRenderer extends SVGNodeRenderer {
 				offsetDest.add(destToCenter.mul(factor)), // Dest anchor
 			);
 
-			if (Dir.Bidirectional !== link.direction) {
-				path.classList.add("target");
-			} else {
-				path.classList.remove("target");
-			}
-
 			if(Dir.Bidirectional !== link.direction) {
 				const arrow = shapes.get(`${link.key}-arrow`, () => new SVGSymbol(linkArrow, 60));
 				arrow.updateMesh(dest.add(destToCenter.mul(20)), link.getDestination().getGlobalRotation().get().add(Angle.HALF_PI));

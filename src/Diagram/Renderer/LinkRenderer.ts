@@ -96,7 +96,7 @@ export class LinkRenderer extends SVGNodeRenderer {
 
 	private getLinkStyle(link: Link) {
 		if (link.from instanceof Determinant && link.to instanceof Determinant) {
-			return "selected" === link.status.get() ? style.selectedDeterminantMode : style.preview;
+			return "selected" === link.status.get() ? style.selectedDeterminantMode : style.previewDeterminantMode;
 		}
 
 		return "selected" === link.status.get() ? style.selected : style.preview;

@@ -76,11 +76,25 @@ export class Diagram extends Node2D {
 		});
 
 		this.addListener("mouseenter", (e: NodeEvent) => {
-			if (e.target instanceof Determinant) {
-				this.previewNode(e.target);
+			const target = e.target;
+
+			if (target instanceof Determinant) {
+				this.previewNode(target);
+				return;
+			}
+
+			if ("determinants" !== this.links && (target instanceof Pathology || target instanceof Facility)) {
+				this.previewNode(target);
+				return;
 			}
 		});
-		this.addListener("mouseleave", (e: NodeEvent) => e.target instanceof Determinant && this.previewNode(undefined));
+		this.addListener("mouseleave", (e: NodeEvent) => {
+			const target = e.target;
+
+			if (target instanceof Determinant || target instanceof Pathology || target instanceof Facility) {
+				this.previewNode(undefined);
+			}
+		});
 
 		const facilities = new FacilitiesRing(this.buildFacilityGroups(facilitiesData));
 		facilities.setRotation(Angle.fromDeg(156));
@@ -309,11 +323,9 @@ export class Diagram extends Node2D {
 			return;
 		}
 
-		if (undefined === node || node instanceof Determinant) {
-			this._previewedNode = node;
-			this.updateNodesHighlight();
-			this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
-		}
+		this._previewedNode = node;
+		this.updateNodesHighlight();
+		this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
 	}
 
 	private updateNodesHighlight() {
@@ -322,7 +334,7 @@ export class Diagram extends Node2D {
 		const determinants = Engine.nodesByTag<Determinant>("determinant");
 		const facilities = Engine.nodesByTag<Facility>("facility");
 		const pathologies = Engine.nodesByTag<Pathology>("pathology");
-		const previewAssoc = this._previewedNode ? AssociationManager.getAllAssociations(this._previewedNode) : null;
+		const previewAssoc = this._previewedNode instanceof Determinant ? AssociationManager.getAllAssociations(this._previewedNode) : null;
 		const selectionAssoc = this._selectedNode ? AssociationManager.getAllAssociations(this._selectedNode) : null;
 		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
 
@@ -354,7 +366,7 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			determinant.setStatus(hasActiveNode ? "dimmed" : false);
+			determinant.setStatus(hasActiveNode && this._previewedNode instanceof Determinant ? "dimmed" : false);
 		}
 
 		for (const facility of facilities) {
@@ -373,7 +385,7 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			facility.setStatus(hasActiveNode ? "dimmed" : false);
+			facility.setStatus(hasActiveNode && this._previewedNode instanceof Facility ? "dimmed" : false);
 		}
 
 		for (const pathology of pathologies) {
@@ -392,7 +404,7 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			pathology.setStatus(hasActiveNode ? "dimmed" : false);
+			pathology.setStatus(hasActiveNode && this._previewedNode instanceof Pathology ? "dimmed" : false);
 		}
 
 		// Update decoration

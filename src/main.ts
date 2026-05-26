@@ -42,7 +42,8 @@ async function main(withLoader = true) {
 		throw new Error("Diagram DOM missing");
 	}
 
-	const app = new App(appDom, diagramDom);
+	const app = App.init(appDom, diagramDom);
+
 	// @ts-ignore
 	window.app = app;
 	const translator = app.getTranslator();

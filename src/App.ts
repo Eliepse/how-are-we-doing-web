@@ -30,6 +30,8 @@ import { linkArrow } from "./Diagram/Shape/LinkArrow";
 type AppMode = "focus:determinant" | "default";
 
 export class App {
+	private static _instance?: App = undefined;
+
 	private readonly translator: Translator;
 	private readonly labelManager: FloatingLabelManager;
 	private profiling?: ProfilerDisplay = undefined;
@@ -47,7 +49,7 @@ export class App {
 	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
 	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
 
-	constructor(
+	private constructor(
 		rootDom: Element,
 		diagramDom: Element,
 	) {
@@ -69,17 +71,36 @@ export class App {
 		renderer.registerReferencable(blobPattern);
 		renderer.registerReferencable(linkGradient);
 		renderer.registerSymbolic(linkArrow);
-		renderer.addNodeRenderer(new FacilityRenderer(renderer, this));
-		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this));
-		renderer.addNodeRenderer(new PathologyRenderer(renderer, this));
-		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.translator));
+		renderer.addNodeRenderer(new FacilityRenderer(renderer));
+		renderer.addNodeRenderer(new DeterminantRenderer(renderer));
+		renderer.addNodeRenderer(new PathologyRenderer(renderer));
+		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer));
 		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
 		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
-		renderer.addNodeRenderer(new LinkRenderer(renderer, this));
+		renderer.addNodeRenderer(new LinkRenderer(renderer));
 		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer));
 		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer));
 		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer));
 		renderer.addNodeRenderer(new FallbackRenderer(renderer));
+	}
+
+	static init(
+		rootDom: Element,
+		diagramDom: Element,
+	) {
+		if(undefined !== this._instance) {
+			console.warn("App has already been instantiated, overriding...");
+		}
+
+		return this._instance = new App(rootDom, diagramDom);
+	}
+
+	static instance() {
+		if(undefined === this._instance) {
+			throw new Error("App has not been instanciated yet!");
+		}
+
+		return this._instance;
 	}
 
 	getDiagram(): Diagram {

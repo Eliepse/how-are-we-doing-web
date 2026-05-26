@@ -2,19 +2,13 @@ import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Circle } from "../../SVGRenderer/Shape/Circle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
-import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { colors } from "../colors";
 import { Pathology } from "../Items/Pathology/Pathology";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
-import type { App } from "../../App";
 import { Color } from "../../Engine2D/ValueObject/Color";
 import type { ActiveStatus } from "../types";
 
 export class PathologyRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private _app: App) {
-		super(renderer);
-	}
-
 	override render(vnode: VirtualNode<Pathology>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);

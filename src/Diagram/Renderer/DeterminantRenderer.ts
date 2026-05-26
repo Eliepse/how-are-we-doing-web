@@ -11,7 +11,6 @@ import { colors } from "../colors";
 import { Determinant, type Steps } from "../Items/Determinant/Determinant";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import { ClipPath } from "../../Engine2D/ValueObject/Clip";
-import type { App } from "../../App";
 import { Opacity } from "../../Engine2D/ValueObject/Opacity";
 import type { ActiveStatus } from "../types";
 
@@ -25,10 +24,6 @@ const stepClipsOptimized: { [k in Steps]: ClipPath } = {
 };
 
 export class DeterminantRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private _app: App) {
-		super(renderer);
-	}
-
 	override render(vnode: VirtualNode<Determinant>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);

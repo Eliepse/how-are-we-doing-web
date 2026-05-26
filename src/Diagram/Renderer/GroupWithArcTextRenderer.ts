@@ -1,17 +1,13 @@
 import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { ArcText } from "../../SVGRenderer/Shape/ArcText";
-import { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { DeterminantSubFamily } from "../Items/Determinant/DeterminantSubFamily";
 import { FacilityFamily } from "../Items/Facility/FacilityFamily";
-import type { Translator } from "../Translation/Translator";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
+import { App } from "../../App";
 
 export class GroupWithArcTextRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private translator: Translator) {
-		super(renderer);
-	}
-
 	override render(vnode: VirtualNode<FacilityFamily | DeterminantSubFamily>): void {
+		const translator = App.instance().getTranslator();
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
 		const position = node.getGlobalPosition();
@@ -23,7 +19,7 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 			"arcText",
 			() => {
 				const arc = new ArcText(node.getName());
-				const name = this.translator.dyn(`nodes.${node.getName()}`, (txt) => arc.updateText(txt));
+				const name = translator.dyn(`nodes.${node.getName()}`, (txt) => arc.updateText(txt));
 				arc.updateText(name.toString());
 				return arc;
 			},

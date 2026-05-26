@@ -315,4 +315,8 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		Engine._instance._debug = value;
 		Engine._instance.renderer.setDebug(value);
 	}
+
+	static forceRenderUpdate() {
+		Engine._instance.clock.forceTick();
+	}
 }

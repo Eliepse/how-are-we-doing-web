@@ -2,11 +2,16 @@ export class Clock {
 	private _paused = true;
 	private _time = 0;
 	private _frames = 0;
+	private _lastTickTime;
+	private _minTimeMsPerFrame;
 
 	constructor(
 		public frameRate = 60,
 		private _callback: (deltaTime: number, frames: number) => void
-	) {}
+	) {
+		this._lastTickTime = Date.now();
+		this._minTimeMsPerFrame = 1_000 / this.frameRate;
+	}
 
 	private tick(deltaTimeMs: number): void {
 		this._time += deltaTimeMs;
@@ -28,28 +33,33 @@ export class Clock {
 		}
 
 		this._paused = false;
-		let lastTickTime = Date.now();
-		let minTimeMsPerFrame = 1_000 / this.frameRate;
+		this._lastTickTime = Date.now();
+		this._minTimeMsPerFrame = 1_000 / this.frameRate;
 
-		const attemptNextTick = () => {
-			if (this._paused) {
-				return;
-			}
-			const now = Date.now();
-			const deltaTimeMs = now - lastTickTime;
+		this.tryTick();
+	}
 
-			if (minTimeMsPerFrame <= deltaTimeMs) {
-				this.tick(deltaTimeMs);
-				lastTickTime = now;
-			}
+	private tryTick(force = false) {
+		if (this._paused) {
+			return;
+		}
 
-			requestAnimationFrame(attemptNextTick);
-		};
+		const now = Date.now();
+		const deltaTimeMs = now - this._lastTickTime;
 
-		attemptNextTick();
+		if (this._minTimeMsPerFrame <= deltaTimeMs || force) {
+			this.tick(deltaTimeMs);
+			this._lastTickTime = now;
+		}
+
+		requestAnimationFrame(() => this.tryTick());
 	}
 
 	pause(): void {
 		this._paused = true;
+	}
+
+	forceTick() {
+		this.tryTick(true);
 	}
 }

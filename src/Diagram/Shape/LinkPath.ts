@@ -10,7 +10,9 @@ export const style = {
 	selected: new SVGStyle({ stroke: new Stroke({ width: 2, color: colors.primary.alpha(0.6) }) }),
 	preview: new SVGStyle({ stroke: new Stroke({ width: 2, color: Color.White.alpha(0.45) }) }),
 	secondary: new SVGStyle({ stroke: new Stroke({ width: 2, color: colors.secondary.alpha(0.45) }) }),
+	selectedDeterminantModeBidir: new SVGStyle({ stroke: new Stroke({ width: 2, color: linkGradient }) }),
 	selectedDeterminantMode: new SVGStyle({ stroke: new Stroke({ width: 2, color: linkGradient, strokeDash: [6, 3] }) }),
+	previewDeterminantModeBidir: new SVGStyle({ stroke: new Stroke({ width: 2, color: Color.White.alpha(0.45) }) }),
 	previewDeterminantMode: new SVGStyle({ stroke: new Stroke({ width: 2, color: Color.White.alpha(0.45), strokeDash: [6, 3] }) }),
 }
 

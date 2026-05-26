@@ -13,18 +13,13 @@ import { linkArrow } from "../Shape/LinkArrow";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { colors } from "../colors";
 import { Color } from "../../Engine2D/ValueObject/Color";
-import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
-import type { App } from "../../App";
+import { App } from "../../App";
 
 export class LinkRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private _app: App) {
-		super(renderer);
-	}
-
 	override render(vnode: VirtualNode): void {
 		const link = vnode.node as Link;
 		const shapes = this.getShapes(vnode);
-		const selected = this._app.getDiagram().getSelectedNode();
+		const selected = App.instance().getDiagram().getSelectedNode();
 
 		if (link.hidden) {
 			shapes.remove(link.key);
@@ -96,6 +91,10 @@ export class LinkRenderer extends SVGNodeRenderer {
 
 	private getLinkStyle(link: Link) {
 		if (link.from instanceof Determinant && link.to instanceof Determinant) {
+			if(Dir.Bidirectional === link.direction) {
+				return "selected" === link.status.get() ? style.selectedDeterminantModeBidir : style.previewDeterminantModeBidir;
+			}
+
 			return "selected" === link.status.get() ? style.selectedDeterminantMode : style.previewDeterminantMode;
 		}
 

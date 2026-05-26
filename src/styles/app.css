@@ -287,16 +287,36 @@
 
 #modes {
     margin: 0;
-    padding: 0;
+    padding: .25rem;
     display: flex;
+    width: 24rem;
+    border: 1px solid white;
+    border-radius: .5rem;
     gap: .5rem;
     list-style: none;
     justify-self: center;
 }
 
 #modes li {
+    flex: 1;
     padding: 0;
     margin: 0;
+}
+
+#modes li button {
+    width: 100%;
+    border: none;
+}
+
+#modes li button:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+#modes li button:active,
+#modes li button.active {
+    color: var(--dark-blue);
+    background: rgba(255, 255, 255, 1);
 }
 
 /*

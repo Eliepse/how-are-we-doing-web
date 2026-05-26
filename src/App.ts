@@ -27,9 +27,19 @@ import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
 import { linkGradient } from "./Diagram/Shape/LinkGradient";
 import { linkArrow } from "./Diagram/Shape/LinkArrow";
 
-type AppMode = "focus:determinant" | "default";
+export type Feature =
+	"detailed-relations"
+	| "focus-determinant"
+	| "determinant"
+	| "det-links:determinant"
+	| "pathology"
+	| "det-links:pathology"
+	| "facility"
+	| "det-links:facility";
 
 export class App {
+	private static _instance?: App = undefined;
+
 	private readonly translator: Translator;
 	private readonly labelManager: FloatingLabelManager;
 	private profiling?: ProfilerDisplay = undefined;
@@ -41,13 +51,19 @@ export class App {
 	private diagram?: Diagram;
 	private biblio: BiblioManager;
 	private loaded: boolean = false;
-	private mode: AppMode = "default";
+	private features: Set<Feature> = new Set([
+		"determinant",
+		"pathology",
+		"det-links:pathology",
+		"facility",
+		"det-links:facility",
+	]);
 
 	public onContextChanged = (_context: Context) => undefined;
 	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
 	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
 
-	constructor(
+	private constructor(
 		rootDom: Element,
 		diagramDom: Element,
 	) {
@@ -69,17 +85,58 @@ export class App {
 		renderer.registerReferencable(blobPattern);
 		renderer.registerReferencable(linkGradient);
 		renderer.registerSymbolic(linkArrow);
-		renderer.addNodeRenderer(new FacilityRenderer(renderer, this));
-		renderer.addNodeRenderer(new DeterminantRenderer(renderer, this));
-		renderer.addNodeRenderer(new PathologyRenderer(renderer, this));
-		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer, this.translator));
+		renderer.addNodeRenderer(new FacilityRenderer(renderer));
+		renderer.addNodeRenderer(new DeterminantRenderer(renderer));
+		renderer.addNodeRenderer(new PathologyRenderer(renderer));
+		renderer.addNodeRenderer(new GroupWithArcTextRenderer(renderer));
 		renderer.addNodeRenderer(new FacilityFamilyRenderer(renderer));
 		renderer.addNodeRenderer(new DeterminantSubFamilyRenderer(renderer));
-		renderer.addNodeRenderer(new LinkRenderer(renderer, this));
+		renderer.addNodeRenderer(new LinkRenderer(renderer));
 		renderer.addNodeRenderer(new PathologyFamilyRenderer(renderer));
 		renderer.addNodeRenderer(new DiagramBackgroundRenderer(renderer));
 		renderer.addNodeRenderer(new BgDecorationsRenderer(renderer));
 		renderer.addNodeRenderer(new FallbackRenderer(renderer));
+	}
+
+	static init(
+		rootDom: Element,
+		diagramDom: Element,
+	) {
+		if (undefined !== this._instance) {
+			console.warn("App has already been instantiated, overriding...");
+		}
+
+		return this._instance = new App(rootDom, diagramDom);
+	}
+
+	static instance() {
+		if (undefined === this._instance) {
+			throw new Error("App has not been instanciated yet!");
+		}
+
+		return this._instance;
+	}
+
+	static feature(feature: Feature): boolean;
+	static feature(feature: Feature, state: boolean): void;
+	static feature(feature: Feature, state?: boolean): void | boolean {
+		if (true === state) {
+			App.instance().features.add(feature);
+		} else if (false === state) {
+			App.instance().features.delete(feature);
+		} else {
+			return App.instance().features.has(feature);
+		}
+	}
+
+	static featuresAll(...features: Feature[]): boolean {
+		for (const feature of features) {
+			if (false === App.instance().features.has(feature)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	getDiagram(): Diagram {
@@ -139,7 +196,7 @@ export class App {
 		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
 
-			if ("focus:determinant" === this.mode && !(node instanceof Determinant)) {
+			if (App.feature("focus-determinant") && !(node instanceof Determinant)) {
 				return;
 			}
 
@@ -301,22 +358,31 @@ export class App {
 		this.biblio.close();
 	}
 
-	changeMode(mode: AppMode) {
-		if (mode === this.mode || !this.diagram) {
+	changeMode(mode: "focus" | "detailled" | "basic") {
+		if (!this.diagram) {
 			return;
 		}
 
-		this.mode = mode;
+		document.querySelectorAll<HTMLElement>("[data-mode]").forEach((el) => {
+			if (mode === el.dataset.mode) {
+				el.classList.add("active");
+			} else {
+				el.classList.remove("active");
+			}
+		});
 
-		if ("focus:determinant" === mode) {
-			this.diagram.setLinksMode("determinants");
-			return;
-		}
+		App.feature("detailed-relations", "basic" !== mode);
 
-		this.diagram.setLinksMode("pathologies");
-	}
+		const isDetsFocus = "focus" === mode;
+		App.feature("focus-determinant", isDetsFocus);
+		App.feature("det-links:determinant", isDetsFocus);
 
-	getMode(): AppMode {
-		return this.mode;
+		App.feature("pathology", !isDetsFocus);
+		App.feature("det-links:pathology", !isDetsFocus);
+		App.feature("facility", !isDetsFocus);
+		App.feature("det-links:facility", !isDetsFocus);
+
+		this.diagram.updateRingsOpacity();
+		this.diagram.updateNodesHighlight();
 	}
 }

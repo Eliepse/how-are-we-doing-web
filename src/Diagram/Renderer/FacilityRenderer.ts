@@ -2,17 +2,11 @@ import type { VirtualNode } from "../../Engine2D/Core/VirtualNode";
 import { Color } from "../../Engine2D/ValueObject/Color";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
-import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Facility } from "../Items/Facility/Facility";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
-import type { App } from "../../App";
 import type { ActiveStatus } from "../types";
 
 export class FacilityRenderer extends SVGNodeRenderer {
-	constructor(renderer: SVGRenderer, private _app: App) {
-		super(renderer);
-	}
-
 	override render(vnode: VirtualNode<Facility>): void {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);

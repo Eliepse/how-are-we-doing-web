@@ -27,7 +27,15 @@ import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
 import { linkGradient } from "./Diagram/Shape/LinkGradient";
 import { linkArrow } from "./Diagram/Shape/LinkArrow";
 
-type AppMode = "focus:determinant" | "default";
+export type Feature =
+	"detailed-relations"
+	| "focus-determinant"
+	| "determinant"
+	| "det-links:determinant"
+	| "pathology"
+	| "det-links:pathology"
+	| "facility"
+	| "det-links:facility";
 
 export class App {
 	private static _instance?: App = undefined;
@@ -43,7 +51,14 @@ export class App {
 	private diagram?: Diagram;
 	private biblio: BiblioManager;
 	private loaded: boolean = false;
-	private mode: AppMode = "default";
+	private features: Set<Feature> = new Set([
+		"determinant",
+		"pathology",
+		"det-links:pathology",
+		"facility",
+		"det-links:facility",
+		"detailed-relations",
+	]);
 
 	public onContextChanged = (_context: Context) => undefined;
 	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
@@ -88,7 +103,7 @@ export class App {
 		rootDom: Element,
 		diagramDom: Element,
 	) {
-		if(undefined !== this._instance) {
+		if (undefined !== this._instance) {
 			console.warn("App has already been instantiated, overriding...");
 		}
 
@@ -96,11 +111,35 @@ export class App {
 	}
 
 	static instance() {
-		if(undefined === this._instance) {
+		if (undefined === this._instance) {
 			throw new Error("App has not been instanciated yet!");
 		}
 
 		return this._instance;
+	}
+
+	static feature(feature: Feature): boolean;
+	static feature(feature: Feature, state: boolean): void;
+	static feature(feature: Feature, state?: boolean): void | boolean {
+		if (true === state) {
+			console.debug(feature, state);
+			App.instance().features.add(feature);
+		} else if (false === state) {
+			console.debug(feature, state);
+			App.instance().features.delete(feature);
+		} else {
+			return App.instance().features.has(feature);
+		}
+	}
+
+	static featuresAll(...features: Feature[]): boolean {
+		for (const feature of features) {
+			if (false === App.instance().features.has(feature)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	getDiagram(): Diagram {
@@ -160,7 +199,7 @@ export class App {
 		this.diagram.addListener("mouseenter", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
 
-			if ("focus:determinant" === this.mode && !(node instanceof Determinant)) {
+			if (App.feature("focus-determinant") && !(node instanceof Determinant)) {
 				return;
 			}
 
@@ -322,22 +361,21 @@ export class App {
 		this.biblio.close();
 	}
 
-	changeMode(mode: AppMode) {
-		if (mode === this.mode || !this.diagram) {
+	changeMode(mode: "focus:determinant" | "default") {
+		if (!this.diagram) {
 			return;
 		}
 
-		this.mode = mode;
+		const isDetsFocus = "focus:determinant" === mode;
 
-		if ("focus:determinant" === mode) {
-			this.diagram.setLinksMode("determinants");
-			return;
-		}
+		App.feature("focus-determinant", isDetsFocus);
+		App.feature("det-links:determinant", isDetsFocus);
 
-		this.diagram.setLinksMode("pathologies");
-	}
+		App.feature("pathology", !isDetsFocus);
+		App.feature("det-links:pathology", !isDetsFocus);
+		App.feature("facility", !isDetsFocus);
+		App.feature("det-links:facility", !isDetsFocus);
 
-	getMode(): AppMode {
-		return this.mode;
+		this.diagram.setLinksMode(isDetsFocus ? "determinants" : "pathologies");
 	}
 }

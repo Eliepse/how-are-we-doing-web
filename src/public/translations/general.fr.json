@@ -24,5 +24,8 @@
   "credits.iconographyContent": "Adèle Bougard et Marie-Alice Lincoln",
   "credits.thanksTitle": "Remerciements pour la mise à disposition des images",
   "credits.thanksContent": "CAUE Rhône Métropole, Métropole de Lyon, UrbaLyon, Bibliothèque municipale de Lyon.",
-  "credits.context": "Toutes les contributions sont des recherches originales, menées dans le cadre de la Fondation AIA entre 2019 et 2025."
+  "credits.context": "Toutes les contributions sont des recherches originales, menées dans le cadre de la Fondation AIA entre 2019 et 2025.",
+  "controls.mode.simple": "Simple",
+  "controls.mode.detailled": "Détaillé",
+  "controls.mode.focus": "Déterminants"
 }

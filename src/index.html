@@ -90,10 +90,19 @@
 
 		<ul id="modes">
 			<li>
-				<button data-action="mode:change" data-mode="default">Diagram</button>
+				<button class="active" data-action="mode:change" data-mode="basic" data-translate="general.controls.mode.simple">
+					Simple
+				</button>
 			</li>
 			<li>
-				<button data-action="mode:change" data-mode="focus:determinant">Determinants</button>
+				<button data-action="mode:change" data-mode="detailled" data-translate="general.controls.mode.detailled">
+					Detailled
+				</button>
+			</li>
+			<li>
+				<button data-action="mode:change" data-mode="focus" data-translate="general.controls.mode.focus">
+					Determinants
+				</button>
 			</li>
 		</ul>
 
@@ -107,7 +116,7 @@
 		<div class="legend">
 			<figure>
 				<img src="assets/determinants/landscape-and-athmosphere.svg"
-					 style="clip-path: rect(0 100% 25% 0); filter: blur(3px)"
+				     style="clip-path: rect(0 100% 25% 0); filter: blur(3px)"
 				/>
 				<figcaption data-translate="general.legend_determinant_missing_data"></figcaption>
 			</figure>

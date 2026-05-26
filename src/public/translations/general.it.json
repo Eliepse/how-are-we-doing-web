@@ -25,5 +25,8 @@
   "credits.iconographyContent": "Adèle Bougard and Marie-Alice Lincoln",
   "credits.thanksTitle": "Acknowledgments for the provision of images",
   "credits.thanksContent": "CAUE Rhône Métropole, Métropole de Lyon, UrbaLyon, Bibliothèque municipale de Lyon.",
-  "credits.context": "Tutti i contributi presentati in questo lavoro sono ricerche originali, realizzate nell’ambito della Fondation AIA tra il 2019 e il 2025."
+  "credits.context": "Tutti i contributi presentati in questo lavoro sono ricerche originali, realizzate nell’ambito della Fondation AIA tra il 2019 e il 2025.",
+  "controls.mode.simple": "Simple",
+  "controls.mode.detailled": "Detailled",
+  "controls.mode.focus": "Determinants"
 }

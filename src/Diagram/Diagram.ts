@@ -356,7 +356,7 @@ export class Diagram extends Node2D {
 		this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
 	}
 
-	private updateNodesHighlight() {
+	public updateNodesHighlight() {
 		const withDetsFocus = App.feature("focus-determinant");
 		const linkManager = Engine.nodeByUname<LinkManager>("link:manager");
 		const determinants = Engine.nodesByTag<Determinant>("determinant");
@@ -368,7 +368,6 @@ export class Diagram extends Node2D {
 
 		linkManager?.clearLinks();
 
-		const withDeterminantAssocs = App.feature("det-links:determinant");
 		const withDetailedAssocs = App.feature("detailed-relations");
 		for (const determinant of determinants) {
 			if (false === App.feature("determinant")) {
@@ -379,23 +378,22 @@ export class Diagram extends Node2D {
 			if (this._selectedNode === determinant) {
 				determinant.setStatus("selected");
 				continue;
-			} else if (selectionAssoc?.determinant?.has(determinant.id)) {
-				if (withDeterminantAssocs && withDetailedAssocs) {
-					determinant.setStatus(this._selectedNode instanceof Determinant ? "n+1" : "selected");
-				} else if (withDeterminantAssocs && !withDetailedAssocs && !(this._selectedNode instanceof Determinant)) {
+			}
+
+			if (selectionAssoc?.determinant?.has(determinant.id)) {
+				if(!(this._selectedNode instanceof Determinant)) {
 					determinant.setStatus("selected");
+					continue;
 				}
 
-				continue;
+				if(withDetailedAssocs) {
+					determinant.setStatus("n+1");
+					continue;
+				}
 			}
 
 			if (this._previewedNode === determinant) {
 				determinant.setStatus("preview");
-				continue;
-			}
-
-			if (this._selectedNode instanceof Determinant && !withDetsFocus) {
-				determinant.setStatus(selectionAssoc?.determinant?.has(determinant.id) ? "preview" : "dimmed");
 				continue;
 			}
 
@@ -411,7 +409,6 @@ export class Diagram extends Node2D {
 		const withFacilityAssocs = App.feature("det-links:facility");
 		for (const facility of facilities) {
 			if (false === withFacilities) {
-				console.debug("dim")
 				facility.setStatus("dimmed");
 				continue;
 			}
@@ -609,35 +606,34 @@ export class Diagram extends Node2D {
 		}
 	}
 
-	setLinksMode(type: "determinants" | "pathologies") {
-		console.debug({ type });
-		this.links = type;
+	updateRingsOpacity() {
 		const families = {
 			pathology: Engine.nodeByUname("group:pathology"),
 			determinant: Engine.nodeByUname("group:determinant"),
 			facility: Engine.nodeByUname("group:facility"),
 		};
 
-		if ("determinants" === type) {
+		if (App.feature("pathology")) {
+			transitionNodeOpacity(families.pathology, 500, Opacity.Opaque);
+			transitionNodeOpacity(this.decorations, 500, Opacity.Opaque);
+		} else {
 			transitionNodeOpacity(families.pathology, 500, new Opacity(.1));
-			transitionNodeOpacity(families.determinant, 500, Opacity.Opaque);
-			transitionNodeOpacity(families.facility, 500, new Opacity(.1));
 			transitionNodeOpacity(this.decorations, 500, new Opacity(.1));
-
-			this.selectNode(this._selectedNode instanceof Determinant ? this._selectedNode : undefined);
-			this.previewNode(this._previewedNode instanceof Determinant ? this._previewedNode : undefined);
-			this.updateNodesHighlight();
-
-			return;
 		}
 
-		// Default
-		transitionNodeOpacity(families.pathology, 500, Opacity.Opaque);
-		transitionNodeOpacity(families.determinant, 500, Opacity.Opaque);
-		transitionNodeOpacity(families.facility, 500, Opacity.Opaque);
-		transitionNodeOpacity(this.decorations, 500, Opacity.Opaque);
+		if (App.feature("facility")) {
+			transitionNodeOpacity(families.facility, 500, Opacity.Opaque);
+		} else {
+			transitionNodeOpacity(families.facility, 500, new Opacity(.1));
+		}
 
-		this.updateNodesHighlight();
+		if (App.feature("determinant")) {
+			transitionNodeOpacity(families.determinant, 500, Opacity.Opaque);
+		} else {
+			transitionNodeOpacity(families.determinant, 500, Opacity.Opaque);
+			this.selectNode(this._selectedNode instanceof Determinant ? this._selectedNode : undefined);
+			this.previewNode(this._previewedNode instanceof Determinant ? this._previewedNode : undefined);
+		}
 	}
 
 	override onRendered(_deltaTime: number) {

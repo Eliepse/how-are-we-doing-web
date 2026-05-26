@@ -57,7 +57,6 @@ export class App {
 		"det-links:pathology",
 		"facility",
 		"det-links:facility",
-		"detailed-relations",
 	]);
 
 	public onContextChanged = (_context: Context) => undefined;
@@ -122,10 +121,8 @@ export class App {
 	static feature(feature: Feature, state: boolean): void;
 	static feature(feature: Feature, state?: boolean): void | boolean {
 		if (true === state) {
-			console.debug(feature, state);
 			App.instance().features.add(feature);
 		} else if (false === state) {
-			console.debug(feature, state);
 			App.instance().features.delete(feature);
 		} else {
 			return App.instance().features.has(feature);
@@ -361,13 +358,22 @@ export class App {
 		this.biblio.close();
 	}
 
-	changeMode(mode: "focus:determinant" | "default") {
+	changeMode(mode: "focus" | "detailled" | "basic") {
 		if (!this.diagram) {
 			return;
 		}
 
-		const isDetsFocus = "focus:determinant" === mode;
+		document.querySelectorAll<HTMLElement>("[data-mode]").forEach((el) => {
+			if (mode === el.dataset.mode) {
+				el.classList.add("active");
+			} else {
+				el.classList.remove("active");
+			}
+		});
 
+		App.feature("detailed-relations", "basic" !== mode);
+
+		const isDetsFocus = "focus" === mode;
 		App.feature("focus-determinant", isDetsFocus);
 		App.feature("det-links:determinant", isDetsFocus);
 
@@ -376,6 +382,7 @@ export class App {
 		App.feature("facility", !isDetsFocus);
 		App.feature("det-links:facility", !isDetsFocus);
 
-		this.diagram.setLinksMode(isDetsFocus ? "determinants" : "pathologies");
+		this.diagram.updateRingsOpacity();
+		this.diagram.updateNodesHighlight();
 	}
 }

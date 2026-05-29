@@ -113,7 +113,7 @@
 	</div>
 
 	<div id="diagramRoot">
-		<div class="legend">
+		<div class="legend" data-legend="default">
 			<figure>
 				<img src="assets/determinants/landscape-and-athmosphere.svg"
 				     style="clip-path: rect(0 100% 25% 0); filter: blur(3px); transform: scaleY(-100%); width: 5rem"
@@ -121,8 +121,21 @@
 				<figcaption data-translate="general.legend_determinant_missing_data"></figcaption>
 			</figure>
 			<figure>
-				<img src="public/image/hierarchisation.svg" alt="" style="width: 8rem" />
+				<img src="/image/hierarchisation.svg" alt="" style="width: 8rem" />
 				<figcaption data-translate="general.legend_determinant_normal"></figcaption>
+			</figure>
+		</div>
+
+		<div class="legend" data-legend="focus" style="display: none">
+			<figure>
+				<img src="/image/determinants_secondary.svg"
+				     style="width: 4rem"
+				/>
+				<figcaption data-translate="general.legend.determinant_secondary"></figcaption>
+			</figure>
+			<figure>
+				<img src="/image/determinants_primary.svg" alt="" style="width: 4rem" />
+				<figcaption data-translate="general.legend.determinant_primary"></figcaption>
 			</figure>
 		</div>
 	</div>

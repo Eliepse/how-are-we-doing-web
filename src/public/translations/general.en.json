@@ -12,6 +12,8 @@
   "facility": "Facilities",
   "legend_determinant_missing_data": "No hierarchy due to lack of data",
   "legend_determinant_normal": "Prioritization of issues by health determinant according to site diagnosis",
+  "legend.determinant_primary": "Primary health determinants",
+  "legend.determinant_secondary": "Secondary health determinants",
   "what binds us": "What binds us",
   "credits.description": "What binds us, a study of the interactions between health determinants and the living environment",
   "credits.scientificTitle": "Scientific direction",

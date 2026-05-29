@@ -7,7 +7,7 @@ type Status = "selected" | "n+1" | "preview";
 
 export class Link extends Node2D {
 	private _hidden = new Attribute(false);
-	public direction: Direction = Dir.Bidirectional;
+	public direction: Direction = Dir.Target;
 	public readonly status = new Attribute<Status>("selected");
 
 	constructor(

@@ -69,6 +69,10 @@ export class LinkManager extends Node2D {
 		const associations = AssociationManager.getDirectAssociations(node).determinant;
 
 		for (const [detId, direction] of associations.entries()) {
+			if(Dir.Target === direction) {
+				continue;
+			}
+
 			const nodeKey = Dir.Source === direction ? `d${detId}-d${node.id}` : `d${node.id}-d${detId}`;
 			const link = this.links.get(nodeKey);
 
@@ -77,7 +81,7 @@ export class LinkManager extends Node2D {
 				continue;
 			}
 
-			link.direction = Dir.Bidirectional === direction ? Dir.Bidirectional : Dir.Target;
+			// link.direction = Dir.Bidirectional === direction ? Dir.Bidirectional : Dir.Target;
 			link.status?.set(preview ? "preview" : "selected");
 			link.show();
 		}

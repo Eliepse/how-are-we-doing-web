@@ -68,7 +68,8 @@ export class AssociationManager {
 			// Check if match as a source
 			if (type === asso[0].type && source.id === asso[0].id) {
 				// Check if the relation exists in the other way
-				const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
+				// const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
+				const isBidirectional = false; // Do not support bidirectionnal links for now
 				associations[asso[1].type].set(asso[1].id, isBidirectional ? Dir.Bidirectional : Dir.Source);
 				continue;
 			}
@@ -76,7 +77,8 @@ export class AssociationManager {
 			// Check if it matches as a target
 			if (type === asso[1].type && source.id === asso[1].id) {
 				// Check if the relation exists in the other way
-				const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
+				// const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
+				const isBidirectional = false; // Do not support bidirectionnal links for now
 				associations[asso[0].type].set(asso[0].id, isBidirectional ? Dir.Bidirectional : Dir.Target);
 			}
 		}
@@ -107,7 +109,8 @@ export class AssociationManager {
 				}
 
 				const inverseKey = this.makeAssoKey(asso[1], asso[0]);
-				const isBidirectional = this.index.has(inverseKey);
+				// const isBidirectional = this.index.has(inverseKey);
+				const isBidirectional = false; // Do not support bidirectionnal links for now
 				associations[asso[1].type].set(asso[1].id, isBidirectional ? Dir.Bidirectional : Dir.Target);
 				continue;
 			}
@@ -119,7 +122,8 @@ export class AssociationManager {
 				}
 
 				const inverseKey = this.makeAssoKey(asso[0], asso[1]);
-				const isBidirectional = this.index.has(inverseKey);
+				// const isBidirectional = this.index.has(inverseKey);
+				const isBidirectional = false; // Do not support bidirectionnal links for now
 				associations[asso[0].type].set(asso[0].id, isBidirectional ? Dir.Bidirectional : Dir.Source);
 			}
 		}

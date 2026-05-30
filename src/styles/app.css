@@ -335,6 +335,7 @@
     gap: 5rem;
 }
 
+.legend svg,
 .legend img {
     fill: white;
     color: white;

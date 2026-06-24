@@ -5,7 +5,6 @@ import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 import { Circle } from "../../SVGRenderer/Shape/Circle";
 import { Stroke } from "../../SVGRenderer/ValueObject/Stroke";
 import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
-import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { Vector } from "../../Engine2D/ValueObject/Vector";
 import { colors } from "../colors";
 import { Determinant, type Steps } from "../Items/Determinant/Determinant";
@@ -13,6 +12,8 @@ import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer"
 import { ClipPath } from "../../Engine2D/ValueObject/Clip";
 import { Opacity } from "../../Engine2D/ValueObject/Opacity";
 import type { ActiveStatus } from "../types";
+import { App } from "../../App";
+import { Engine } from "../../Engine2D/Engine";
 
 const anchorOpacity = new Opacity(.67);
 export const determinantAnchorOffset = new Vector(-128, 0);
@@ -63,10 +64,28 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		if (status.hasChanged() || step.hasChanged() || opacity.hasChanged()) {
 			const color = this.getStatusColor(status.get());
 			element.updateStyle(new SVGStyle({ fill: color, opacity: opacity.get() }), stepClipsOptimized[step.get()]);
-			circle.updateStyle(new SVGStyle({ stroke: new Stroke({ width: 2, color: color.alpha(anchorOpacity) }) }));
-			circleCore.updateStyle(new SVGStyle({ fill: color }));
 
-			if ("selected" === status.get() || "preview" === status.get() || "n+1" === status.get()) {
+			const forceIdleCore = "n+1" === status.get() && App.feature("detailed-relations");
+
+			if (forceIdleCore) {
+				circle.updateStyle(new SVGStyle({
+					stroke: new Stroke({
+						width: 2,
+						color: Color.White.alpha(anchorOpacity),
+					}),
+				}));
+				circleCore.updateStyle(new SVGStyle({ fill: Color.White }));
+			} else {
+				circle.updateStyle(new SVGStyle({
+					stroke: new Stroke({
+						width: 2,
+						color: color.alpha(anchorOpacity),
+					}),
+				}));
+				circleCore.updateStyle(new SVGStyle({ fill: color }));
+			}
+
+			if (!forceIdleCore && ("selected" === status.get() || "preview" === status.get() || "n+1" === status.get())) {
 				circleCore.show();
 			} else {
 				circleCore.hide();
@@ -88,6 +107,12 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		}
 
 		return Color.White;
+	}
+
+	private getAnchorColor(status: ActiveStatus | false): Color {
+		if ("n+1" === status && App.feature("detailed-relations")) {
+			return Color.White;
+		}
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

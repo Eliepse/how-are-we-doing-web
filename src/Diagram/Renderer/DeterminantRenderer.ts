@@ -13,7 +13,6 @@ import { ClipPath } from "../../Engine2D/ValueObject/Clip";
 import { Opacity } from "../../Engine2D/ValueObject/Opacity";
 import type { ActiveStatus } from "../types";
 import { App } from "../../App";
-import { Engine } from "../../Engine2D/Engine";
 
 const anchorOpacity = new Opacity(.67);
 export const determinantAnchorOffset = new Vector(-128, 0);
@@ -107,12 +106,6 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		}
 
 		return Color.White;
-	}
-
-	private getAnchorColor(status: ActiveStatus | false): Color {
-		if ("n+1" === status && App.feature("detailed-relations")) {
-			return Color.White;
-		}
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

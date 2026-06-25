@@ -50,7 +50,8 @@ async function main(withLoader = true) {
 
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
-	translator.translateDOM(document.querySelector<HTMLElement>(".legend"));
+	translator.translateDOM(document.querySelector<HTMLElement>(".legend[data-legend=default]"));
+	translator.translateDOM(document.querySelector<HTMLElement>(".legend[data-legend=focus]"));
 
 	app.onContextChanged = (context: Context) => {
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
@@ -123,6 +124,22 @@ async function main(withLoader = true) {
 			e.preventDefault();
 			// @ts-ignore
 			app.changeMode(el.dataset.mode);
+
+			const legendDefault = document.querySelector<HTMLDivElement>(".legend[data-legend=default]");
+			const legendFocus = document.querySelector<HTMLDivElement>(".legend[data-legend=focus]");
+
+			if(!legendFocus || !legendDefault) {
+				return;
+			}
+
+			// @ts-ignore
+			if("focus" === el.dataset.mode) {
+				legendDefault.style.display = "none";
+				legendFocus.style.display = "";
+			} else {
+				legendDefault.style.display = "";
+				legendFocus.style.display = "none";
+			}
 		});
 	});
 

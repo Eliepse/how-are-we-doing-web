@@ -39,7 +39,7 @@ export class Pathology extends Node2D implements WithPointerEvents {
 	getRadius(): number {
 		// const factor = (Math.cos(this.time.get() / 3) + 1) / 2;
 		// return interpolate(Pathology.minRadius, Pathology.maxRadius, factor);
-		return 6;
+		return 7;
 	}
 
 	setStatus(status: ActiveStatus | false): void {

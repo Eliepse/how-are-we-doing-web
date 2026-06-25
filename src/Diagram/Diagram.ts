@@ -493,7 +493,11 @@ export class Diagram extends Node2D {
 		}
 
 		if (App.feature("det-links:pathology")) {
-			if (this._previewedNode instanceof Determinant) {
+			const isPreviewSecondary = "n+1" === this._previewedNode?.status?.get();
+			const noSelection = !this._selectedNode;
+
+			// Only display links for hovered node for secondary nodes, or if there's no selection
+			if (this._previewedNode instanceof Determinant && (noSelection || isPreviewSecondary)) {
 				linkManager?.showDeterminantPathologyLinks(this._previewedNode, true);
 			}
 

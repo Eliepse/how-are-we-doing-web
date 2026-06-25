@@ -19,7 +19,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 
 		const edge = shapes.get("edge", () => new Circle(8));
 		const core = shapes.get("core", () => {
-			const shape = new Circle(5);
+			const shape = new Circle(4);
 			shape.updateStyle(new SVGStyle({ fill: colors.primary }));
 			shape.hide();
 			return shape;
@@ -28,12 +28,12 @@ export class PathologyRenderer extends SVGNodeRenderer {
 
 		if (position.hasChanged() || status.hasChanged()) {
 			core.updateMesh(position.get());
-			edge.updateMesh(position.get(), isActive ? Pathology.maxRadius : node.getRadius());
+			edge.updateMesh(position.get(), node.getRadius());
 		}
 
 		if (status.hasChanged() || opacity.hasChanged()) {
 			const color = this.getStatusColor(status.get()).alpha(opacity.get());
-			edge.updateStyle(new SVGStyle({ stroke: new Stroke({ width: 3, color }) }));
+			edge.updateStyle(new SVGStyle({ stroke: new Stroke({ width: 2.5, color }) }));
 
 			if ("selected" === status.get()) {
 				core.show();

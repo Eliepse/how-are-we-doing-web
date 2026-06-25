@@ -405,6 +405,8 @@ export class Diagram extends Node2D {
 			determinant.setStatus(hasActiveNode && this._previewedNode instanceof Determinant ? "dimmed" : false);
 		}
 
+		const isPreviewSecondary = "n+1" === this._previewedNode?.status?.get();
+
 		const withFacilities = App.feature("facility");
 		const withFacilityAssocs = App.feature("det-links:facility");
 		for (const facility of facilities) {
@@ -444,7 +446,7 @@ export class Diagram extends Node2D {
 				pathology.setStatus("selected");
 				continue;
 			} else if (this._previewedNode === pathology || previewAssoc?.pathology?.has(pathology.id)) {
-				pathology.setStatus("preview");
+				pathology.setStatus(isPreviewSecondary ? "n+1" : "preview");
 				continue;
 			} else if (withPathologyAssocs) {
 				if (selectionAssoc?.pathology?.has(pathology.id)) {
@@ -493,7 +495,6 @@ export class Diagram extends Node2D {
 		}
 
 		if (App.feature("det-links:pathology")) {
-			const isPreviewSecondary = "n+1" === this._previewedNode?.status?.get();
 			const noSelection = !this._selectedNode;
 
 			// Only display links for hovered node for secondary nodes, or if there's no selection

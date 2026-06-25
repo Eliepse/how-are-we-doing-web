@@ -58,6 +58,10 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			return new Color(158, 185, 200);
 		}
 
+		if ("n+1" === status) {
+			return colors.secondary;
+		}
+
 		return Color.White;
 	}
 

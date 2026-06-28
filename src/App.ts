@@ -62,6 +62,7 @@ export class App {
 	public onContextChanged = (_context: Context) => undefined;
 	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
 	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
+	public onFeatureChanged = () => undefined;
 
 	private constructor(
 		rootDom: Element,
@@ -122,8 +123,10 @@ export class App {
 	static feature(feature: Feature, state?: boolean): void | boolean {
 		if (true === state) {
 			App.instance().features.add(feature);
+			App.instance().onFeatureChanged();
 		} else if (false === state) {
 			App.instance().features.delete(feature);
+			App.instance().onFeatureChanged();
 		} else {
 			return App.instance().features.has(feature);
 		}

@@ -50,8 +50,7 @@ async function main(withLoader = true) {
 
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
-	translator.translateDOM(document.querySelector<HTMLElement>(".legend[data-legend=default]"));
-	translator.translateDOM(document.querySelector<HTMLElement>(".legend[data-legend=focus]"));
+	translator.translateDOM(document.querySelector<HTMLElement>("#legendRoot"));
 
 	app.onContextChanged = (context: Context) => {
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
@@ -62,6 +61,17 @@ async function main(withLoader = true) {
 		});
 
 		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
+
+		const legendBlurred = document.querySelector<HTMLElement>("figure[data-legend=blurred]");
+		if(legendBlurred) {
+			legendBlurred.style.display = context.isDefault ? "none" : "";
+		}
+
+		const legendDefault = document.querySelector<HTMLElement>("figure[data-legend=default]");
+		if(legendDefault) {
+			legendDefault.style.display = context.isDefault ? "none" : "";
+		}
+
 	};
 
 	app.onSelectionChanged = (node) => {
@@ -81,6 +91,18 @@ async function main(withLoader = true) {
 			type: "selectionChanged",
 			data: { nodes: broadcastNodes },
 		});
+	};
+
+	app.onFeatureChanged = () => {
+		const legendPrimary = document.querySelector<HTMLElement>("figure[data-legend=primary]");
+		if(legendPrimary) {
+			legendPrimary.style.display = App.feature("detailed-relations") ? "" : "none";
+		}
+
+		const legendSecondary = document.querySelector<HTMLElement>("figure[data-legend=secondary]");
+		if(legendSecondary) {
+			legendSecondary.style.display = App.feature("detailed-relations") ? "" : "none";
+		}
 	};
 
 	translator.dyn("general.no context", (txt) => {
@@ -104,7 +126,7 @@ async function main(withLoader = true) {
 	// Toggle the interface visibility
 	document.addEventListener("keydown", (e) => {
 		const nav = document.querySelector<HTMLElement>("#navigation");
-		const legend = document.querySelector<HTMLElement>(".legend");
+		const legend = document.querySelector<HTMLElement>("#legendRoot");
 
 		if ("i" === e.key && nav && legend) {
 			nav.style.display = nav.style.display.trim() ? "" : "none";
@@ -125,8 +147,8 @@ async function main(withLoader = true) {
 			// @ts-ignore
 			app.changeMode(el.dataset.mode);
 
-			const legendDefault = document.querySelector<HTMLDivElement>(".legend[data-legend=default]");
-			const legendFocus = document.querySelector<HTMLDivElement>(".legend[data-legend=focus]");
+			const legendDefault = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=default]");
+			const legendFocus = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=focus]");
 
 			if(!legendFocus || !legendDefault) {
 				return;

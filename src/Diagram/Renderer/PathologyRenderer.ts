@@ -15,7 +15,6 @@ export class PathologyRenderer extends SVGNodeRenderer {
 		const position = node.getGlobalPosition();
 		const opacity = node.getGlobalOpacity();
 		const status = node.status;
-		const isActive = "selected" === node.status.get() || "preview" === node.status.get();
 
 		const edge = shapes.get("edge", () => new Circle(8));
 		const core = shapes.get("core", () => {
@@ -41,12 +40,6 @@ export class PathologyRenderer extends SVGNodeRenderer {
 				core.hide();
 			}
 		}
-
-		// if (isHovered) {
-		// 	edge.updateStyle(hoveredStyle);
-		// } else if (undefined !== selectedNode && node !== selectedNode) {
-		// 	edge.updateStyle(dimmedStyle);
-		// }
 	}
 
 	private getStatusColor(status: ActiveStatus | false): Color {

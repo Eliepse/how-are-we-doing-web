@@ -82,10 +82,11 @@
 
 <div id="app">
 	<div id="navigation">
-		<div style="justify-self: start">
+		<div style="justify-self: start; display: flex; gap: .5rem">
 			<button data-action="locale:change" data-locale="en">EN</button>
-			<button data-action="locale:change" data-locale="fr" style="margin-left: 8px">FR</button>
-			<button data-action="locale:change" data-locale="it" style="margin-left: 8px">IT</button>
+			<button data-action="locale:change" data-locale="fr">FR</button>
+			<button data-action="locale:change" data-locale="it">IT</button>
+			<button data-action="credits:open" data-translate="general.credits" style="margin-left: 1.25rem">Credits</button>
 		</div>
 
 		<ul id="modes">
@@ -109,7 +110,6 @@
 		</ul>
 
 		<div style="justify-self: end">
-			<button data-action="credits:open" data-translate="general.credits">Credits</button>
 			<button id="biblioToggle" style="margin-left: 8px">Bibliography</button>
 		</div>
 	</div>

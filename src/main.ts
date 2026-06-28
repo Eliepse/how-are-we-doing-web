@@ -50,7 +50,7 @@ async function main(withLoader = true) {
 
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
-	translator.translateDOM(document.querySelector<HTMLElement>(".legend"));
+	translator.translateDOM(document.querySelector<HTMLElement>("#legendRoot"));
 
 	app.onContextChanged = (context: Context) => {
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
@@ -126,7 +126,7 @@ async function main(withLoader = true) {
 	// Toggle the interface visibility
 	document.addEventListener("keydown", (e) => {
 		const nav = document.querySelector<HTMLElement>("#navigation");
-		const legend = document.querySelector<HTMLElement>(".legend");
+		const legend = document.querySelector<HTMLElement>("#legendRoot");
 
 		if ("i" === e.key && nav && legend) {
 			nav.style.display = nav.style.display.trim() ? "" : "none";
@@ -147,8 +147,8 @@ async function main(withLoader = true) {
 			// @ts-ignore
 			app.changeMode(el.dataset.mode);
 
-			const legendDefault = document.querySelector<HTMLDivElement>(".legend[data-legend=default]");
-			const legendFocus = document.querySelector<HTMLDivElement>(".legend[data-legend=focus]");
+			const legendDefault = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=default]");
+			const legendFocus = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=focus]");
 
 			if(!legendFocus || !legendDefault) {
 				return;

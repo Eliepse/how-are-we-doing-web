@@ -50,8 +50,7 @@ async function main(withLoader = true) {
 
 	translator.translateDOM(document.querySelector<HTMLElement>("#navigation"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
-	translator.translateDOM(document.querySelector<HTMLElement>(".legend[data-legend=default]"));
-	translator.translateDOM(document.querySelector<HTMLElement>(".legend[data-legend=focus]"));
+	translator.translateDOM(document.querySelector<HTMLElement>(".legend"));
 
 	app.onContextChanged = (context: Context) => {
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
@@ -62,6 +61,17 @@ async function main(withLoader = true) {
 		});
 
 		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
+
+		const legendBlurred = document.querySelector<HTMLElement>("figure[data-legend=blurred]");
+		if(legendBlurred) {
+			legendBlurred.style.display = context.isDefault ? "none" : "";
+		}
+
+		const legendDefault = document.querySelector<HTMLElement>("figure[data-legend=default]");
+		if(legendDefault) {
+			legendDefault.style.display = context.isDefault ? "none" : "";
+		}
+
 	};
 
 	app.onSelectionChanged = (node) => {
@@ -81,6 +91,18 @@ async function main(withLoader = true) {
 			type: "selectionChanged",
 			data: { nodes: broadcastNodes },
 		});
+	};
+
+	app.onFeatureChanged = () => {
+		const legendPrimary = document.querySelector<HTMLElement>("figure[data-legend=primary]");
+		if(legendPrimary) {
+			legendPrimary.style.display = App.feature("detailed-relations") ? "" : "none";
+		}
+
+		const legendSecondary = document.querySelector<HTMLElement>("figure[data-legend=secondary]");
+		if(legendSecondary) {
+			legendSecondary.style.display = App.feature("detailed-relations") ? "" : "none";
+		}
 	};
 
 	translator.dyn("general.no context", (txt) => {

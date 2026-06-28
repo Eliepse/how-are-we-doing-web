@@ -332,14 +332,14 @@
     display: flex;
     font-size: .675rem;
     flex-direction: column;
-    gap: 5rem;
+    gap: 4rem;
 }
 
 .legend svg,
 .legend img {
     fill: white;
     color: white;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
     max-width: 6.5rem;
 }
 

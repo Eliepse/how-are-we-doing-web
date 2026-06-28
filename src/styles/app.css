@@ -330,7 +330,7 @@
     left: 8rem;
     bottom: 4rem;
     display: flex;
-    font-size: .75rem;
+    font-size: .675rem;
     flex-direction: column;
     gap: 5rem;
 }
@@ -340,6 +340,7 @@
     fill: white;
     color: white;
     margin-bottom: 2rem;
+    max-width: 6.5rem;
 }
 
 .legend figure {
@@ -349,5 +350,5 @@
 }
 
 .legend figcaption {
-    width: 10rem;
+    width: 8.5rem;
 }

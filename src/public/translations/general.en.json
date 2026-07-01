@@ -29,7 +29,7 @@
   "credits.thanksTitle": "Acknowledgments for the provision of images",
   "credits.thanksContent": "CAUE Rhône Métropole, Métropole de Lyon, Urba Lyon, Bibliothèque municipale de Lyon, Ville de Grenoble, Direction de l’Urbanisme et de l’Aménagement de la Ville de Grenoble, Direction de la Communication de la Ville de Grenoble, Direction Iconographie et Systèmes d'Information Géographique de la Ville de Grenoble, Flickr",
   "credits.context": "All contributions are original research, conducted within the framework of the Fondation AIA between 2019 and 2026.",
-  "controls.mode.simple": "Simple",
-  "controls.mode.detailled": "Detailled",
-  "controls.mode.focus": "Determinants"
+  "controls.mode.simple": "Explore",
+  "controls.mode.detailled": "Refine",
+  "controls.mode.focus": "Correlate"
 }

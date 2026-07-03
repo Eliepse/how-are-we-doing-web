@@ -165,8 +165,15 @@ export class App {
 
 		// Contexts
 		clb(step++, steps, "Loading contexts");
-		const data = await (await fetch("data/contexts.json")).json();
-		this.contexts = data.contexts.map((context: {
+		const contexts = [
+			...(await (await fetch("contexts/default.json")).json())?.contexts,
+			...(await (await fetch("contexts/lyon.json")).json())?.contexts,
+			...(await (await fetch("contexts/grenoble.json")).json())?.contexts,
+		];
+
+		console.debug(contexts);
+
+		this.contexts = contexts.map((context: {
 			id: string,
 			name: string,
 			default?: boolean,

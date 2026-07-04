@@ -1,0 +1,41 @@
+{
+  "contexts": [
+    {
+      "determinants": {
+        "access to a diversified and qualitative offer": 0.5,
+        "access to and variety of the transportation offer": 0.5,
+        "acoustic indoor comfort": 0.5,
+        "active transportation choice": 0.5,
+        "aeraulic and hygrothermal outdoor comfort": 0.5,
+        "air pollution and electromagnetic fields low exposure": 0.5,
+        "environment and biodiversity awareness": 0.5,
+        "environment and biodiversity preservation": 0.5,
+        "healthy food knowledge and choice": 0.5,
+        "indoor air quality and hygrothermal comfort": 0.5,
+        "industrial, water and soil pollution low exposure": 0.5,
+        "interactions with natural environments": 0.5,
+        "multi-sensory outdoor comfort and diversity": 0.5,
+        "neighbourhood functional mix": 0.5,
+        "neighbourhood socio-economic status": 0.5,
+        "population economic activity and security": 0.5,
+        "prevention and resilience to environmental hazards": 0.5,
+        "qualitative and adequate sound environment": 0.5,
+        "relaxing, cultural and recreational activities": 0.5,
+        "road network quality for active transportation": 0.5,
+        "road traffic low exposure": 0.5,
+        "social cohesion and involvement": 0.5,
+        "social mixity, equity and solidarity": 0.5,
+        "spatial legibility and security feeling": 0.5,
+        "sport and physical activities": 0.5,
+        "stability and regularity of access to quality housing": 0.5,
+        "sun light access and visual indoor comfort": 0.5,
+        "sun light exposure and visual outdoor comfort": 0.5,
+        "urban appropriation access and equity": 0.5,
+        "urban concentration and urbanization level": 0.5
+      },
+      "id": "no-context",
+      "name": "No Context",
+      "default": true
+    }
+  ]
+}

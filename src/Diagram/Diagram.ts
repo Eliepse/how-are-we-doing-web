@@ -365,7 +365,7 @@ export class Diagram extends Node2D {
 		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
 		let previewAssoc, selectionAssoc = null;
 
-		if (this._previewedNode instanceof Determinant) {
+		if (this._previewedNode instanceof Determinant && this._previewedNode !== this._selectedNode) {
 			previewAssoc = AssociationManager.getAllAssociations(this._previewedNode, detMode ? Dir.Source : undefined);
 		}
 
@@ -521,6 +521,10 @@ export class Diagram extends Node2D {
 
 	getSelectedNode(): SelectableNode | undefined {
 		return this._selectedNode;
+	}
+
+	getPreviewNode(): SelectableNode | undefined {
+		return this._previewedNode;
 	}
 
 	getActiveNodes(): {

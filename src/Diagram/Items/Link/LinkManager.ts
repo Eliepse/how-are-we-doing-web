@@ -66,13 +66,9 @@ export class LinkManager extends Node2D {
 	}
 
 	showInterDeterminantLinks(node: Determinant, preview = false) {
-		const associations = AssociationManager.getDirectAssociations(node).determinant;
+		const associations = AssociationManager.getDirectAssociations(node, Dir.Source).determinant;
 
 		for (const [detId, direction] of associations.entries()) {
-			if(Dir.Target === direction) {
-				continue;
-			}
-
 			const nodeKey = Dir.Source === direction ? `d${detId}-d${node.id}` : `d${node.id}-d${detId}`;
 			const link = this.links.get(nodeKey);
 

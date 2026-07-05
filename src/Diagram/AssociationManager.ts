@@ -56,7 +56,9 @@ export class AssociationManager {
 		return "facility";
 	}
 
-	static getDirectAssociations(source: SelectableNode): Associations {
+	static getDirectAssociations(source: SelectableNode, direction?: Direction): Associations {
+		const allowSource = undefined === direction || Dir.Source === direction;
+		const allowTarget = undefined === direction || Dir.Target === direction;
 		const type = this.getNodeType(source);
 		const associations = {
 			facility: new Map<number, Direction>(),
@@ -66,7 +68,7 @@ export class AssociationManager {
 
 		for (const asso of this.registry) {
 			// Check if match as a source
-			if (type === asso[0].type && source.id === asso[0].id) {
+			if (allowSource && type === asso[0].type && source.id === asso[0].id) {
 				// Check if the relation exists in the other way
 				// const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
 				const isBidirectional = false; // Do not support bidirectionnal links for now
@@ -75,7 +77,7 @@ export class AssociationManager {
 			}
 
 			// Check if it matches as a target
-			if (type === asso[1].type && source.id === asso[1].id) {
+			if (allowTarget && type === asso[1].type && source.id === asso[1].id) {
 				// Check if the relation exists in the other way
 				// const isBidirectional = this.index.has(this.makeAssoKey(asso[1], asso[0]));
 				const isBidirectional = false; // Do not support bidirectionnal links for now
@@ -86,14 +88,14 @@ export class AssociationManager {
 		return associations;
 	}
 
-	static getAllAssociations(source: SelectableNode): Associations {
+	static getAllAssociations(source: SelectableNode, direction?: Direction): Associations {
 		// Determinant is directly connected to other types
 		if (source instanceof Determinant) {
-			return this.getDirectAssociations(source);
+			return this.getDirectAssociations(source, direction);
 		}
 
 		const type = this.getNodeType(source);
-		const associations = this.getDirectAssociations(source);
+		const associations = this.getDirectAssociations(source, direction);
 
 		// Use determinants as pivot to get the last connected type (n+2)
 		for (const asso of this.registry) {

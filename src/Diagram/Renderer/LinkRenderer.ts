@@ -20,6 +20,8 @@ export class LinkRenderer extends SVGNodeRenderer {
 		const link = vnode.node as Link;
 		const shapes = this.getShapes(vnode);
 		const selected = App.instance().getDiagram().getSelectedNode();
+		const preview = App.instance().getDiagram().getPreviewNode();
+		const activeNode = "selected" === link.status.get() ? selected : preview;
 
 		if (link.hidden) {
 			shapes.remove(link.key);
@@ -39,16 +41,17 @@ export class LinkRenderer extends SVGNodeRenderer {
 		}
 
 		if (link.from instanceof Determinant && link.to instanceof Determinant) {
-			const destination = link.getDestination();
+			const destinationNode = activeNode === link.to ? link.from : link.to;
+			const sourceNode = activeNode === link.to ? link.to : link.from;
 
 			// Create a temporary node to compute the position
 			const tempNode = new Node2D();
 			tempNode.setPosition(determinantAnchorOffset);
 
-			tempNode.setParent(link.getSource());
+			tempNode.setParent(sourceNode);
 			const source = tempNode.getGlobalPosition().get();
 
-			tempNode.setParent(destination);
+			tempNode.setParent(destinationNode);
 			const dest = tempNode.getGlobalPosition().get();
 
 			const factor = dest.sub(source).mag() * .54;
@@ -65,8 +68,8 @@ export class LinkRenderer extends SVGNodeRenderer {
 
 			if (Dir.Bidirectional !== link.direction) {
 				const arrow = shapes.get(`${link.key}-arrow`, () => new SVGSymbol(linkArrow, 60));
-				arrow.updateMesh(dest.add(destToCenter.mul(20)), destination.getGlobalRotation().get().add(Angle.HALF_PI));
-				const selectedColor = destination === selected ? colors.primary : colors.secondary;
+				arrow.updateMesh(dest.add(destToCenter.mul(20)), destinationNode.getGlobalRotation().get().add(Angle.HALF_PI));
+				const selectedColor = destinationNode === activeNode ? colors.primary : colors.secondary;
 				arrow.updateStyle(new SVGStyle({ fill: "selected" === link.status.get() ? selectedColor : Color.White }));
 			}
 

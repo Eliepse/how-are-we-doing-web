@@ -23,7 +23,7 @@ import { Opacity } from "../Engine2D/ValueObject/Opacity";
 import { easeOutCubic, interpolateOpacity } from "../Engine2D/Time/interpolations";
 import { Transition } from "../Engine2D/Time/Transition";
 import { LinkManager } from "./Items/Link/LinkManager";
-import { AssociationManager, type AssoNodeType } from "./AssociationManager";
+import { AssociationManager, type AssoNodeType, Dir } from "./AssociationManager";
 import { linkGradient } from "./Shape/LinkGradient";
 import { App } from "../App";
 
@@ -357,14 +357,21 @@ export class Diagram extends Node2D {
 	}
 
 	public updateNodesHighlight() {
-		const withDetsFocus = App.feature("focus-determinant");
 		const linkManager = Engine.nodeByUname<LinkManager>("link:manager");
 		const determinants = Engine.nodesByTag<Determinant>("determinant");
 		const facilities = Engine.nodesByTag<Facility>("facility");
 		const pathologies = Engine.nodesByTag<Pathology>("pathology");
-		const previewAssoc = this._previewedNode instanceof Determinant ? AssociationManager.getAllAssociations(this._previewedNode) : null;
-		const selectionAssoc = this._selectedNode ? AssociationManager.getAllAssociations(this._selectedNode) : null;
+		const detMode = App.feature("focus-determinant");
 		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
+		let previewAssoc, selectionAssoc = null;
+
+		if (this._previewedNode instanceof Determinant) {
+			previewAssoc = AssociationManager.getAllAssociations(this._previewedNode, detMode ? Dir.Source : undefined);
+		}
+
+		if (this._selectedNode) {
+			selectionAssoc = AssociationManager.getAllAssociations(this._selectedNode, detMode ? Dir.Source : undefined);
+		}
 
 		linkManager?.clearLinks();
 
@@ -381,12 +388,12 @@ export class Diagram extends Node2D {
 			}
 
 			if (selectionAssoc?.determinant?.has(determinant.id)) {
-				if(!(this._selectedNode instanceof Determinant)) {
+				if (!(this._selectedNode instanceof Determinant)) {
 					determinant.setStatus("selected");
 					continue;
 				}
 
-				if(withDetailedAssocs) {
+				if (withDetailedAssocs) {
 					determinant.setStatus("n+1");
 					continue;
 				}

@@ -8,7 +8,7 @@
     display: grid;
     width: 100%;
     height: 100%;
-    grid-template-rows: 3rem 1fr 4rem;
+    grid-template-rows: var(--12) 1fr var(--16);
     grid-template-columns: var(--sideColumn) 1fr var(--sideColumn);
     overflow: hidden;
     /*transition: grid-template-columns var(--speed) ease-out;*/
@@ -20,7 +20,8 @@
     align-items: center;
     grid-column: span 3;
     grid-row: 1 / 2;
-    padding: .5rem 1rem;
+    padding: var(--2) var(--4);
+    font-size: var(--3);
 }
 
 /*
@@ -53,7 +54,7 @@
 #diagram text {
     font-weight: 400;
     text-align: center;
-    font-size: .875rem;
+    font-size: var(--3-5);
     text-transform: uppercase;
     user-select: none;
     opacity: .6;
@@ -82,12 +83,12 @@
     left: 0;
     max-width: 11.25rem;
     text-align: center;
-    padding: .25rem .375rem;
-    border-radius: .5rem;
+    padding: var(--1) var(--1-5);
+    border-radius: var(--2);
     border: 1px solid white;
     background: rgb(25 23 51 / 0.7);
     color: white;
-    font-size: .75rem;
+    font-size: var(--3);
     user-select: none;
     z-index: 5;
 }
@@ -121,7 +122,7 @@
 }
 
 #biblioRoot::before {
-    --gap: 2.5rem;
+    --gap: var(--10);
     content: "";
     position: absolute;
     display: block;
@@ -137,7 +138,7 @@
     top: 0;
     left: 0;
     bottom: 0;
-    padding: 2.5rem 1rem 1rem;
+    padding: var(--10) var(--4) var(--4);
     width: 20rem;
     overflow-y: auto;
     z-index: 20;
@@ -157,8 +158,8 @@
 }
 
 .biblio-nodesTitle {
-    font-size: 1rem;
-    margin-bottom: 1rem;
+    font-size: var(--4);
+    margin-bottom: var(--4);
 }
 
 .biblio-nodes li {
@@ -170,7 +171,7 @@
 }
 
 .biblio-nodes li + li {
-    margin-top: .5rem;
+    margin-top: var(--2);
 }
 
 .biblio-links {
@@ -231,12 +232,12 @@
     max-width: 60rem;
     padding: 2rem;
     border: 1px solid hsla(0, 0%, 100%, .16);
-    border-radius: .5rem;
+    border-radius: var(--2);
     background: var(--dark-blue);
 }
 
 .credit-modal h2 {
-    font-size: 2rem;
+    font-size: var(--8);
     font-weight: normal;
     margin: 0 0 24px 0;
 }
@@ -244,24 +245,24 @@
 .credit-modal h3,
 .credit-modal p {
     max-width: 40rem;
-    font-size: 1rem;
+    font-size: var(--4);
 }
 
 .credit-modal h3 {
     max-width: 30rem;
-    margin-bottom: .5rem;
+    margin-bottom: var(--2);
     line-height: 1.25;
 }
 
 .credit-modal p {
     margin-top: 0;
-    margin-bottom: 2rem;
+    margin-bottom: var(--8);
 }
 
 #credits button[data-action="credits:close"] {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: var(--4);
+    right: var(--4);
 }
 
 /*
@@ -276,22 +277,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: var(--3-5);
 }
 
 .contextName {
-    margin: 0 1rem;
+    margin: 0 var(--4);
     min-width: 20rem;
     text-align: center;
 }
 
 #modes {
     margin: 0;
-    padding: .25rem;
+    padding: var(--1);
     display: flex;
-    width: 24rem;
+    width: 20rem;
     border: 1px solid white;
-    border-radius: .5rem;
-    gap: .5rem;
+    border-radius: var(--2);
+    gap: var(--2);
     list-style: none;
     justify-self: center;
 }
@@ -332,9 +334,9 @@
     display: flex;
     justify-content: end;
     align-items: center;
-    font-size: .675rem;
+    font-size: var(--2-5);
     flex-direction: column;
-    gap: 4rem;
+    gap: var(--16);
 }
 
 #legendRoot svg,
@@ -348,7 +350,7 @@
 #legendRoot figure {
     text-align: center;
     padding: 0;
-    margin: 0 1rem;
+    margin: 0 var(--4);
 }
 
 #legendRoot figcaption {

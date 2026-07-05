@@ -5,6 +5,20 @@
     --red: rgb(228, 3, 47);
     --red-hsl: hsl(348 98% 45%);
     font-size: 1rem;
+
+    --1px: .0625rem;
+    --0-5: .125rem;
+    --1: .25rem;
+    --1-5: .375rem;
+    --2: .5rem;
+    --2-5: .625rem;
+    --3: .75rem;
+    --3-5: .875rem;
+    --4: 1rem;
+    --8: 2rem;
+    --10: 2.5rem;
+    --12: 3rem;
+    --16: 4rem;
 }
 
 * {
@@ -49,12 +63,13 @@ svg {
 }
 
 button {
-    padding: 6px 8px;
+    padding: var(--1) var(--1-5);
     color: white;
     background: transparent;
-    border-radius: 6px;
+    border-radius: var(--1-5);
     border: 1px solid white;
     cursor: pointer;
+    font-size: inherit;
 }
 
 button:hover {
@@ -64,12 +79,12 @@ button:hover {
 
 #profiling {
     display: grid;
-    gap: .5rem;
+    gap: var(--2);
     position: fixed;
-    top: .5rem;
-    left: .5rem;
+    top: var(--2);
+    left: var(--2);
     margin: 0;
-    padding: .5rem  ;
+    padding: var(--2)  ;
     min-width: 160px;
     font-size: 13px;
     color: #fff;

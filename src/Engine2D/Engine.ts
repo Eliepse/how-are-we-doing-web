@@ -229,7 +229,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		this.tree.update();
 
 		if (Input.pointer.primary.down) {
-			this.propagateClick(this.renderer.windowToLocalPoint(Input.pointer.screenPosition));
+			this.propagateClick(this.renderer.windowToLocalPoint(Input.pointer.position.current));
 		}
 
 		// "for" loop prevent long callstack caused by recursive calls

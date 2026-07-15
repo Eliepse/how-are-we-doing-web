@@ -8,7 +8,7 @@ type MouseButton = {
 }
 
 type Pointer = {
-	screenPosition: Vector;
+	position: { current: Vector, previous: Vector, delta: Vector, isMoving: boolean };
 	primary: MouseButton;
 	secondary: MouseButton;
 }
@@ -24,15 +24,24 @@ export class Input {
 	private static _instance?: Input;
 
 	private pointer: Pointer = {
-		screenPosition: Vector.Zero,
+		position: { current: Vector.Zero, previous: Vector.Zero, delta: Vector.Zero, isMoving: false },
 		primary: { ...DEFAULT_BTN },
 		secondary: { ...DEFAULT_BTN },
 	};
 
 	private constructor() {
+		const updatePointerPosition = (position: Vector) => {
+			const previousPosition = this.pointer.position.previous;
+			const delta = position.sub(previousPosition);
+
+			this.pointer.position.current = position;
+			this.pointer.position.delta = delta;
+			this.pointer.position.isMoving = !delta.isEmpty();
+		};
+
 		document.addEventListener("mousemove", (e) => {
 			const position = new Vector(e.clientX, e.clientY);
-			this.pointer.screenPosition = position;
+			updatePointerPosition(position);
 
 			if (this.pointer.primary.pressed) {
 				this.pointer.primary.drag.to = position;
@@ -47,7 +56,8 @@ export class Input {
 
 		document.addEventListener("mousedown", (e) => {
 			const position = new Vector(e.clientX, e.clientY);
-			this.pointer.screenPosition = position;
+			updatePointerPosition(position);
+
 			const patch = {
 				down: true,
 				up: false,
@@ -66,7 +76,8 @@ export class Input {
 
 		document.addEventListener("mouseup", (e) => {
 			const position = new Vector(e.clientX, e.clientY);
-			this.pointer.screenPosition = position;
+			updatePointerPosition(position);
+
 			const patch = { down: false, up: true, pressed: false };
 
 			if (0 === e.button) {
@@ -88,6 +99,10 @@ export class Input {
 	}
 
 	private processTicked() {
+		this.pointer.position.previous = this.pointer.position.current;
+		this.pointer.position.delta = Vector.Zero;
+		this.pointer.position.isMoving = false;
+
 		this.pointer.primary.down = false;
 		this.pointer.primary.up = false;
 		this.pointer.secondary.down = false;

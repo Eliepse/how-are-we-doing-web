@@ -171,8 +171,6 @@ export class App {
 			...(await (await fetch("contexts/grenoble.json")).json())?.contexts,
 		];
 
-		console.debug(contexts);
-
 		this.contexts = contexts.map((context: {
 			id: string,
 			name: string,

@@ -290,6 +290,10 @@ export class App {
 			links.facilities.forEach((l) => this.biblio.addLink("facility", l.source.toLowerCase()));
 		});
 
+		this.diagram.addListener("nodePreviewed", (event: NodeEvent<SelectableNode | undefined>) => {
+			this.onPreviewChanged(event.target)
+		});
+
 		// Start the engine
 		Engine.start();
 	}

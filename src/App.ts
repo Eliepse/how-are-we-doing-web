@@ -171,8 +171,6 @@ export class App {
 			...(await (await fetch("contexts/grenoble.json")).json())?.contexts,
 		];
 
-		console.debug(contexts);
-
 		this.contexts = contexts.map((context: {
 			id: string,
 			name: string,
@@ -288,6 +286,10 @@ export class App {
 			const links = this.diagram.getActiveLinksSources();
 			links.pathologies.forEach((l) => this.biblio.addLink("pathology", l.source.toLowerCase()));
 			links.facilities.forEach((l) => this.biblio.addLink("facility", l.source.toLowerCase()));
+		});
+
+		this.diagram.addListener("nodePreviewed", (event: NodeEvent<SelectableNode | undefined>) => {
+			this.onPreviewChanged(event.target)
 		});
 
 		// Start the engine

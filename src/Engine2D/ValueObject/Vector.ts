@@ -112,6 +112,10 @@ export class Vector {
 		return Vector.isEqual(this, vector);
 	}
 
+	isEmpty(): boolean {
+		return 0 === this.x && 0 === this.y;
+	}
+
 	toAttributes() {
 		return {
 			x: this.x.toFixed(Config.Render.precision),

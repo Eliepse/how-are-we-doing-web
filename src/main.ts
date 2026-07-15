@@ -1,6 +1,7 @@
 import { App } from "./App";
 import type { Context } from "./Diagram/Context";
 import { wait } from "./helpers";
+import { Collector } from "./Telemetry/Collector";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
@@ -43,6 +44,8 @@ async function main(withLoader = true) {
 	}
 
 	const app = App.init(appDom, diagramDom);
+	const collector = new Collector();
+	await collector.init();
 
 	// @ts-ignore
 	window.app = app;
@@ -63,18 +66,22 @@ async function main(withLoader = true) {
 		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
 
 		const legendBlurred = document.querySelector<HTMLElement>("figure[data-legend=blurred]");
-		if(legendBlurred) {
+		if (legendBlurred) {
 			legendBlurred.style.display = context.isDefault ? "none" : "";
 		}
 
 		const legendDefault = document.querySelector<HTMLElement>("figure[data-legend=default]");
-		if(legendDefault) {
+		if (legendDefault) {
 			legendDefault.style.display = context.isDefault ? "none" : "";
 		}
 
 	};
 
 	app.onSelectionChanged = (node) => {
+		if (node) {
+			collector.logEvent("selection_changed", { id: node.id, class: node.constructor.name });
+		}
+
 		if (undefined === node) {
 			diagramChannel.postMessage({ type: "selectionChanged", data: { nodes: [] } });
 			return;
@@ -95,14 +102,22 @@ async function main(withLoader = true) {
 
 	app.onFeatureChanged = () => {
 		const legendPrimary = document.querySelector<HTMLElement>("figure[data-legend=primary]");
-		if(legendPrimary) {
+		if (legendPrimary) {
 			legendPrimary.style.display = App.feature("detailed-relations") ? "" : "none";
 		}
 
 		const legendSecondary = document.querySelector<HTMLElement>("figure[data-legend=secondary]");
-		if(legendSecondary) {
+		if (legendSecondary) {
 			legendSecondary.style.display = App.feature("detailed-relations") ? "" : "none";
 		}
+	};
+
+	app.onPreviewChanged = (node) => {
+		if(!node) {
+			return;
+		}
+
+		collector.logEvent("preview_changed", { id: node.id, class: node.constructor.name });
 	};
 
 	translator.dyn("general.no context", (txt) => {
@@ -150,12 +165,12 @@ async function main(withLoader = true) {
 			const legendDefault = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=default]");
 			const legendFocus = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=focus]");
 
-			if(!legendFocus || !legendDefault) {
+			if (!legendFocus || !legendDefault) {
 				return;
 			}
 
 			// @ts-ignore
-			if("focus" === el.dataset.mode) {
+			if ("focus" === el.dataset.mode) {
 				legendDefault.style.display = "none";
 				legendFocus.style.display = "";
 			} else {

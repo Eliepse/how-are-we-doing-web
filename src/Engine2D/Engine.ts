@@ -68,13 +68,6 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		this.tree = new VirtualTree(this.rootNode);
 		this.tree.onMount = (vnode) => this.handleOnMount(vnode);
 		this.tree.onUnmount = (vnode) => this.handleOnUnmount(vnode);
-
-		this.addEventListener("mousemove", (e) => this.handleMouseMove(e.cursor));
-		document.addEventListener("mousemove", (e) => {
-			this.dispatchEvent("mousemove", {
-				cursor: this.renderer.windowToLocalPoint(new Vector(e.clientX, e.clientY)),
-			});
-		});
 	}
 
 	static get root(): Node2D {
@@ -228,8 +221,15 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 		this.tree.update();
 
+		// Trigger ticked-based pointer events
+		const pointLocalPosition = this.renderer.windowToLocalPoint(Input.pointer.position.current);
+
 		if (Input.pointer.primary.down) {
-			this.propagateClick(this.renderer.windowToLocalPoint(Input.pointer.position.current));
+			this.propagateClick(pointLocalPosition);
+		}
+
+		if (Input.pointer.position.isMoving) {
+			this.handleMouseMove(pointLocalPosition);
 		}
 
 		// "for" loop prevent long callstack caused by recursive calls

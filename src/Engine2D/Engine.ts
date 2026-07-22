@@ -7,6 +7,7 @@ import { NodeEvent } from "./Core/NodeEvent";
 import { VirtualTree } from "./Core/VirtualTree";
 import type { Renderer } from "./Renderer/Renderer";
 import type { Transition } from "./Time/Transition";
+import { Input } from "./Interaction/Input";
 
 export type EngineMouseEvent = { cursor: Vector };
 type Listener<TEvent extends object> = (event: TEvent) => void;
@@ -67,19 +68,6 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		this.tree = new VirtualTree(this.rootNode);
 		this.tree.onMount = (vnode) => this.handleOnMount(vnode);
 		this.tree.onUnmount = (vnode) => this.handleOnUnmount(vnode);
-
-		this.addEventListener("click", (e) => this.propagateClick(e.cursor));
-		this.addEventListener("mousemove", (e) => this.handleMouseMove(e.cursor));
-		document.addEventListener("mousemove", (e) => {
-			this.dispatchEvent("mousemove", {
-				cursor: this.renderer.windowToLocalPoint(new Vector(e.clientX, e.clientY)),
-			});
-		});
-		document.addEventListener("click", (e) => {
-			this.dispatchEvent("click", {
-				cursor: this.renderer.windowToLocalPoint(new Vector(e.clientX, e.clientY)),
-			});
-		});
 	}
 
 	static get root(): Node2D {
@@ -233,6 +221,17 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 		this.tree.update();
 
+		// Trigger ticked-based pointer events
+		const pointLocalPosition = this.renderer.windowToLocalPoint(Input.pointer.position.current);
+
+		if (Input.pointer.primary.down) {
+			this.propagateClick(pointLocalPosition);
+		}
+
+		if (Input.pointer.position.isMoving) {
+			this.handleMouseMove(pointLocalPosition);
+		}
+
 		// "for" loop prevent long callstack caused by recursive calls
 		for (const vnode of this.tree.getNodes()) {
 			// Trigger onProcess method
@@ -272,6 +271,8 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 			this._profile.nodesRendered = 0;
 			this._profile.nodesSkippedRender = 0;
 		}
+
+		Input.ticked();
 	}
 
 	public static registerTransition(transition: Transition) {

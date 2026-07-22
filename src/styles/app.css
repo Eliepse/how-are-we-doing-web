@@ -327,10 +327,10 @@
 */
 
 #legendRoot {
-    grid-row: 2 / 4;
+    grid-row: 2 / 3;
     grid-column: 1 / 2;
     height: 100%;
-    padding-bottom: 10rem;
+    padding-bottom: 16%;
     display: flex;
     justify-content: end;
     align-items: center;

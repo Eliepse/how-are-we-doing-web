@@ -113,7 +113,7 @@ async function main(withLoader = true) {
 	};
 
 	app.onPreviewChanged = (node) => {
-		if(!node) {
+		if (!node) {
 			return;
 		}
 
@@ -192,7 +192,18 @@ function setupLanguageControls(app: App): void {
 		.forEach((node) => {
 			node.addEventListener("click", (e) => {
 				e.stopPropagation();
-				node.dataset.locale && translator.changeLocale(node.dataset.locale);
+
+				const locale = node.dataset.locale;
+
+				if (!locale) {
+					return;
+				}
+
+				translator.changeLocale(locale);
+
+				document.querySelectorAll<HTMLElement>("[data-lang-show]").forEach((element) => {
+					element.style.display = element.dataset.langShow === locale ? "" : "none";
+				});
 			});
 		});
 }

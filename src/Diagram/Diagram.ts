@@ -452,15 +452,15 @@ export class Diagram extends Node2D {
 			if (this._selectedNode === pathology || selectionAssoc?.pathology?.has(pathology.id)) {
 				pathology.setStatus("selected");
 				continue;
-			} else if (this._previewedNode === pathology || previewAssoc?.pathology?.has(pathology.id)) {
+			} else if (this._previewedNode === pathology) {
 				pathology.setStatus(isPreviewSecondary ? "n+1" : "preview");
 				continue;
 			} else if (withPathologyAssocs) {
 				if (selectionAssoc?.pathology?.has(pathology.id)) {
 					pathology.setStatus("selected");
 					continue;
-				} else if (previewAssoc?.pathology?.has(pathology.id)) {
-					pathology.setStatus("preview");
+				} else if (previewAssoc?.pathology?.has(pathology.id) && isPreviewSecondary) {
+					pathology.setStatus("n+1");
 					continue;
 				}
 			}

@@ -108,7 +108,7 @@
 
 #biblioRoot {
     position: relative;
-    grid-row: 2 / 4;
+    grid-row: 2 / 3;
     grid-column: 3 / 4;
     flex: none;
     transition: opacity var(--speed) ease-out, transform var(--speed) ease-out;
@@ -363,4 +363,27 @@
 
 #legendRoot figcaption {
     width: 8.5rem;
+}
+
+
+/*
+| --------------------------------
+| Attrubution
+| --------------------------------
+*/
+
+#attribution {
+    grid-column: 3 / 4;
+    grid-row: 3 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding: 0 2rem;
+    font-size: .75rem;
+}
+
+#attribution cite {
+    font-style: normal;
+    text-transform: uppercase;
+    opacity: .4;
 }

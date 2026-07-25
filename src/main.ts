@@ -7,25 +7,24 @@ export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
 
 async function main(withLoader = true) {
+	let loaderPercent = 0;
+
 	function updateLoader(percent: number, title: string): void {
 		if (false === withLoader) {
 			return;
 		}
 
-		if (!loaderDom.loadingBar || !loaderDom.loadingCounter || !loaderDom.loadingTitle) {
+		if (!loaderDom.loadingBar) {
 			return;
 		}
 
+		loaderPercent = percent;
 		loaderDom.loadingBar.style.width = `${percent.toFixed(2)}%`;
-		loaderDom.loadingCounter.innerText = `${Math.round(percent)} %`;
-		loaderDom.loadingTitle.innerText = title;
 	}
 
 	const loaderDom = {
-		root: document.querySelector<HTMLDivElement>("#loader"),
-		loadingBar: document.querySelector<HTMLDivElement>(".loader__progressBar div"),
-		loadingCounter: document.querySelector<HTMLDivElement>(".loader__progressCounter"),
-		loadingTitle: document.querySelector<HTMLDivElement>(".loader__title"),
+		root: document.querySelector<HTMLDivElement>("#splash"),
+		loadingBar: document.querySelector<HTMLDivElement>(".loader__progressBar"),
 	};
 
 	if (false === withLoader) {
@@ -126,10 +125,25 @@ async function main(withLoader = true) {
 			.forEach((el) => (el.innerHTML = txt));
 	});
 
-	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
+	const loadStartedAt = Date.now();
 
-	withLoader && (await wait(500));
+	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
+	console.info(`App loaded in: ${Date.now() - loadStartedAt} ms`);
+
+	const minLoadtimeMs = import.meta.env.DEV ? 0 : 5_000;
+	const alreadyLoadedPercent = loaderPercent;
+	const leftToLoadPercent = 100 - loaderPercent;
+
+	while (Date.now() - loadStartedAt < minLoadtimeMs) {
+		const loadTimeMs = Date.now() - loadStartedAt;
+		const forceWaitMs = minLoadtimeMs - loadTimeMs;
+		const delay = Math.min(Math.max(Math.random() * forceWaitMs, 350), 850);
+		await wait(delay);
+		updateLoader(Math.min(100, alreadyLoadedPercent + (leftToLoadPercent * (loadTimeMs / minLoadtimeMs))), "");
+	}
+
 	updateLoader(100, "Ready");
+
 	void app.launch();
 	withLoader && (await wait(350));
 

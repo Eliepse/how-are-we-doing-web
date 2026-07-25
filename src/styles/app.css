@@ -129,6 +129,11 @@
     border-left: 1px solid rgba(255, 255, 255, 0.4)
 }
 
+#biblioToggle[aria-pressed=true] {
+    color: var(--dark-blue);
+    background: #fff;
+}
+
 #biblioContent {
     position: absolute;
     top: 0;
@@ -319,7 +324,7 @@
 
 #modes li button:hover {
     color: white;
-    background: rgba(255, 255, 255, 0.16);
+    background: var(--dark-white);
 }
 
 #modes li button:active,

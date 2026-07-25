@@ -44,8 +44,7 @@ button {
 }
 
 button:hover {
-    background: white;
-    color: var(--dark-blue);
+    background: var(--dark-white);
 }
 
 #profiling {

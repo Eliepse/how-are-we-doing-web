@@ -170,9 +170,10 @@ async function main(withLoader = true) {
 	});
 
 	document.querySelectorAll("[data-action='mode:change']").forEach((el) => {
-		el.addEventListener("click", (e) => {
+		el.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			e.preventDefault();
+
 			// @ts-ignore
 			app.changeMode(el.dataset.mode);
 
@@ -217,7 +218,7 @@ function setupLanguageControls(app: App): void {
 	document
 		.querySelectorAll<HTMLElement>("button[data-action='locale:change']")
 		.forEach((node) => {
-			node.addEventListener("click", (e) => {
+			node.addEventListener("mousedown", (e) => {
 				e.stopPropagation();
 
 				const locale = node.dataset.locale;
@@ -234,7 +235,7 @@ function setupLanguageControls(app: App): void {
 	document
 		.querySelectorAll<HTMLElement>("button[data-action='locale:toggle']")
 		.forEach((node) => {
-			node.addEventListener("click", (e) => {
+			node.addEventListener("mousedown", (e) => {
 				e.stopPropagation();
 
 				const currentIndex = translator.supportedLocales.indexOf(translator.currentLocale);
@@ -272,7 +273,7 @@ function setupBibliography(app: App): void {
 
 	dom.innerText = textShow.toString();
 
-	dom.addEventListener("click", (e) => {
+	dom.addEventListener("mousedown", (e) => {
 		e.stopPropagation();
 
 		if ("true" === dom.ariaPressed) {
@@ -295,20 +296,26 @@ function setupCredits(): void {
 		return;
 	}
 
-	dom.addEventListener("click", (e) => {
+	dom.addEventListener("mousedown", (e) => {
 		dom.ariaHidden = "true";
 		e.stopPropagation();
 	});
 	dom.addEventListener("mousemove", (e) => e.stopPropagation());
 
-	dom.querySelector(".credit-modal")?.addEventListener("click", (e) => e.stopPropagation());
+	dom.querySelector(".credit-modal")?.addEventListener("mousedown", (e) => e.stopPropagation());
 
 	document.querySelectorAll("button[data-action='credits:open']").forEach((btn) => {
-		btn.addEventListener("click", () => (dom.ariaHidden = "false"));
+		btn.addEventListener("mousedown", (e) => {
+			e.stopPropagation();
+			dom.ariaHidden = "false";
+		});
 	});
 
 	document.querySelectorAll("button[data-action='credits:close']").forEach((btn) => {
-		btn.addEventListener("click", () => (dom.ariaHidden = "true"));
+		btn.addEventListener("mousedown", (e) => {
+			e.stopPropagation();
+			dom.ariaHidden = "true";
+		});
 	});
 }
 
@@ -322,14 +329,14 @@ function setupContextControls(app: App): void {
 	});
 
 	document.querySelectorAll("[data-action='context:prev']")?.forEach((n) => {
-		n.addEventListener("click", (e) => {
+		n.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			app.previousContext();
 		});
 	});
 
 	document.querySelectorAll("[data-action='context:next']")?.forEach((n) => {
-		n.addEventListener("click", (e) => {
+		n.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			app.nextContext();
 		});

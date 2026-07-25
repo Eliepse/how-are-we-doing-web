@@ -11,9 +11,9 @@
             --red-hex: #e3032e;
             --red: rgb(228, 3, 47);
             --red-hsl: hsl(348 98% 45%);
-			--dark-white: rgba(255, 255, 255, 0.16);
+            --dark-white: rgba(255, 255, 255, 0.16);
             --color-secondary: #de7f7d;
-			--sans-serif: InterVariable, sans-serif;
+            --sans-serif: InterVariable, sans-serif;
             font-size: 1rem;
 
             --1px: .0625rem;
@@ -124,9 +124,10 @@
 <div id="app">
 	<div id="navigation">
 		<div style="justify-self: start; display: flex; gap: .5rem">
-			<button data-action="locale:change" data-locale="fr">FR</button>
-			<button data-action="locale:change" data-locale="en">EN</button>
-			<button data-action="credits:open" data-translate="general.credits" style="margin-left: 1.25rem">Credits
+			<button data-action="locale:toggle" style="text-transform: uppercase" data-locale-current>
+				FR
+			</button>
+			<button data-action="credits:open" data-translate="general.credits">Credits
 			</button>
 		</div>
 

@@ -201,6 +201,19 @@ async function main(withLoader = true) {
 
 function setupLanguageControls(app: App): void {
 	const translator = app.getTranslator();
+
+	function updateLocalDisplay() {
+		const currentLocale = translator.currentLocale;
+
+		document.querySelectorAll<HTMLElement>("[data-lang-show]").forEach((element) => {
+			element.style.display = element.dataset.langShow === currentLocale ? "" : "none";
+		});
+
+		document.querySelectorAll<HTMLElement>("[data-locale-current]").forEach((element) => {
+			element.textContent = currentLocale;
+		});
+	}
+
 	document
 		.querySelectorAll<HTMLElement>("button[data-action='locale:change']")
 		.forEach((node) => {
@@ -214,10 +227,27 @@ function setupLanguageControls(app: App): void {
 				}
 
 				translator.changeLocale(locale);
+				updateLocalDisplay();
+			});
+		});
 
-				document.querySelectorAll<HTMLElement>("[data-lang-show]").forEach((element) => {
-					element.style.display = element.dataset.langShow === locale ? "" : "none";
-				});
+	document
+		.querySelectorAll<HTMLElement>("button[data-action='locale:toggle']")
+		.forEach((node) => {
+			node.addEventListener("click", (e) => {
+				e.stopPropagation();
+
+				const currentIndex = translator.supportedLocales.indexOf(translator.currentLocale);
+				const newIndex = (currentIndex + 1) % translator.supportedLocales.length;
+				const newLocale = translator.supportedLocales[newIndex];
+
+				if (!newLocale) {
+					console.error("Unable to toggle the locale");
+					return;
+				}
+
+				translator.changeLocale(newLocale);
+				updateLocalDisplay();
 			});
 		});
 }

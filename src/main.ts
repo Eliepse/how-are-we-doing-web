@@ -9,7 +9,7 @@ const diagramChannel = new BroadcastChannel("diagram");
 async function main(withLoader = true) {
 	let loaderPercent = 0;
 
-	function updateLoader(percent: number, title: string): void {
+	function updateLoader(percent: number, _title: string): void {
 		if (false === withLoader) {
 			return;
 		}
@@ -130,6 +130,7 @@ async function main(withLoader = true) {
 	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
 	console.info(`App loaded in: ${Date.now() - loadStartedAt} ms`);
 
+	// @ts-expect-error
 	const minLoadtimeMs = import.meta.env.DEV ? 0 : 5_000;
 	const alreadyLoadedPercent = loaderPercent;
 	const leftToLoadPercent = 100 - loaderPercent;
@@ -227,7 +228,7 @@ function setupLanguageControls(app: App): void {
 					return;
 				}
 
-				translator.changeLocale(locale);
+				void translator.changeLocale(locale);
 				updateLocalDisplay();
 			});
 		});
@@ -247,7 +248,7 @@ function setupLanguageControls(app: App): void {
 					return;
 				}
 
-				translator.changeLocale(newLocale);
+				void translator.changeLocale(newLocale);
 				updateLocalDisplay();
 			});
 		});

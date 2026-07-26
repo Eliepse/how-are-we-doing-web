@@ -62,7 +62,8 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		// Pattern and anchor rim
 		if (status.hasChanged() || step.hasChanged() || opacity.hasChanged()) {
 			const color = this.getStatusColor(status.get());
-			element.updateStyle(new SVGStyle({ fill: color, opacity: opacity.get() }), stepClipsOptimized[step.get()]);
+			const gOpacity = opacity.get();
+			element.updateStyle(new SVGStyle({ fill: color.alpha(gOpacity.ratio), opacity: gOpacity }), stepClipsOptimized[step.get()]);
 
 			const forceIdleCore = "n+1" === status.get() && App.feature("detailed-relations");
 
@@ -70,7 +71,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 				circle.updateStyle(new SVGStyle({
 					stroke: new Stroke({
 						width: 2,
-						color: Color.White.alpha(anchorOpacity),
+						color: Color.White.alpha(anchorOpacity).alpha(gOpacity.ratio),
 					}),
 				}));
 				circleCore.updateStyle(new SVGStyle({ fill: Color.White }));
@@ -78,10 +79,10 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 				circle.updateStyle(new SVGStyle({
 					stroke: new Stroke({
 						width: 2,
-						color: color.alpha(anchorOpacity),
+						color: color.alpha(anchorOpacity).alpha(gOpacity.ratio),
 					}),
 				}));
-				circleCore.updateStyle(new SVGStyle({ fill: color }));
+				circleCore.updateStyle(new SVGStyle({ fill: color.alpha(gOpacity.ratio) }));
 			}
 
 			if (!forceIdleCore && ("selected" === status.get() || "preview" === status.get() || "n+1" === status.get())) {

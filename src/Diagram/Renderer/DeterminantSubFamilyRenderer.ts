@@ -20,8 +20,11 @@ export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {
 		const start = position.get().add(Vector.Right.mul(node.getRadius() - 136).rot(endAngle));
 		const end = position.get().add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
 
-		separator.updateMesh(start, end);
-		separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: Color.White.alpha(.6) }) }));
+		if(node.getGlobalOpacity().hasChanged()) {
+			separator.updateMesh(start, end);
+			const gOpacity = node.getGlobalOpacity().get();
+			separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: Color.White.alpha(.6).alpha(gOpacity.ratio) }) }));
+		}
 	}
 
 	override accepts(node: VirtualNode): boolean {

@@ -1,0 +1,81 @@
+
+/*
+| --------------------------------
+| Bibliography
+| --------------------------------
+*/
+
+#biblioRoot {
+    position: relative;
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
+    flex: none;
+    transition: opacity var(--speed) ease-out, transform var(--speed) ease-out;
+    opacity: 0;
+    transform: translateX(100%);
+    overflow: hidden;
+}
+
+#biblioRoot::before {
+    --gap: var(--10);
+    content: "";
+    position: absolute;
+    display: block;
+    width: 0;
+    top: var(--gap);
+    bottom: var(--gap);
+    left: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.4)
+}
+
+#biblioToggle[aria-pressed=true] {
+    color: var(--dark-blue);
+    background: #fff;
+}
+
+#biblioContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding: var(--10) var(--4) var(--4);
+    width: 20rem;
+    overflow-y: auto;
+    z-index: 20;
+    user-select: none;
+}
+
+#biblioRoot.open {
+    opacity: 1;
+    transform: translateX(0%);
+}
+
+.biblio-nodes {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.biblio-nodesTitle {
+    font-size: var(--4);
+    margin-bottom: var(--4);
+}
+
+.biblio-nodes li {
+    font-size: .8125rem;
+}
+
+.biblio-nodes li::first-letter {
+    text-transform: uppercase;
+}
+
+.biblio-nodes li + li {
+    margin-top: var(--2);
+}
+
+.biblio-links {
+    font-size: .6875rem;
+    margin: 2rem 0;
+    color: red;
+}

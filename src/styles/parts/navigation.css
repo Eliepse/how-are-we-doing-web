@@ -1,0 +1,77 @@
+
+#navigation {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    grid-column: span 3;
+    grid-row: 1 / 2;
+    padding: var(--2) var(--4);
+    font-size: var(--3);
+}
+
+/*
+| --------------------------------
+| Context controls
+| --------------------------------
+*/
+
+#contextControls {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--3-5);
+}
+
+.contextName {
+    margin: 0 var(--4);
+    min-width: 20rem;
+    text-align: center;
+}
+
+/*
+| --------------------------------
+| Modes controls
+| --------------------------------
+*/
+
+#modes {
+    margin: 0;
+    padding: var(--1);
+    display: flex;
+    width: 24rem;
+    border: 1px solid white;
+    border-left: 0;
+    border-right: 0;
+    gap: var(--2);
+    list-style: none;
+    justify-self: center;
+}
+
+#modes li {
+    flex: 1;
+    padding: 0;
+    margin: 0;
+}
+
+#modes li button {
+    width: 100%;
+    border: none;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: .025em;
+    padding: .25rem 0;
+    font-size: .875rem
+}
+
+#modes li button:hover {
+    color: white;
+    background: var(--dark-white);
+}
+
+#modes li button:active,
+#modes li button.active {
+    color: var(--dark-blue);
+    background: rgba(255, 255, 255, 1);
+}

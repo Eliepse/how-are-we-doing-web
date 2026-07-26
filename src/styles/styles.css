@@ -67,3 +67,24 @@ button:hover {
     overflow: hidden;
     position: relative;
 }
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        opacity: 1;
+    }
+    99% {
+        opacity: 0;
+    }
+    to {
+        display: none;
+    }
+}

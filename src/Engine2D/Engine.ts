@@ -1,13 +1,15 @@
 import type { WithPointerEvents } from "./Contract/WithPointerEvents";
-import type { Node2D } from "./Node/Node2D";
+import { type Node2D } from "./Node/Node2D";
 import { Vector } from "./ValueObject/Vector";
 import { Clock } from "./Time/Clock";
 import { VirtualNode } from "./Core/VirtualNode";
 import { NodeEvent } from "./Core/NodeEvent";
 import { VirtualTree } from "./Core/VirtualTree";
 import type { Renderer } from "./Renderer/Renderer";
-import type { Transition } from "./Time/Transition";
+import { type Transition } from "./Time/Transition";
 import { Input } from "./Interaction/Input";
+import { Animator } from "./Animator/Animator";
+import type { Tickable } from "./Time/Tickable";
 
 export type EngineMouseEvent = { cursor: Vector };
 type Listener<TEvent extends object> = (event: TEvent) => void;
@@ -29,7 +31,7 @@ type DebugProfile = {
 };
 type OnTickClb = (engine: Engine, profile: DebugProfile) => void;
 
-export class Engine<TRenderer extends Renderer = Renderer> {
+export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 	private static _instance: Engine;
 	public static onTicked: OnTickClb = () => undefined;
 
@@ -45,6 +47,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 	private _pointerEventsNodes = new Set<Node2D & WithPointerEvents>();
 	private _hoveredNodes = new Set<Node2D & WithPointerEvents>();
 	private transitions = new Set<Transition>();
+	private animator: Animator;
 
 	private _debug = false;
 	private _profile: DebugProfile = {
@@ -63,7 +66,8 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		private rootNode: Node2D,
 		private renderer: TRenderer,
 	) {
-		this.clock = new Clock(60, (delta, frames) => this.clockTick(delta, frames));
+		this.clock = new Clock(60, this);
+		this.animator = Animator.instance();
 
 		this.tree = new VirtualTree(this.rootNode);
 		this.tree.onMount = (vnode) => this.handleOnMount(vnode);
@@ -214,7 +218,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 	}
 
-	private clockTick(deltaTime: number, frames: number): void {
+	tick(deltaTime: number, time: number, timeUTC: number, deltaTimeMs: number, ticks: number): void {
 		if (undefined === this.tree) {
 			throw new Error("The tree has not been constructed");
 		}
@@ -232,6 +236,8 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 			this.handleMouseMove(pointLocalPosition);
 		}
 
+		this.animator.tick(deltaTime, time, timeUTC, deltaTimeMs, ticks);
+
 		// "for" loop prevent long callstack caused by recursive calls
 		for (const vnode of this.tree.getNodes()) {
 			// Trigger onProcess method
@@ -239,7 +245,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 			// Trigger render if needed
 			if (vnode.node.shouldRerender()) {
-				this.renderer.renderNode(vnode, deltaTime, frames);
+				this.renderer.renderNode(vnode, deltaTime, ticks);
 				vnode.node.onRendered(deltaTime);
 
 				if (Engine.debug) {
@@ -260,7 +266,7 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 		}
 
 		if (Engine.debug) {
-			this._profile.frames = frames;
+			this._profile.frames = ticks;
 			this._profile.frameTime = deltaTime;
 			this._profile.fps = (1 / deltaTime);
 			this._profile.transitionsCount = Engine._instance.transitions.size;
@@ -285,6 +291,10 @@ export class Engine<TRenderer extends Renderer = Renderer> {
 
 	static getHovering() {
 		return Engine._instance._hoveredNodes;
+	}
+
+	static unames(): string[] {
+		return Array.from(Engine._instance._nodeByUname.keys());
 	}
 
 	static nodeByUname<T extends Node2D>(uname: string): T | undefined {

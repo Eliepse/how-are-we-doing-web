@@ -26,6 +26,10 @@ import { LinkRenderer } from "./Diagram/Renderer/LinkRenderer";
 import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
 import { linkGradient } from "./Diagram/Shape/LinkGradient";
 import { linkArrow } from "./Diagram/Shape/LinkArrow";
+import { Animator } from "./Engine2D/Animator/Animator";
+import { Scene } from "./Engine2D/Animator/Scene";
+import { Sequence } from "./Engine2D/Animator/Sequence";
+import { Opacity } from "./Engine2D/ValueObject/Opacity";
 
 export type Feature =
 	"detailed-relations"
@@ -289,11 +293,31 @@ export class App {
 		});
 
 		this.diagram.addListener("nodePreviewed", (event: NodeEvent<SelectableNode | undefined>) => {
-			this.onPreviewChanged(event.target)
+			this.onPreviewChanged(event.target);
 		});
 
 		// Start the engine
 		Engine.start();
+
+		const facilityGroup = Engine.nodeByUname("group:facility");
+		const determinantGroup = Engine.nodeByUname("group:determinant");
+		const pathologyGroup = Engine.nodeByUname("group:pathology");
+
+		const diagramRevealScene = new Scene(
+			"home",
+			[
+				[1250, new Sequence((r) => this.diagram?.setOpacity(new Opacity(r)), 750)],
+				[1250, new Sequence((r) => pathologyGroup?.setOpacity(new Opacity(r)), 1_000)],
+				[1750, new Sequence((r) => determinantGroup?.setOpacity(new Opacity(r)), 1_000)],
+				[2250, new Sequence((r) => facilityGroup?.setOpacity(new Opacity(r)), 1_000)],
+			],
+		);
+
+		this.diagram?.setOpacity(Opacity.Transparent);
+		facilityGroup?.setOpacity(Opacity.Transparent);
+		determinantGroup?.setOpacity(Opacity.Transparent);
+		pathologyGroup?.setOpacity(Opacity.Transparent);
+		Animator.play(diagramRevealScene);
 	}
 
 	get debug() {

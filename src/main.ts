@@ -298,7 +298,7 @@ function setupBibliography(app: App): void {
 }
 
 function setupCredits(): void {
-	const dom = document.querySelector("#credits");
+	const dom = document.querySelector<HTMLElement>("#credits");
 
 	if (null === dom) {
 		return;
@@ -316,6 +316,7 @@ function setupCredits(): void {
 		btn.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			dom.ariaHidden = "false";
+			dom.style.display = "";
 		});
 	});
 
@@ -323,6 +324,7 @@ function setupCredits(): void {
 		btn.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			dom.ariaHidden = "true";
+			dom.style.display = "none";
 		});
 	});
 }

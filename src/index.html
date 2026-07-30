@@ -216,46 +216,61 @@
 	</div>
 </div>
 
-<aside id="credits" aria-hidden="true">
-	<div class="credit-modal">
-		<h2 data-translate="general.what binds us"></h2>
-		<p data-translate="general.credits.description" style="margin-bottom: 64px; max-width: 400px"></p>
+<aside id="credits" class="popup" aria-hidden="true" style="display: none">
+	<div class="popup-modal">
+		<button class="popup-close" data-action="credits:close">&times;</button>
+		<div class="popup-header">
+			<span data-translate="general.what binds us">Ce qui nous lie</span><br />
+			<h2 data-translate="general.credits">Credits</h2>
+		</div>
 
-		<h3 data-translate="general.credits.scientificTitle"></h3>
-		<p data-translate="general.credits.scientificContent"></p>
+		<div class="credit-modal">
+			<div class="credit-block">
+				<p>
+					<strong data-translate="general.credits.scientificTitle"></strong>&nbsp;:
+					<span data-translate="general.credits.scientificContent"></span>
+				</p>
 
-		<h3 data-translate="general.credits.researchTitle"></h3>
-		<p data-translate="general.credits.researchContent"></p>
+				<p>
+					<strong data-translate="general.credits.researchTitle"></strong>&nbsp;:
+					<span data-translate="general.credits.researchContent"></span>
+				</p>
 
-		<h3 data-translate="general.credits.designTitle"></h3>
-		<p data-translate="general.credits.designContent"></p>
+				<p>
+					<strong data-translate="general.credits.designTitle"></strong>&nbsp;:
+					<span data-translate="general.credits.designContent"></span>
+				</p>
 
-		<h3 data-translate="general.credits.documentaryTitle"></h3>
-		<p data-translate="general.credits.documentaryContent"></p>
+				<p>
+					<strong data-translate="general.credits.caseStudyTite"></strong>&nbsp;:
+					<span data-translate="general.credits.caseStudyContent"></span>
+				</p>
+			</div>
 
-		<h3 data-translate="general.credits.iconographyTitle"></h3>
-		<p data-translate="general.credits.iconographyContent"></p>
+			<div class="credit-block">
+				<p>
+					<strong data-translate="general.credits.iconographyTitle"></strong>&nbsp;:
+					<span data-translate="general.credits.iconographyContent"></span>
+				</p>
 
-		<h3 data-translate="general.credits.thanksTitle"></h3>
-		<p data-translate="general.credits.thanksContent"></p>
+				<p>
+					<strong data-translate="general.credits.thanksTitle"></strong>&nbsp;:
+					<span data-translate="general.credits.thanksContent"></span>
+				</p>
+			</div>
 
-		<p data-translate="general.credits.context" style="opacity: .6"></p>
-
-		<p>
-			&copy; Fondation AIA, 2026
-		</p>
-
-		<button data-action="credits:close" data-translate="general.close">close</button>
+			<p><strong data-translate="general.credits.context"></strong></p>
+			<p><strong>&copy; Fondation AIA, 2026</strong></p>
+		</div>
 	</div>
 </aside>
 
-<!--<aside id="lexicon" style="display: none">-->
-<aside id="lexicon" style="display: none" onmousemove="event.stopPropagation()" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
-	<div class="lexicon_modal">
-		<button class="lexicon_close" data-action="lexicon:close">&times;</button>
-		<div class="lexicon_header">
-			<span>Ce qui nous lie</span><br />
-			<h2>Lexique</h2>
+<aside id="lexicon" class="popup" aria-hidden="true" style="display: none">
+	<div class="popup-modal">
+		<button class="popup-close" data-action="lexicon:close">&times;</button>
+		<div class="popup-header">
+			<span data-translate="general.what binds us">Ce qui nous lie</span><br />
+			<h2 data-translate="general.lexicon">Lexique</h2>
 		</div>
 
 		<ul class="lexicon_menu">

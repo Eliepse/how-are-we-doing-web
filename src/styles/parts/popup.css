@@ -1,0 +1,47 @@
+.popup {
+    position: absolute;
+    inset: 0;
+    padding: 3rem;
+    display: flex;
+    z-index: 9999;
+    background: hsla(var(--dark-blue-hsl), .8);
+}
+
+.popup-modal {
+    position: relative;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    grid-template-columns: 1fr 4fr;
+    gap: 2rem 0;
+    margin: auto;
+    width: 100%;
+    max-width: 100rem;
+    height: 100%;
+    padding: 3rem;
+    align-content: center;
+    backdrop-filter: blur(6px);
+    border: 1px solid #fff;
+    border-radius: var(--4);
+}
+
+.popup-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.5rem;
+    line-height: 0;
+}
+
+.popup-header {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    font-size: 1.25rem;
+}
+
+.popup-header h2 {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: bold;
+}

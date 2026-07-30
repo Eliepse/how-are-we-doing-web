@@ -157,6 +157,7 @@ async function main(withLoader = true) {
 	setupBibliography(app);
 	setupCredits();
 	setupContextControls(app);
+	setupTabs();
 
 	// Toggle the interface visibility
 	document.addEventListener("keydown", (e) => {
@@ -347,6 +348,70 @@ function setupContextControls(app: App): void {
 			app.nextContext();
 		});
 	});
+}
+
+function setupTabs(): void {
+	const lexiconDom = document.querySelector<HTMLElement>("#lexicon");
+
+	if(!lexiconDom) {
+		return;
+	}
+
+	document.querySelectorAll("button[data-action='lexicon:open']").forEach((btn) => {
+		btn.addEventListener("mousedown", (e) => {
+			e.stopPropagation();
+			lexiconDom.ariaHidden = "false";
+			lexiconDom.style.display = "";
+		});
+	});
+
+	document.querySelectorAll("button[data-action='lexicon:close']").forEach((btn) => {
+		btn.addEventListener("mousedown", (e) => {
+			e.stopPropagation();
+			lexiconDom.ariaHidden = "true";
+			lexiconDom.style.display = "none";
+		});
+	});
+
+	const tabsMap = new Map<string, Map<string, HTMLElement>>();
+	const tabsButtons = new Set<HTMLElement>(document.querySelectorAll<HTMLElement>("[data-toggle-tab]"));
+
+	document.querySelectorAll<HTMLElement>("[data-tab]").forEach((el) => {
+		const key = el.dataset.tab ?? "";
+		const prefix = key.split(":")[0];
+
+		if (!key || !prefix) {
+			return;
+		}
+
+		const map = tabsMap.get(prefix) ?? new Map<string, HTMLElement>();
+		map.set(key, el);
+		tabsMap.set(prefix, map);
+	});
+
+	for(const button of tabsButtons) {
+		button.addEventListener("mousedown", (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+
+			const key = button.dataset.toggleTab;
+			const prefix = key?.split(":")[0];
+
+			if (!key || !prefix) {
+				return;
+			}
+
+
+			for(const item of tabsButtons) {
+				item.dataset.tabActive = button === item ? "true" : "false";
+			}
+
+			const map = tabsMap.get(prefix) ?? new Map<string, HTMLElement>();
+			for (const [targetKey, target] of map.entries()) {
+				target.style.display = key === targetKey ? "" : "none";
+			}
+		});
+	}
 }
 
 void main();

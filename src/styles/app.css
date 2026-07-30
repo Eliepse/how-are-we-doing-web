@@ -4,6 +4,7 @@
 @import "parts/credits.css";
 @import "parts/navigation.css";
 @import "parts/legend.css";
+@import "parts/lexicon.css";
 
 #app {
     --sideColumn: 20rem;

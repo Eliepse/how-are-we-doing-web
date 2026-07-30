@@ -128,7 +128,8 @@
 			<button data-action="locale:toggle" style="text-transform: uppercase" data-locale-current>
 				FR
 			</button>
-			<button data-action="credits:open" data-translate="general.credits">Credits
+			<button data-action="credits:open" data-translate="general.credits">
+				Credits
 			</button>
 		</div>
 
@@ -153,6 +154,9 @@
 		</ul>
 
 		<div style="justify-self: end">
+			<button data-action="lexicon:open" data-translate="general.lexicon">
+				Lexicon
+			</button>
 			<button id="biblioToggle" style="margin-left: 8px">Bibliography</button>
 		</div>
 	</div>
@@ -242,6 +246,205 @@
 		</p>
 
 		<button data-action="credits:close" data-translate="general.close">close</button>
+	</div>
+</aside>
+
+<!--<aside id="lexicon" style="display: none">-->
+<aside id="lexicon" style="display: none" onmousemove="event.stopPropagation()" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
+	<div class="lexicon_modal">
+		<button class="lexicon_close" data-action="lexicon:close">&times;</button>
+		<div class="lexicon_header">
+			<span>Ce qui nous lie</span><br />
+			<h2>Lexique</h2>
+		</div>
+
+		<ul class="lexicon_menu">
+			<li>
+				<button data-toggle-tab="lexicon:exposom" data-tab-active="true">Exposome urbain</button>
+			</li>
+			<li>
+				<button data-toggle-tab="lexicon:pathology">Santé</button>
+			</li>
+			<li>
+				<button data-toggle-tab="lexicon:determinant">Déterminant</button>
+			</li>
+			<li>
+				<button data-toggle-tab="lexicon:facility">Aménagements</button>
+			</li>
+		</ul>
+
+		<div class="lexicon_content" data-tab="lexicon:exposom">
+			<p>
+				<strong>L'exposome urbain</strong> correspond à l'ensemble des facteurs et expositions liés au cadre de
+				vie
+				urbain susceptibles de façonner la santé et le bien-être des populations. Il résulte de l'interaction
+				dynamique entre les caractéristiques environnementales, physiques, sociales, économiques et
+				organisationnelles de la ville, dont les effets varient selon les territoires et au cours du temps.
+			</p>
+			<p>
+				L'étude de l'exposome urbain permet de mieux comprendre pourquoi certaines populations sont
+				davantage exposées à des facteurs favorables ou défavorables à la santé, afin d'aider les
+				décideurs à concevoir des villes plus saines et plus équitables.
+			</p>
+			<p>
+				Il peut être appréhendé comme le résultat des interactions entre les caractéristiques de
+				l'aménagement urbain, les déterminants de santé qu'elles influencent, et les effets qui en
+				découlent sur l'état de santé des populations.
+			</p>
+		</div>
+
+		<div class="lexicon_content" data-tab="lexicon:pathology" style="display: none">
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Santé physique</div>
+			<div class="lexicon_row-content">
+				<p>
+					État de bien-être du corps permettant de réaliser les activités de la vie
+					quotidienne, de se déplacer, de préserver son autonomie et de pratiquer
+					les activités nécessaires ou choisies selon son mode de vie.
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Santé mentale</div>
+			<div class="lexicon_row-content">
+				<p>
+					État de bien-être psychologique et émotionnel permettant de faire face
+					aux situations de la vie, de gérer ses émotions, de développer ses
+					capacités, de prendre des décisions et de participer à la vie de la société.
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Santé sociale</div>
+			<div class="lexicon_row-content">
+				<p>
+					État de bien-être lié à la qualité des relations avec les autres, au
+					sentiment d'appartenance, à la participation à la vie collective et à la
+					capacité de bénéficier de ressources et de soutiens, notamment en
+					matière de santé.
+				</p>
+			</div>
+		</div>
+
+		<div class="lexicon_content" data-tab="lexicon:determinant" style="display: none">
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Socio-économie</div>
+			<div class="lexicon_row-content">
+				<p>
+					Caractéristiques sociales et économiques d'une population ou d'un
+					territoire (revenus, emploi, niveau d'études, accès aux services...).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Modes de vie</div>
+			<div class="lexicon_row-content">
+				<p>
+					Habitudes et comportements qui rythment le quotidien des individus
+					(activité physique, alimentation, loisirs, déplacements…).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Qualité du bâti</div>
+			<div class="lexicon_row-content">
+				<p>
+					Caractéristiques des bâtiments qui influencent les conditions de vie et de
+					confort des occupants (isolation, luminosité, ventilation, accessibilité...).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Mixité fonctionnelle</div>
+			<div class="lexicon_row-content">
+				<p>
+					Diversité des activités et des services présents dans un même quartier ou
+					territoire (logements, commerces, écoles, emplois, loisirs...).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Paysage et ambiances</div>
+			<div class="lexicon_row-content">
+				<p>
+					Caractéristiques perceptibles d'un lieu qui participent à son identité et à
+					son cadre de vie (vues, végétation, sons, éclairage, animation, etc.)
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Usages extérieurs</div>
+			<div class="lexicon_row-content">
+				<p>
+					Usages et pratiques observés dans les espaces publics et de plein air
+					(déplacements, loisirs, rencontres, détente...).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Intermodalité</div>
+			<div class="lexicon_row-content">
+				<p>
+					Possibilité de combiner facilement plusieurs modes de déplacement pour
+					un même trajet (marche, vélo, bus, métro, train, voiture...).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Territoires et biodiversité</div>
+			<div class="lexicon_row-content">
+				<p>
+					Caractéristiques des milieux naturels et des écosystèmes d'un territoire
+					(espaces verts, cours d'eau, espèces animales et végétales…).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Pollutions et nuisances</div>
+			<div class="lexicon_row-content">
+				<p>
+					Facteurs susceptibles d'altérer la qualité de l'environnement et du cadre de
+					vie (pollution de l'air, bruit, chaleur, odeurs, pollution lumineuse...).
+				</p>
+			</div>
+		</div>
+
+		<div class="lexicon_content" data-tab="lexicon:facility" style="display: none">
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Tissu urbain et bâtiments</div>
+			<div class="lexicon_row-content">
+				<p>
+					Organisation et caractéristiques des bâtiments et aménagements
+					urbains qui composent un territoire (maisons, immeubles, commerces,
+					équipements....).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Espaces naturels et paysagers</div>
+			<div class="lexicon_row-content">
+				<p>
+					Espaces de nature et de végétation qui contribuent à la qualité du
+					cadre de vie et aux équilibres écologiques (parcs, jardins, arbres,
+					cours d’eau…).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Espaces publics et aménités urbaines</div>
+			<div class="lexicon_row-content">
+				<p>
+					Lieux, équipements et services qui favorisent les interactions
+					sociales et les activités du quotidien (places, bancs, aires
+					sportives...).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Mobilités et infra-structures de transport</div>
+			<div class="lexicon_row-content">
+				<p>
+					Moyens, réseaux et aménagements permettant de se déplacer sur
+					un territoire (route, piste cyclable, trottoir, transport en commun...).
+				</p>
+			</div>
+			<div class="lexicon_row-img"></div>
+			<div class="lexicon_row-title">Usages et fonctions</div>
+			<div class="lexicon_row-content">
+				<p>
+					Activités, services et fonctions présents dans un territoire qui
+					répondent aux besoins de la population (habiter, étudier, travailler,
+					faire ses courses, se divertir...).
+				</p>
+			</div>
+		</div>
 	</div>
 </aside>
 

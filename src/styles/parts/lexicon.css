@@ -1,0 +1,121 @@
+#lexicon {
+    position: absolute;
+    inset: 0;
+    padding: 3rem;
+    display: flex;
+    z-index: 9999;
+    background: hsla(var(--dark-blue-hsl), .8);
+}
+
+.lexicon_modal {
+    position: relative;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    grid-template-columns: 1fr 4fr;
+    gap: 2rem 0;
+    margin: auto;
+    width: 100%;
+    max-width: 100rem;
+    height: 100%;
+    padding: 3rem;
+    align-content: center;
+    backdrop-filter: blur(6px);
+    border: 1px solid #fff;
+    border-radius: var(--4);
+}
+
+.lexicon_close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.5rem;
+    line-height: 0;
+}
+
+.lexicon_header {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    font-size: 1.25rem;
+}
+
+.lexicon_header h2 {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.lexicon_menu {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    list-style: none;
+    padding: 0;
+}
+
+.lexicon_menu button {
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.lexicon_menu button[data-tab-active=true] {
+    background: white;
+    color: var(--dark-blue);
+}
+
+.lexicon_content {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    overflow-y: auto;
+}
+
+.lexicon_content p {
+    margin: 0;
+    line-height: 1.4;
+    font-size: 1.125rem;
+}
+
+.lexicon_content p + p {
+    margin-top: 1.5rem;
+}
+
+.lexicon_content[data-tab="lexicon:exposom"] {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.lexicon_content[data-tab="lexicon:exposom"] > * {
+    max-width: 48rem;
+}
+
+.lexicon_content[data-tab="lexicon:pathology"],
+.lexicon_content[data-tab="lexicon:determinant"],
+.lexicon_content[data-tab="lexicon:facility"] {
+    display: grid;
+    grid-template-columns: 12rem 14rem 1fr;
+    gap: 1rem 3rem
+}
+
+.lexicon_row-img {
+    grid-column: 1/2;
+    align-self: center;
+}
+
+.lexicon_row-title {
+    grid-column: 2/3;
+    align-self: center;
+    font-weight: bold;
+}
+
+.lexicon_row-content {
+    grid-column: 3/4;
+    align-self: center;
+}

@@ -48,6 +48,7 @@ async function main(withLoader = true) {
 	}
 
 	const app = App.init(appDom, diagramDom);
+	app.setReadonly(true);
 	const collector = new Collector();
 	await collector.init();
 

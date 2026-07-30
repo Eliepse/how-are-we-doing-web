@@ -317,7 +317,7 @@ export class App {
 		facilityGroup?.setOpacity(Opacity.Transparent);
 		determinantGroup?.setOpacity(Opacity.Transparent);
 		pathologyGroup?.setOpacity(Opacity.Transparent);
-		Animator.play(diagramRevealScene);
+		Animator.play(diagramRevealScene, () => this.setReadonly(false));
 	}
 
 	get debug() {
@@ -420,5 +420,9 @@ export class App {
 
 		this.diagram.updateRingsOpacity();
 		this.diagram.updateNodesHighlight();
+	}
+
+	setReadonly(state: boolean) {
+		Engine.setReadonly(state);
 	}
 }

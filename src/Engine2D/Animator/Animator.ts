@@ -12,7 +12,7 @@ export class Animator implements Tickable {
 		this.scenesStartedAt.delete(scene);
 	}
 
-	play(scene: Scene) {
+	play(scene: Scene, onDone: () => void) {
 		if (this.currentScenes.has(scene)) {
 			console.warn(`The scene '${scene.name}' is already playing`);
 			return;
@@ -21,7 +21,10 @@ export class Animator implements Tickable {
 		this.currentScenes.add(scene);
 		this.scenesStartedAt.set(scene, Date.now());
 
-		scene.onended = () => this.stop(scene);
+		scene.onended = () => {
+			this.stop(scene);
+			onDone();
+		};
 	}
 
 	tick(deltaTime: number, time: number, timeUTC: number, deltaTimeMs: number, ticks: number): void {
@@ -43,7 +46,7 @@ export class Animator implements Tickable {
 		return Animator._instance;
 	}
 
-	static play(scene: Scene): void {
-		Animator.instance().play(scene);
+	static play(scene: Scene, onDone?: () => void): void {
+		Animator.instance().play(scene, onDone ?? (() => undefined));
 	}
 }

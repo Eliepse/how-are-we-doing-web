@@ -61,6 +61,7 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 		fps: 0,
 		transitionsCount: 0,
 	};
+	private _readonly = false;
 
 	private constructor(
 		private rootNode: Node2D,
@@ -172,6 +173,10 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 	}
 
 	private propagateClick(cursor: Vector): void {
+		if(this._readonly) {
+			return;
+		}
+
 		for (const node of this._pointerEventsNodes) {
 			if (false === node.getPointerCollider().isInside(cursor)) {
 				continue;
@@ -187,6 +192,10 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 	}
 
 	private handleMouseMove(cursor: Vector): void {
+		if(this._readonly) {
+			return;
+		}
+
 		const skipCheck: (Node2D & WithPointerEvents)[] = [];
 
 		for (const hoveredNodes of this._hoveredNodes) {
@@ -329,5 +338,9 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 
 	static forceRenderUpdate() {
 		Engine._instance.clock.forceTick();
+	}
+
+	static setReadonly(state: boolean) {
+		Engine._instance._readonly = state;
 	}
 }

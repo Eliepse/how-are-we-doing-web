@@ -3,8 +3,10 @@ import type { Context } from "./Diagram/Context";
 import { wait } from "./helpers";
 import { Collector } from "./Telemetry/Collector";
 
-import "./styles/styles.css";
-import "./styles/app.css";
+// @ts-expect-error
+import "/styles/styles.css";
+// @ts-expect-error
+import "/styles/app.css";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");

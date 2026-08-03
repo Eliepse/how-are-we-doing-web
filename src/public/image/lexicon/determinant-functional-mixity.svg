@@ -1,0 +1,99 @@
+<svg viewBox="85.95105012 118.37679564 139.06289466 74.20703828" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Calque_1" style="max-height: 500px" width="139.06289466" height="74.20703828">
+
+    <defs>
+        <style>
+            .st0, .st1 {
+            fill: none;
+            }
+
+            .st2 {
+            fill: url(#Nouveau_motif_97);
+            }
+
+            .st3 {
+            fill: url(#Nouveau_motif_96);
+            }
+
+            .st4 {
+            fill: url(#Nouveau_motif_91);
+            }
+
+            .st5 {
+            fill: url(#Nouveau_motif_95);
+            }
+
+            .st6 {
+            fill: url(#Nouveau_motif_94);
+            }
+
+            .st7 {
+            fill: url(#Nouveau_motif_93);
+            }
+
+            .st8 {
+            fill: url(#Nouveau_motif_92);
+            }
+
+            .st1 {
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            stroke-width: .75px;
+            }
+
+            .st9 {
+            fill: #fff;
+            }
+
+            .st10 {
+            fill: url(#Nouveau_motif_9);
+            }
+        </style>
+        <pattern viewBox="0 0 52 34.94" patternUnits="userSpaceOnUse" patternTransform="translate(-3406.15 -3236.05) scale(.56 .59)" height="34.94" width="52" y="0" x="0" data-name="Nouveau motif 9" id="Nouveau_motif_9">
+            <g>
+                <rect height="34.94" width="52" x="0" class="st0"/>
+                <rect height="1.41" width="8.62" y="3.61" class="st9"/>
+                <polygon points="12.23 8.62 12.23 0 13.64 0 13.64 8.62 12.23 8.62" class="st9"/>
+                <polygon points="29.63 8.62 29.63 0 31.04 0 31.04 8.62 29.63 8.62" class="st9"/>
+                <polygon points="47.04 8.62 47.04 0 48.45 0 48.45 8.62 47.04 8.62" class="st9"/>
+                <rect height="1.41" width="8.62" y="3.61" x="17.35" class="st9"/>
+                <rect height="1.41" width="8.62" y="3.61" x="34.7" class="st9"/>
+                <polygon points="3.55 17.25 3.55 8.62 4.96 8.62 4.96 17.25 3.55 17.25" class="st9"/>
+                <polygon points="20.96 17.25 20.96 8.62 22.37 8.62 22.37 17.25 20.96 17.25" class="st9"/>
+                <polygon points="38.36 17.25 38.36 8.62 39.77 8.62 39.77 17.25 38.36 17.25" class="st9"/>
+                <rect height="1.41" width="8.62" y="12.23" x="8.68" class="st9"/>
+                <rect height="1.41" width="8.62" y="12.23" x="26.03" class="st9"/>
+                <rect height="1.41" width="8.62" y="12.23" x="43.38" class="st9"/>
+                <rect height="1.41" width="8.62" y="21.3" class="st9"/>
+                <polygon points="12.23 26.32 12.23 17.69 13.64 17.69 13.64 26.32 12.23 26.32" class="st9"/>
+                <polygon points="29.63 26.32 29.63 17.69 31.04 17.69 31.04 26.32 29.63 26.32" class="st9"/>
+                <polygon points="47.04 26.32 47.04 17.69 48.45 17.69 48.45 26.32 47.04 26.32" class="st9"/>
+                <rect height="1.41" width="8.62" y="21.3" x="17.35" class="st9"/>
+                <rect height="1.41" width="8.62" y="21.3" x="34.7" class="st9"/>
+                <polygon points="3.55 34.94 3.55 26.32 4.96 26.32 4.96 34.94 3.55 34.94" class="st9"/>
+                <polygon points="20.96 34.94 20.96 26.32 22.37 26.32 22.37 34.94 20.96 34.94" class="st9"/>
+                <polygon points="38.36 34.94 38.36 26.32 39.77 26.32 39.77 34.94 38.36 34.94" class="st9"/>
+                <rect height="1.41" width="8.62" y="29.92" x="8.68" class="st9"/>
+                <rect height="1.41" width="8.62" y="29.92" x="26.03" class="st9"/>
+                <rect height="1.41" width="8.62" y="29.92" x="43.38" class="st9"/>
+            </g>
+        </pattern>
+        <pattern xlink:href="#Nouveau_motif_9" patternTransform="translate(-3373.88 -3236.05) scale(.56 .59)" data-name="Nouveau motif 9" id="Nouveau_motif_91"/>
+        <pattern xlink:href="#Nouveau_motif_9" patternTransform="translate(-3438.54 -3236.05) scale(.56 .59)" data-name="Nouveau motif 9" id="Nouveau_motif_92"/>
+        <pattern xlink:href="#Nouveau_motif_9" patternTransform="translate(-3471.14 -3236.05) scale(.56 .59)" data-name="Nouveau motif 9" id="Nouveau_motif_93"/>
+        <pattern xlink:href="#Nouveau_motif_9" patternTransform="translate(-3406.15 -3203.58) scale(.56 .59)" data-name="Nouveau motif 9" id="Nouveau_motif_94"/>
+        <pattern xlink:href="#Nouveau_motif_9" patternTransform="translate(-3373.88 -3203.58) scale(.56 .59)" data-name="Nouveau motif 9" id="Nouveau_motif_95"/>
+        <pattern xlink:href="#Nouveau_motif_9" patternTransform="translate(-3438.54 -3203.58) scale(.56 .59)" data-name="Nouveau motif 9" id="Nouveau_motif_96"/>
+        <pattern xlink:href="#Nouveau_motif_9" patternTransform="translate(-3471.14 -3203.58) scale(.56 .59)" data-name="Nouveau motif 9" id="Nouveau_motif_97"/>
+    </defs>
+    <line y2="123.43" x2="221.15" y1="123.43" x1="90.66" class="st1"/>
+    <line y2="155.91" x2="221.15" y1="155.91" x1="90.66" class="st1"/>
+    <line y2="188.38" x2="221.15" y1="188.38" x1="90.66" class="st1"/>
+    <rect height="30.73" width="30.97" y="124.3" x="156.65" class="st10"/>
+    <rect height="30.73" width="30.97" y="124.3" x="188.92" class="st4"/>
+    <rect height="30.73" width="30.97" y="124.3" x="124.26" class="st8"/>
+    <rect height="30.73" width="30.97" y="124.3" x="91.66" class="st7"/>
+    <rect height="30.73" width="30.97" y="156.78" x="156.65" class="st6"/>
+    <rect height="30.73" width="30.97" y="156.78" x="188.92" class="st5"/>
+    <rect height="30.73" width="30.97" y="156.78" x="124.26" class="st3"/>
+    <rect height="30.73" width="30.97" y="156.78" x="91.66" class="st2"/>
+</svg>

@@ -69,6 +69,7 @@ async function main(withLoader = true) {
 		});
 
 		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
+		collector.logEvent("context_changed", { id: context.id, name: context.name });
 
 		const legendBlurred = document.querySelector<HTMLElement>("figure[data-legend=blurred]");
 		if (legendBlurred) {
@@ -79,7 +80,6 @@ async function main(withLoader = true) {
 		if (legendDefault) {
 			legendDefault.style.display = context.isDefault ? "none" : "";
 		}
-
 	};
 
 	app.onSelectionChanged = (node) => {
@@ -122,7 +122,7 @@ async function main(withLoader = true) {
 			return;
 		}
 
-		collector.logEvent("preview_changed", { id: node.id, class: node.constructor.name });
+		// collector.logEvent("preview_changed", { id: node.id, class: node.constructor.name });
 	};
 
 	translator.dyn("general.no context", (txt) => {
@@ -154,11 +154,11 @@ async function main(withLoader = true) {
 	void app.launch();
 	withLoader && (await wait(350));
 
-	setupLanguageControls(app);
-	setupBibliography(app);
-	setupCredits();
+	setupLanguageControls(app, collector);
+	setupBibliography(app, collector);
+	setupCredits(collector);
 	setupContextControls(app);
-	setupTabs();
+	setupTabs(collector);
 
 	// Toggle the interface visibility
 	document.addEventListener("keydown", (e) => {
@@ -177,13 +177,19 @@ async function main(withLoader = true) {
 		}
 	});
 
-	document.querySelectorAll("[data-action='mode:change']").forEach((el) => {
+	document.querySelectorAll<HTMLElement>("[data-action='mode:change']").forEach((el) => {
 		el.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			e.preventDefault();
 
-			// @ts-ignore
-			app.changeMode(el.dataset.mode);
+			const mode = el.dataset.mode as "focus" | "detailled" | "basic";
+
+			if (!el.classList.contains("active")) {
+				collector.logEvent("mode_changed", { mode });
+			}
+
+			app.changeMode(mode);
+
 
 			const legendDefault = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=default]");
 			const legendFocus = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=focus]");
@@ -208,7 +214,7 @@ async function main(withLoader = true) {
 	loaderDom.root?.remove();
 }
 
-function setupLanguageControls(app: App): void {
+function setupLanguageControls(app: App, collector: Collector): void {
 	const translator = app.getTranslator();
 
 	function updateLocalDisplay() {
@@ -235,6 +241,7 @@ function setupLanguageControls(app: App): void {
 					return;
 				}
 
+				collector.logEvent("locale_changed", { locale });
 				void translator.changeLocale(locale);
 				updateLocalDisplay();
 			});
@@ -255,13 +262,14 @@ function setupLanguageControls(app: App): void {
 					return;
 				}
 
+				collector.logEvent("locale_changed", { locale: newLocale });
 				void translator.changeLocale(newLocale);
 				updateLocalDisplay();
 			});
 		});
 }
 
-function setupBibliography(app: App): void {
+function setupBibliography(app: App, collector: Collector): void {
 	const translator = app.getTranslator();
 	const dom = document.querySelector<HTMLButtonElement>("#biblioToggle");
 
@@ -286,18 +294,21 @@ function setupBibliography(app: App): void {
 
 		if ("true" === dom.ariaPressed) {
 			app.hideBibliography();
+			collector.logEvent("biblio_opened");
+
 			dom.ariaPressed = "false";
 			dom.innerText = textShow.toString();
 			return;
 		}
 
 		app.showBibliography();
+		collector.logEvent("biblio_closed");
 		dom.ariaPressed = "true";
 		dom.innerText = textHide.toString();
 	});
 }
 
-function setupCredits(): void {
+function setupCredits(collector: Collector): void {
 	const dom = document.querySelector<HTMLElement>("#credits");
 
 	if (null === dom) {
@@ -314,6 +325,7 @@ function setupCredits(): void {
 
 	document.querySelectorAll("button[data-action='credits:open']").forEach((btn) => {
 		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("credits_opened");
 			e.stopPropagation();
 			dom.ariaHidden = "false";
 			dom.style.display = "";
@@ -322,6 +334,7 @@ function setupCredits(): void {
 
 	document.querySelectorAll("button[data-action='credits:close']").forEach((btn) => {
 		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("credits_closed");
 			e.stopPropagation();
 			dom.ariaHidden = "true";
 			dom.style.display = "none";
@@ -353,15 +366,16 @@ function setupContextControls(app: App): void {
 	});
 }
 
-function setupTabs(): void {
+function setupTabs(collector: Collector): void {
 	const lexiconDom = document.querySelector<HTMLElement>("#lexicon");
 
-	if(!lexiconDom) {
+	if (!lexiconDom) {
 		return;
 	}
 
 	document.querySelectorAll("button[data-action='lexicon:open']").forEach((btn) => {
 		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("lexicon_closed");
 			e.stopPropagation();
 			lexiconDom.ariaHidden = "false";
 			lexiconDom.style.display = "";
@@ -370,6 +384,7 @@ function setupTabs(): void {
 
 	document.querySelectorAll("button[data-action='lexicon:close']").forEach((btn) => {
 		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("lexicon_closed");
 			e.stopPropagation();
 			lexiconDom.ariaHidden = "true";
 			lexiconDom.style.display = "none";
@@ -392,7 +407,7 @@ function setupTabs(): void {
 		tabsMap.set(prefix, map);
 	});
 
-	for(const button of tabsButtons) {
+	for (const button of tabsButtons) {
 		button.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			e.preventDefault();
@@ -405,7 +420,7 @@ function setupTabs(): void {
 			}
 
 
-			for(const item of tabsButtons) {
+			for (const item of tabsButtons) {
 				item.dataset.tabActive = button === item ? "true" : "false";
 			}
 

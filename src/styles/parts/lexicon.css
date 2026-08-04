@@ -69,6 +69,10 @@
     width: 7rem;
 }
 
+.lexicon_content[data-tab="lexicon:facility"] img {
+    width: 5rem;
+}
+
 .lexicon_row-title {
     grid-column: 2/3;
     align-self: center;

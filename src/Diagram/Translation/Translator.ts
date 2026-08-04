@@ -21,6 +21,10 @@ export class Translator {
 		this._currentLocale = defaultLocale;
 	}
 
+	get currentLocale() {
+		return this._currentLocale;
+	}
+
 	private makeUrl(context: string, locale: Locale): string {
 		return this._urlPattern.replaceAll(/{([a-z]+)}/gi, (match, key) => {
 			switch (key) {

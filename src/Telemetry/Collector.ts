@@ -33,7 +33,7 @@ export class Collector {
 		});
 	}
 
-	logEvent(type: string, payload: object, firedAt: Date = new Date()) {
+	logEvent(type: string, payload?: object, firedAt: Date = new Date()) {
 		if(!this.connection) {
 			return;
 		}

@@ -3,29 +3,33 @@ import type { Context } from "./Diagram/Context";
 import { wait } from "./helpers";
 import { Collector } from "./Telemetry/Collector";
 
+// @ts-expect-error
+import "/styles/styles.css";
+// @ts-expect-error
+import "/styles/app.css";
+
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
 
 async function main(withLoader = true) {
-	function updateLoader(percent: number, title: string): void {
+	let loaderPercent = 0;
+
+	function updateLoader(percent: number, _title: string): void {
 		if (false === withLoader) {
 			return;
 		}
 
-		if (!loaderDom.loadingBar || !loaderDom.loadingCounter || !loaderDom.loadingTitle) {
+		if (!loaderDom.loadingBar) {
 			return;
 		}
 
+		loaderPercent = percent;
 		loaderDom.loadingBar.style.width = `${percent.toFixed(2)}%`;
-		loaderDom.loadingCounter.innerText = `${Math.round(percent)} %`;
-		loaderDom.loadingTitle.innerText = title;
 	}
 
 	const loaderDom = {
-		root: document.querySelector<HTMLDivElement>("#loader"),
-		loadingBar: document.querySelector<HTMLDivElement>(".loader__progressBar div"),
-		loadingCounter: document.querySelector<HTMLDivElement>(".loader__progressCounter"),
-		loadingTitle: document.querySelector<HTMLDivElement>(".loader__title"),
+		root: document.querySelector<HTMLDivElement>("#splash"),
+		loadingBar: document.querySelector<HTMLDivElement>(".loader__progressBar"),
 	};
 
 	if (false === withLoader) {
@@ -44,6 +48,7 @@ async function main(withLoader = true) {
 	}
 
 	const app = App.init(appDom, diagramDom);
+	app.setReadonly(true);
 	const collector = new Collector();
 	await collector.init();
 
@@ -55,7 +60,29 @@ async function main(withLoader = true) {
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#legendRoot"));
 
+	const ctxDetailsModal = document.querySelector<HTMLElement>("#context-details");
+	const openCtxActionBtns = document.querySelectorAll<HTMLButtonElement>("button[data-action='context:open']");
+
+	document.querySelectorAll<HTMLButtonElement>("button[data-action='context:close']")
+		.forEach((btn) => btn.addEventListener("mousedown", () => {
+			if (btn.disabled || !ctxDetailsModal) {
+				return;
+			}
+
+			ctxDetailsModal.ariaHidden = "true";
+			ctxDetailsModal.style.display = "none";
+		}));
+	openCtxActionBtns.forEach((btn) => btn.addEventListener("mousedown", () => {
+		if (btn.disabled || !ctxDetailsModal) {
+			return;
+		}
+
+		ctxDetailsModal.ariaHidden = "false";
+		ctxDetailsModal.style.display = "";
+	}));
+
 	app.onContextChanged = (context: Context) => {
+		// Update display
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
 			node.textContent = translator
 				.translate(context.name.toLowerCase(), "general")
@@ -63,7 +90,11 @@ async function main(withLoader = true) {
 			node.dataset.tr = context.id;
 		});
 
+		// Telemetry
 		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
+		collector.logEvent("context_changed", { id: context.id, name: context.name });
+
+		// Update legend
 
 		const legendBlurred = document.querySelector<HTMLElement>("figure[data-legend=blurred]");
 		if (legendBlurred) {
@@ -75,6 +106,40 @@ async function main(withLoader = true) {
 			legendDefault.style.display = context.isDefault ? "none" : "";
 		}
 
+		// Update button and modal
+		const details = context.details;
+		openCtxActionBtns.forEach((btn) => btn.disabled = !details);
+
+		if(!details && ctxDetailsModal) {
+			ctxDetailsModal.ariaHidden = "true";
+			ctxDetailsModal.style.display = "none";
+		}
+
+		if (details) {
+			document.querySelectorAll<HTMLElement | HTMLImageElement>("#context-details [data-key^='context:']")
+				.forEach((el) => {
+					switch (el.dataset.key) {
+						case "context:title":
+							el.textContent = context.name;
+							return;
+						case "context:history:content":
+							el.textContent = details.story;
+							return;
+						case "context:stake:content":
+							el.textContent = details.health_stake;
+							return;
+						case "context:img:main":
+							"src" in el && (el.src = details.image_main);
+							return;
+						case "context:img:glance":
+							el.innerHTML = "";
+							el.innerHTML = details.images_glance.map((src) => {
+								return `<li><img src="${src}"/></li>`;
+							}).join("");
+							return;
+					}
+				});
+		}
 	};
 
 	app.onSelectionChanged = (node) => {
@@ -117,7 +182,7 @@ async function main(withLoader = true) {
 			return;
 		}
 
-		collector.logEvent("preview_changed", { id: node.id, class: node.constructor.name });
+		// collector.logEvent("preview_changed", { id: node.id, class: node.constructor.name });
 	};
 
 	translator.dyn("general.no context", (txt) => {
@@ -126,17 +191,34 @@ async function main(withLoader = true) {
 			.forEach((el) => (el.innerHTML = txt));
 	});
 
-	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
+	const loadStartedAt = Date.now();
 
-	withLoader && (await wait(500));
+	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
+	console.info(`App loaded in: ${Date.now() - loadStartedAt} ms`);
+
+	// @ts-expect-error
+	const minLoadtimeMs = import.meta.env.DEV ? 0 : 5_000;
+	const alreadyLoadedPercent = loaderPercent;
+	const leftToLoadPercent = 100 - loaderPercent;
+
+	while (Date.now() - loadStartedAt < minLoadtimeMs) {
+		const loadTimeMs = Date.now() - loadStartedAt;
+		const forceWaitMs = minLoadtimeMs - loadTimeMs;
+		const delay = Math.min(Math.max(Math.random() * forceWaitMs, 350), 850);
+		await wait(delay);
+		updateLoader(Math.min(100, alreadyLoadedPercent + (leftToLoadPercent * (loadTimeMs / minLoadtimeMs))), "");
+	}
+
 	updateLoader(100, "Ready");
+
 	void app.launch();
 	withLoader && (await wait(350));
 
-	setupLanguageControls(app);
-	setupBibliography(app);
-	setupCredits();
+	setupLanguageControls(app, collector);
+	setupBibliography(app, collector);
+	setupCredits(collector);
 	setupContextControls(app);
+	setupTabs(collector);
 
 	// Toggle the interface visibility
 	document.addEventListener("keydown", (e) => {
@@ -155,12 +237,19 @@ async function main(withLoader = true) {
 		}
 	});
 
-	document.querySelectorAll("[data-action='mode:change']").forEach((el) => {
-		el.addEventListener("click", (e) => {
+	document.querySelectorAll<HTMLElement>("[data-action='mode:change']").forEach((el) => {
+		el.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			e.preventDefault();
-			// @ts-ignore
-			app.changeMode(el.dataset.mode);
+
+			const mode = el.dataset.mode as "focus" | "detailled" | "basic";
+
+			if (!el.classList.contains("active")) {
+				collector.logEvent("mode_changed", { mode });
+			}
+
+			app.changeMode(mode);
+
 
 			const legendDefault = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=default]");
 			const legendFocus = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=focus]");
@@ -185,12 +274,25 @@ async function main(withLoader = true) {
 	loaderDom.root?.remove();
 }
 
-function setupLanguageControls(app: App): void {
+function setupLanguageControls(app: App, collector: Collector): void {
 	const translator = app.getTranslator();
+
+	function updateLocalDisplay() {
+		const currentLocale = translator.currentLocale;
+
+		document.querySelectorAll<HTMLElement>("[data-lang-show]").forEach((element) => {
+			element.style.display = element.dataset.langShow === currentLocale ? "" : "none";
+		});
+
+		document.querySelectorAll<HTMLElement>("[data-locale-current]").forEach((element) => {
+			element.textContent = currentLocale;
+		});
+	}
+
 	document
 		.querySelectorAll<HTMLElement>("button[data-action='locale:change']")
 		.forEach((node) => {
-			node.addEventListener("click", (e) => {
+			node.addEventListener("mousedown", (e) => {
 				e.stopPropagation();
 
 				const locale = node.dataset.locale;
@@ -199,16 +301,35 @@ function setupLanguageControls(app: App): void {
 					return;
 				}
 
-				translator.changeLocale(locale);
+				collector.logEvent("locale_changed", { locale });
+				void translator.changeLocale(locale);
+				updateLocalDisplay();
+			});
+		});
 
-				document.querySelectorAll<HTMLElement>("[data-lang-show]").forEach((element) => {
-					element.style.display = element.dataset.langShow === locale ? "" : "none";
-				});
+	document
+		.querySelectorAll<HTMLElement>("button[data-action='locale:toggle']")
+		.forEach((node) => {
+			node.addEventListener("mousedown", (e) => {
+				e.stopPropagation();
+
+				const currentIndex = translator.supportedLocales.indexOf(translator.currentLocale);
+				const newIndex = (currentIndex + 1) % translator.supportedLocales.length;
+				const newLocale = translator.supportedLocales[newIndex];
+
+				if (!newLocale) {
+					console.error("Unable to toggle the locale");
+					return;
+				}
+
+				collector.logEvent("locale_changed", { locale: newLocale });
+				void translator.changeLocale(newLocale);
+				updateLocalDisplay();
 			});
 		});
 }
 
-function setupBibliography(app: App): void {
+function setupBibliography(app: App, collector: Collector): void {
 	const translator = app.getTranslator();
 	const dom = document.querySelector<HTMLButtonElement>("#biblioToggle");
 
@@ -228,43 +349,56 @@ function setupBibliography(app: App): void {
 
 	dom.innerText = textShow.toString();
 
-	dom.addEventListener("click", (e) => {
+	dom.addEventListener("mousedown", (e) => {
 		e.stopPropagation();
 
 		if ("true" === dom.ariaPressed) {
 			app.hideBibliography();
+			collector.logEvent("biblio_opened");
+
 			dom.ariaPressed = "false";
 			dom.innerText = textShow.toString();
 			return;
 		}
 
 		app.showBibliography();
+		collector.logEvent("biblio_closed");
 		dom.ariaPressed = "true";
 		dom.innerText = textHide.toString();
 	});
 }
 
-function setupCredits(): void {
-	const dom = document.querySelector("#credits");
+function setupCredits(collector: Collector): void {
+	const dom = document.querySelector<HTMLElement>("#credits");
 
 	if (null === dom) {
 		return;
 	}
 
-	dom.addEventListener("click", (e) => {
+	dom.addEventListener("mousedown", (e) => {
 		dom.ariaHidden = "true";
 		e.stopPropagation();
 	});
 	dom.addEventListener("mousemove", (e) => e.stopPropagation());
 
-	dom.querySelector(".credit-modal")?.addEventListener("click", (e) => e.stopPropagation());
+	dom.querySelector(".credit-modal")?.addEventListener("mousedown", (e) => e.stopPropagation());
 
 	document.querySelectorAll("button[data-action='credits:open']").forEach((btn) => {
-		btn.addEventListener("click", () => (dom.ariaHidden = "false"));
+		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("credits_opened");
+			e.stopPropagation();
+			dom.ariaHidden = "false";
+			dom.style.display = "";
+		});
 	});
 
 	document.querySelectorAll("button[data-action='credits:close']").forEach((btn) => {
-		btn.addEventListener("click", () => (dom.ariaHidden = "true"));
+		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("credits_closed");
+			e.stopPropagation();
+			dom.ariaHidden = "true";
+			dom.style.display = "none";
+		});
 	});
 }
 
@@ -278,18 +412,84 @@ function setupContextControls(app: App): void {
 	});
 
 	document.querySelectorAll("[data-action='context:prev']")?.forEach((n) => {
-		n.addEventListener("click", (e) => {
+		n.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			app.previousContext();
 		});
 	});
 
 	document.querySelectorAll("[data-action='context:next']")?.forEach((n) => {
-		n.addEventListener("click", (e) => {
+		n.addEventListener("mousedown", (e) => {
 			e.stopPropagation();
 			app.nextContext();
 		});
 	});
+}
+
+function setupTabs(collector: Collector): void {
+	const lexiconDom = document.querySelector<HTMLElement>("#lexicon");
+
+	if (!lexiconDom) {
+		return;
+	}
+
+	document.querySelectorAll("button[data-action='lexicon:open']").forEach((btn) => {
+		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("lexicon_closed");
+			e.stopPropagation();
+			lexiconDom.ariaHidden = "false";
+			lexiconDom.style.display = "";
+		});
+	});
+
+	document.querySelectorAll("button[data-action='lexicon:close']").forEach((btn) => {
+		btn.addEventListener("mousedown", (e) => {
+			collector.logEvent("lexicon_closed");
+			e.stopPropagation();
+			lexiconDom.ariaHidden = "true";
+			lexiconDom.style.display = "none";
+		});
+	});
+
+	const tabsMap = new Map<string, Map<string, HTMLElement>>();
+	const tabsButtons = new Set<HTMLElement>(document.querySelectorAll<HTMLElement>("[data-toggle-tab]"));
+
+	document.querySelectorAll<HTMLElement>("[data-tab]").forEach((el) => {
+		const key = el.dataset.tab ?? "";
+		const prefix = key.split(":")[0];
+
+		if (!key || !prefix) {
+			return;
+		}
+
+		const map = tabsMap.get(prefix) ?? new Map<string, HTMLElement>();
+		map.set(key, el);
+		tabsMap.set(prefix, map);
+	});
+
+	for (const button of tabsButtons) {
+		button.addEventListener("mousedown", (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+
+			const key = button.dataset.toggleTab;
+			const prefix = key?.split(":")[0];
+
+			if (!key || !prefix) {
+				return;
+			}
+
+
+			for (const item of tabsButtons) {
+				item.dataset.tabActive = button === item ? "true" : "false";
+			}
+
+			const map = tabsMap.get(prefix) ?? new Map<string, HTMLElement>();
+			for (const [targetKey, target] of map.entries()) {
+				target.style.display = key === targetKey ? "" : "none";
+			}
+		});
+	}
 }
 
 void main();

@@ -3,89 +3,133 @@
 <head>
 	<meta charset="utf-8">
 	<title>AIA - How Are We?</title>
-	<link href="/styles/styles.css" rel="stylesheet" />
-	<link href="/styles/app.css" rel="stylesheet" />
+
 	<style>
+        :root {
+            --dark-blue: #141333;
+            --dark-blue-hsl: 242, 46%, 14%;
+            --red-hex: #e3032e;
+            --red: rgb(228, 3, 47);
+            --red-hsl: hsl(348 98% 45%);
+            --dark-white: rgba(255, 255, 255, 0.16);
+            --color-secondary: #de7f7d;
+            --sans-serif: InterVariable, sans-serif;
+            font-size: 1rem;
+
+            --1px: .0625rem;
+            --0-5: .125rem;
+            --1: .25rem;
+            --1-5: .375rem;
+            --2: .5rem;
+            --2-5: .625rem;
+            --3: .75rem;
+            --3-5: .875rem;
+            --4: 1rem;
+            --8: 2rem;
+            --10: 2.5rem;
+            --12: 3rem;
+            --16: 4rem;
+
+            user-select: none;
+        }
+
         /*
 		| --------------------------------
-		| Loader
+		| Splashscreen
 		| --------------------------------
 		*/
 
-        #loader {
+        #splash {
+            font-family: var(--sans-serif);
             position: fixed;
             inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--dark-blue);
-            z-index: 100;
+            z-index: 999;
             transition: opacity 1000ms ease-in;
+            text-align: center;
+            color: white;
         }
+
+        #splash > div {
+            max-width: 32rem;
+        }
+
+        #splash h1 {
+            margin: 0 0 1em 0;
+            font-size: 2.75rem;
+        }
+
+        #splash p {
+            font-size: 1.15rem;
+            font-weight: bold;
+        }
+
+        #splash cite {
+            font-size: .75rem;
+            font-style: normal;
+            opacity: .4;
+        }
+
+        /*
+		| --------------------------------
+		| Loader
+		| --------------------------------
+		*/
 
         .loaderBox {
             width: 100%;
-            max-width: 320px;
+            max-width: 280px;
+            margin: 4rem auto;
         }
 
         .loader__progress {
-            display: flex;
-            align-items: center;
-        }
-
-        .loader__progressBar {
             position: relative;
-            flex: 1;
-            height: 16px;
+            height: 12px;
             border-radius: 6px;
             border: 1px solid white;
         }
 
-        .loader__progressBar div {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
+        .loader__progressBar {
+            width: 0;
+            height: 100%;
             background: white;
             border-radius: 4px;
             transition: width 350ms ease-out;
-        }
-
-        .loader__progressCounter {
-            flex: none;
-            width: 54px;
-            line-height: 1;
-            text-align: right;
-            font-size: 14px;
-        }
-
-        .loader__title {
-            margin-top: 8px;
-            text-align: left;
-            font-size: 14px;
+            overflow: hidden;
         }
 	</style>
 </head>
 <body>
 
-<div id="loader">
-	<div class="loaderBox">
-		<div class="loader__progress">
-			<div class="loader__progressBar">
-				<div></div>
+<div id="splash">
+	<div>
+		<h1>Ce qui nous lie</h1>
+		<p>
+			Explorer l'exposome urbain pour mieux comprendre<br />
+			les liens entre cadre de vie et santé
+		</p>
+
+		<div class="loaderBox">
+			<div class="loader__progress">
+				<div class="loader__progressBar"></div>
 			</div>
-			<div class="loader__progressCounter">0 %</div>
 		</div>
-		<div class="loader__title">Loading...</div>
+
+		<cite>&copy; 2026 FONDATION AIA</cite>
 	</div>
 </div>
 
 <div id="app">
 	<div id="navigation">
 		<div style="justify-self: start; display: flex; gap: .5rem">
-			<button data-action="locale:change" data-locale="fr">FR</button>
-			<button data-action="locale:change" data-locale="en">EN</button>
-			<button data-action="credits:open" data-translate="general.credits" style="margin-left: 1.25rem">Credits
+			<button data-action="locale:toggle" style="text-transform: uppercase" data-locale-current>
+				FR
+			</button>
+			<button data-action="credits:open" data-translate="general.credits">
+				Credits
 			</button>
 		</div>
 
@@ -110,6 +154,9 @@
 		</ul>
 
 		<div style="justify-self: end">
+			<button data-action="lexicon:open" data-translate="general.lexicon">
+				Lexicon
+			</button>
 			<button id="biblioToggle" style="margin-left: 8px">Bibliography</button>
 		</div>
 	</div>
@@ -161,43 +208,17 @@
 	<div id="biblioRoot"></div>
 	<div id="contextControls">
 		<button data-action="context:prev">&larr;</button>
-		<div class="contextName" data-key="context:name"></div>
+		<button class="contextName" data-action="context:open" data-key="context:name" disabled></button>
 		<button data-action="context:next">&rarr;</button>
+	</div>
+	<div id="attribution">
+		<cite>&copy; 2026 Fondation AIA</cite>
 	</div>
 </div>
 
-<aside id="credits" aria-hidden="true">
-	<div class="credit-modal">
-		<h2 data-translate="general.what binds us"></h2>
-		<p data-translate="general.credits.description" style="margin-bottom: 64px; max-width: 400px"></p>
-
-		<h3 data-translate="general.credits.scientificTitle"></h3>
-		<p data-translate="general.credits.scientificContent"></p>
-
-		<h3 data-translate="general.credits.researchTitle"></h3>
-		<p data-translate="general.credits.researchContent"></p>
-
-		<h3 data-translate="general.credits.designTitle"></h3>
-		<p data-translate="general.credits.designContent"></p>
-
-		<h3 data-translate="general.credits.documentaryTitle"></h3>
-		<p data-translate="general.credits.documentaryContent"></p>
-
-		<h3 data-translate="general.credits.iconographyTitle"></h3>
-		<p data-translate="general.credits.iconographyContent"></p>
-
-		<h3 data-translate="general.credits.thanksTitle"></h3>
-		<p data-translate="general.credits.thanksContent"></p>
-
-		<p data-translate="general.credits.context" style="opacity: .6"></p>
-
-		<p>
-			© Fondation AIA, 2026
-		</p>
-
-		<button data-action="credits:close" data-translate="general.close">close</button>
-	</div>
-</aside>
+{{> credits }}
+{{> lexicon }}
+{{> context }}
 
 <script type="module" src="/main.ts"></script>
 </body>

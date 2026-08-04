@@ -1,0 +1,85 @@
+#lexicon {
+}
+
+.lexicon_menu {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    list-style: none;
+    padding: 0;
+}
+
+.lexicon_menu button {
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.lexicon_menu button[data-tab-active=true] {
+    background: white;
+    color: var(--dark-blue);
+}
+
+.lexicon_content {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    overflow-y: auto;
+}
+
+.lexicon_content p {
+    margin: 0;
+    line-height: 1.4;
+    font-size: 1.125rem;
+}
+
+.lexicon_content p + p {
+    margin-top: 1.5rem;
+}
+
+.lexicon_content[data-tab="lexicon:exposom"] {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.lexicon_content[data-tab="lexicon:exposom"] > * {
+    max-width: 48rem;
+}
+
+.lexicon_content[data-tab="lexicon:pathology"],
+.lexicon_content[data-tab="lexicon:determinant"],
+.lexicon_content[data-tab="lexicon:facility"] {
+    display: grid;
+    grid-template-columns: 12rem 14rem 1fr;
+    gap: 1rem 3rem
+}
+
+.lexicon_row-img {
+    grid-column: 1/2;
+    align-self: center;
+    text-align: center;
+}
+
+.lexicon_row-img img {
+    width: 7rem;
+}
+
+.lexicon_content[data-tab="lexicon:facility"] img {
+    width: 5rem;
+}
+
+.lexicon_row-title {
+    grid-column: 2/3;
+    align-self: center;
+    font-weight: bold;
+}
+
+.lexicon_row-content {
+    grid-column: 3/4;
+    align-self: center;
+}

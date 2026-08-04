@@ -1,0 +1,53 @@
+#context-details {
+}
+
+#context-details .popup-modal {
+    grid-template-columns: 2fr 3fr;
+    gap: 1rem 2rem;
+}
+
+#context-details h3 {
+    margin: 1rem 0 .5rem 0;
+    font-size: 1.75rem;
+    text-transform: uppercase;
+}
+
+#context-details h4 {
+    margin: 1.5rem 0 .75rem 0;
+    font-size: 1.15rem;
+}
+
+#context-details p {
+    margin: 0 0 .5rem 0;
+    font-size: .875rem;
+}
+
+#context-details img {
+    max-width: 100%;
+}
+
+.context-img-main {
+    grid-row: 2/3;
+    grid-column: 1/2;
+    object-fit: contain;
+}
+
+.context-content {
+    grid-row: 1/3;
+    grid-column: 2/3;
+}
+
+.context-glance {
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 10rem);
+    gap: .5rem;
+    list-style: none;
+}
+.context-glance img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

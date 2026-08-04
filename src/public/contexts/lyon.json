@@ -1,6 +1,8 @@
 {
   "contexts": [
     {
+      "id": "lyon-2",
+      "name": "Lyon : Quartier Confluence",
       "determinants": {
         "social cohesion and involvement": 0.75,
         "social mixity, equity and solidarity": 0.5,
@@ -33,10 +35,25 @@
         "industrial, water and soil pollution low exposure": 0.5,
         "road traffic low exposure": 1
       },
-      "id": "lyon-2",
-      "name": "Lyon : Quartier Confluence"
+      "details": {
+        "story": "Longtemps inconstructible en raison des crues du Rhône, le quartier du Tonkin se développe à partir de la fin du XIXᵉ siècle grâce aux aménagements hydrauliques. Urbanisé au début du XXᵉ siècle sur des terrains des Hospices Civils de Lyon, il est profondément transformé dans les années 1970 selon les principes de l'urbanisme moderniste. Aujourd'hui, les principaux enjeux portent sur sa reconnexion avec le reste de la ville, l'amélioration des espaces publics et son adaptation aux évolutions métropolitaines.",
+        "health_stake": "Le portrait de santé, fondé sur 50 indicateurs en open data, met en évidence une bonne mixité fonctionnelle, un accès favorable à une alimentation saine, aux mobilités actives et aux transports en commun. En revanche, le quartier présente des fragilités liées à une forte vulnérabilité socio-économique, une densité de population élevée, un accès insuffisant aux commerces et équipements de proximité ainsi qu'à des espaces naturels.",
+        "image_main": "/image/context/lyon-2/main.jpg",
+        "images_glance": [
+          "/image/context/lyon-2/glance_1.jpg",
+          "/image/context/lyon-2/glance_2.jpg",
+          "/image/context/lyon-2/glance_3.jpg",
+          "/image/context/lyon-2/glance_4.jpg",
+          "/image/context/lyon-2/glance_5.jpg",
+          "/image/context/lyon-2/glance_6.jpg",
+          "/image/context/lyon-2/glance_7.jpg",
+          "/image/context/lyon-2/glance_8.jpg"
+        ]
+      }
     },
     {
+      "id": "villeurbanne",
+      "name": "Villeurbanne : Quartier Charpennes Tonkin",
       "determinants": {
         "social cohesion and involvement": 1,
         "social mixity, equity and solidarity": 0.75,
@@ -69,10 +86,25 @@
         "industrial, water and soil pollution low exposure": 0.25,
         "road traffic low exposure": 0.5
       },
-      "id": "villeurbanne",
-      "name": "Villeurbanne : Quartier Charpennes Tonkin"
+      "details": {
+        "story": "Longtemps inconstructible en raison des crues du Rhône, le quartier du Tonkin se développe à partir de la fin du XIXᵉ siècle grâce aux aménagements hydrauliques. Urbanisé au début du XXᵉ siècle sur des terrains des Hospices Civils de Lyon, il est profondément transformé dans les années 1970 selon les principes de l'urbanisme moderniste. Aujourd'hui, les principaux enjeux portent sur sa reconnexion avec le reste de la ville, l'amélioration des espaces publics et son adaptation aux évolutions métropolitaines.",
+        "health_stake": "Le portrait de santé, fondé sur 50 indicateurs en open data, met en évidence une bonne mixité fonctionnelle, un accès favorable à une alimentation saine, aux mobilités actives et aux transports en commun. En revanche, le quartier présente des fragilités liées à une forte vulnérabilité socio-économique, une densité de population élevée, un accès insuffisant aux commerces et équipements de proximité ainsi qu'à des espaces naturels. ",
+        "image_main": "/image/context/villeurbanne/main.jpg",
+        "images_glance": [
+          "/image/context/villeurbanne/glance_1.jpg",
+          "/image/context/villeurbanne/glance_2.jpg",
+          "/image/context/villeurbanne/glance_3.jpg",
+          "/image/context/villeurbanne/glance_4.jpg",
+          "/image/context/villeurbanne/glance_5.jpg",
+          "/image/context/villeurbanne/glance_6.jpg",
+          "/image/context/villeurbanne/glance_7.jpg",
+          "/image/context/villeurbanne/glance_8.jpg"
+        ]
+      }
     },
     {
+      "id": "la-saulaie",
+      "name": "Oullins-Pierre-Benite - La Mulatiere",
       "determinants": {
         "social cohesion and involvement": 1,
         "social mixity, equity and solidarity": 0.75,
@@ -105,8 +137,21 @@
         "industrial, water and soil pollution low exposure": 0.75,
         "road traffic low exposure": 0.75
       },
-      "id": "la-saulaie",
-      "name": "Oullins-Pierre-Benite - La Mulatiere"
+      "details": {
+        "story": "Situé à la confluence de l'Yzeron et du Rhône, le quartier s'est développé au XIXᵉ siècle autour des activités industrielles et ferroviaires. Son enclavement, renforcé par l'autoroute A7, puis le déclin industriel à partir des années 1970 ont entraîné une forte dégradation sociale et urbaine. Aujourd'hui, un vaste projet de renouvellement urbain vise à requalifier les friches, améliorerles mobilités et reconnecter le quartier au reste de la métropole.",
+        "health_stake": "Le portrait de santé, fondé sur 50 indicateurs en open data, met en avant un environnement favorable grâce à la proximité des espaces naturels et d'un cours d'eau, à une faible imperméabilisation des sols et à une densité de population modérée. Les principaux enjeux concernent toutefois la vulnérabilité socio-économique des habitants, un déficit de marchabilité et de mobilités actives, un accès limité aux activités culturelles et récréatives ainsi qu'une exposition importante aux nuisances liées aux infrastructures de transport.",
+        "image_main": "/image/context/la-saulaie/main.jpg",
+        "images_glance": [
+          "/image/context/la-saulaie/glance_1.jpg",
+          "/image/context/la-saulaie/glance_2.jpg",
+          "/image/context/la-saulaie/glance_3.jpg",
+          "/image/context/la-saulaie/glance_4.jpg",
+          "/image/context/la-saulaie/glance_5.jpg",
+          "/image/context/la-saulaie/glance_6.jpg",
+          "/image/context/la-saulaie/glance_7.jpg",
+          "/image/context/la-saulaie/glance_8.jpg"
+        ]
+      }
     }
   ]
 }

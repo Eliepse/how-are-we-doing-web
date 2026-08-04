@@ -1,0 +1,29 @@
+<aside id="lexicon" class="popup" aria-hidden="true" style="display: none">
+	<div class="popup-modal">
+		<button class="popup-close" data-action="lexicon:close">&times;</button>
+		<div class="popup-header">
+			<span data-translate="general.what binds us">Ce qui nous lie</span><br />
+			<h2 data-translate="general.lexicon">Lexique</h2>
+		</div>
+
+		<ul class="lexicon_menu">
+			<li>
+				<button data-toggle-tab="lexicon:exposom" data-tab-active="true">Exposome urbain</button>
+			</li>
+			<li>
+				<button data-toggle-tab="lexicon:pathology">Santé</button>
+			</li>
+			<li>
+				<button data-toggle-tab="lexicon:determinant">Déterminant</button>
+			</li>
+			<li>
+				<button data-toggle-tab="lexicon:facility">Aménagements</button>
+			</li>
+		</ul>
+
+		{{> lexicon/exposom }}
+		{{> lexicon/health }}
+		{{> lexicon/determinant }}
+		{{> lexicon/facility }}
+	</div>
+</aside>

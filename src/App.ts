@@ -1,4 +1,4 @@
-import { Context } from "./Diagram/Context";
+import { Context, type Details } from "./Diagram/Context";
 import { Translator } from "./Diagram/Translation/Translator";
 import { FloatingLabelManager } from "./Diagram/FloatingLabelManager";
 import { Diagram, type SelectableNode } from "./Diagram/Diagram";
@@ -176,12 +176,19 @@ export class App {
 		];
 
 		this.contexts = contexts.map((context: {
-			id: string,
-			name: string,
-			default?: boolean,
-			determinants: { [k in DeterminantKey]: number }
+			id: string;
+			name: string;
+			default?: boolean;
+			determinants: { [k in DeterminantKey]: number };
+			details: Details;
 		}) => {
-			return new Context(context.id, context.name, context.determinants, true === context.default);
+			return new Context(
+				context.id,
+				context.name,
+				context.determinants,
+				true === context.default,
+				context.details,
+			);
 		});
 
 		this.loaded = true;

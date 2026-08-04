@@ -60,7 +60,29 @@ async function main(withLoader = true) {
 	translator.translateDOM(document.querySelector<HTMLElement>("#credits"));
 	translator.translateDOM(document.querySelector<HTMLElement>("#legendRoot"));
 
+	const ctxDetailsModal = document.querySelector<HTMLElement>("#context-details");
+	const openCtxActionBtns = document.querySelectorAll<HTMLButtonElement>("button[data-action='context:open']");
+
+	document.querySelectorAll<HTMLButtonElement>("button[data-action='context:close']")
+		.forEach((btn) => btn.addEventListener("mousedown", () => {
+			if (btn.disabled || !ctxDetailsModal) {
+				return;
+			}
+
+			ctxDetailsModal.ariaHidden = "true";
+			ctxDetailsModal.style.display = "none";
+		}));
+	openCtxActionBtns.forEach((btn) => btn.addEventListener("mousedown", () => {
+		if (btn.disabled || !ctxDetailsModal) {
+			return;
+		}
+
+		ctxDetailsModal.ariaHidden = "false";
+		ctxDetailsModal.style.display = "";
+	}));
+
 	app.onContextChanged = (context: Context) => {
+		// Update display
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
 			node.textContent = translator
 				.translate(context.name.toLowerCase(), "general")
@@ -68,8 +90,11 @@ async function main(withLoader = true) {
 			node.dataset.tr = context.id;
 		});
 
+		// Telemetry
 		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
 		collector.logEvent("context_changed", { id: context.id, name: context.name });
+
+		// Update legend
 
 		const legendBlurred = document.querySelector<HTMLElement>("figure[data-legend=blurred]");
 		if (legendBlurred) {
@@ -79,6 +104,41 @@ async function main(withLoader = true) {
 		const legendDefault = document.querySelector<HTMLElement>("figure[data-legend=default]");
 		if (legendDefault) {
 			legendDefault.style.display = context.isDefault ? "none" : "";
+		}
+
+		// Update button and modal
+		const details = context.details;
+		openCtxActionBtns.forEach((btn) => btn.disabled = !details);
+
+		if(!details && ctxDetailsModal) {
+			ctxDetailsModal.ariaHidden = "true";
+			ctxDetailsModal.style.display = "none";
+		}
+
+		if (details) {
+			document.querySelectorAll<HTMLElement | HTMLImageElement>("#context-details [data-key^='context:']")
+				.forEach((el) => {
+					switch (el.dataset.key) {
+						case "context:title":
+							el.textContent = context.name;
+							return;
+						case "context:history:content":
+							el.textContent = details.story;
+							return;
+						case "context:stake:content":
+							el.textContent = details.health_stake;
+							return;
+						case "context:img:main":
+							"src" in el && (el.src = details.image_main);
+							return;
+						case "context:img:glance":
+							el.innerHTML = "";
+							el.innerHTML = details.images_glance.map((src) => {
+								return `<li><img src="${src}"/></li>`;
+							}).join("");
+							return;
+					}
+				});
 		}
 	};
 

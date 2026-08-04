@@ -1,6 +1,8 @@
 {
   "contexts": [
     {
+      "id": "presqu-ile",
+      "name": "Grenoble : Quartier Presqu'Île",
       "determinants": {
         "access to a diversified and qualitative offer": 0.75,
         "access to and variety of the transportation offer": 0.75,
@@ -33,10 +35,25 @@
         "urban appropriation access and equity": 0.5,
         "urban concentration and urbanization level": 1
       },
-      "id": "presqu-ile",
-      "name": "Grenoble : Quartier Presqu'Île"
+      "details": {
+        "story": "Située au confluent du Drac et de l'Isère, la Presqu'île de Grenoble est longtemps restée un territoire dédié aux infrastructures et aux activités scientifiques. À partir des années 1950, l'implantation du CEA, de centres de recherche et d'enseignement supérieur, en fait l'un des principaux pôles européens de l'innovation. Depuis les années 2010, le quartier fait l'objet d'une vaste opération de renouvellement urbain visant à transformer la Presqu'île en un véritable quartier de ville, associant logements, commerces et espaces publics, en conservant son rayonnement scientifique et économique.",
+        "health_stake": "Le portrait de santé, fondé sur 50 indicateurs en open data, met en évidence une bonne mixité fonctionnelle, un tissu économique dynamique, une proximité avec un cours d'eau ainsi qu'un environnement favorable aux déplacements à pied et à vélo. En revanche, plusieurs enjeux persistent, notamment une forte imperméabilisation des sols limitant l'accès à la nature, une exposition aux nuisances générées par les infrastructures routières, un accès encore restreint aux commerces et équipements de proximité ainsi qu'à une offre d'alimentation saine.",
+        "image_main": "/image/context/presqu-ile/main.jpg",
+        "images_glance": [
+          "/image/context/presqu-ile/glance_1.jpg",
+          "/image/context/presqu-ile/glance_2.jpg",
+          "/image/context/presqu-ile/glance_3.jpg",
+          "/image/context/presqu-ile/glance_4.jpg",
+          "/image/context/presqu-ile/glance_5.jpg",
+          "/image/context/presqu-ile/glance_6.jpg",
+          "/image/context/presqu-ile/glance_7.jpg",
+          "/image/context/presqu-ile/glance_8.jpg"
+        ]
+      }
     },
     {
+      "id": "flaubert",
+      "name": "Grenoble : Quartier Flaubert",
       "determinants": {
         "access to a diversified and qualitative offer": 1,
         "access to and variety of the transportation offer": 0.5,
@@ -69,10 +86,25 @@
         "urban appropriation access and equity": 1,
         "urban concentration and urbanization level": 0.75
       },
-      "id": "flaubert",
-      "name": "Grenoble : Quartier Flaubert"
+      "details": {
+        "story": "Situé au sud de Grenoble, le quartier Flaubert s'est développé sur d'anciennes emprises industrielles, ferroviaires et d'équipements publics. Il fait aujourd'hui l'objet de l'un des principaux projets de renouvellement urbain de la métropole. Déployé sur près de 90 hectares, cet écoquartier vise à créer un quartier mixte associant logements, activités, commerces et équipements publics. Pensé selon les principes d'un urbanisme favorable à la santé, le projet accorde une place importante aux mobilités actives, à la participation des habitants, à la biodiversité et au changement climatique.",
+        "health_stake": "Le portrait de santé, fondé sur 50 indicateurs en open data, met en évidence un environnement urbain favorable grâce à une faible exposition aux nuisances liées aux infrastructures routières, une faible imperméabilisation et pollution des sols ainsi qu'un cadre propice aux déplacements actifs grâce à une bonne marchabilité et un réseau cyclable développé. En revanche, le quartier présente plusieurs fragilités liées à une forte densité de population, un accès limité aux commerces et équipements de proximité, à une offre d'activités culturelles et récréatives ainsi qu'à une offre d'alimentation saine.",
+        "image_main": "/image/context/flaubert/main.jpg",
+        "images_glance": [
+          "/image/context/flaubert/glance_1.jpg",
+          "/image/context/flaubert/glance_2.jpg",
+          "/image/context/flaubert/glance_3.jpg",
+          "/image/context/flaubert/glance_4.jpg",
+          "/image/context/flaubert/glance_5.jpg",
+          "/image/context/flaubert/glance_6.jpg",
+          "/image/context/flaubert/glance_7.jpg",
+          "/image/context/flaubert/glance_8.jpg"
+        ]
+      }
     },
     {
+      "id": "caserne-de-bonne",
+      "name": "Grenoble : Quartier Caserne de Bonne",
       "determinants": {
         "access to a diversified and qualitative offer": 0.5,
         "access to and variety of the transportation offer": 0.5,
@@ -105,10 +137,25 @@
         "urban appropriation access and equity": 0.25,
         "urban concentration and urbanization level": 0.25
       },
-      "id": "caserne-de-bonne",
-      "name": "Grenoble : Quartier Caserne de Bonne"
+      "details": {
+        "story": "Ancienne emprise militaire créée au XVIIIᵉ siècle, la Caserne de Bonne est restée fermée sur elle-même jusqu'au départ de l'armée en 1994. Cette vaste friche de près de 8,5 hectares a ensuite fait l'objet d'une ambitieuse opération de renouvellement urbain, donnant naissance au premier écoquartier labellisé de France en 2009. Conçu comme une extension du centre de Grenoble, le quartier associe logements, commerces, équipements, parc urbain et bâtiments patrimoniaux réhabilités, tout en intégrant des exigences élevées en matière de qualité environnementale.",
+        "health_stake": "Le portrait de santé, fondé sur 50 indicateurs en open data, met en évidence un cadre de vie favorable grâce à une densité de population modérée, un tissu économique dynamique, une bonne marchabilité, un réseau cyclable développé et des espaces publics propices aux usages quotidiens. En revanche, plusieurs enjeux demeurent, notamment une forte imperméabilisation des sols, un déficit de végétalisation et d'accès aux espaces naturels, une exposition importante à la pollution de l'air liée au trafic routier ainsi qu'un accès insuffisant à une offre d'alimentation saine. ",
+        "image_main": "/image/context/caserne-de-bonne/main.jpg",
+        "images_glance": [
+          "/image/context/caserne-de-bonne/glance_1.jpg",
+          "/image/context/caserne-de-bonne/glance_2.jpg",
+          "/image/context/caserne-de-bonne/glance_3.jpg",
+          "/image/context/caserne-de-bonne/glance_4.jpg",
+          "/image/context/caserne-de-bonne/glance_5.jpg",
+          "/image/context/caserne-de-bonne/glance_6.jpg",
+          "/image/context/caserne-de-bonne/glance_7.jpg",
+          "/image/context/caserne-de-bonne/glance_8.jpg"
+        ]
+      }
     },
     {
+      "id": "villeneuve",
+      "name": "Grenoble : Quartier Villeneuve",
       "determinants": {
         "access to a diversified and qualitative offer": 0.75,
         "access to and variety of the transportation offer": 0.25,
@@ -141,8 +188,21 @@
         "urban appropriation access and equity": 1,
         "urban concentration and urbanization level": 0.5
       },
-      "id": "villeneuve",
-      "name": "Grenoble : Quartier Villeneuve"
+      "details": {
+        "story": "Conçue à la fin des années 1960 dans le cadre de l'accueil des Jeux olympiques d'hiver de 1968, la Villeneuve constitue l'un des grands projets d'urbanisme moderne de Grenoble. Pensé comme un quartier innovant, il associe logements, équipements publics et commerces, avec une forte ambition de mixité sociale et de qualité de vie. Confronté à d'importantes difficultés socio-économiques à partir des années 1980, il fait aujourd'hui l'objet d'un vaste programme de renouvellement urbain visant à diversifier ses fonctions, réhabiliter son habitat et renforcer son attractivité.",
+        "health_stake": "Le portrait de santé, fondé sur 50 indicateurs en open data, met en évidence plusieurs atouts, notamment une faible exposition aux nuisances routières, une faible imperméabilisation des sols, un bon accès aux espaces végétalisés et une desserte efficace par les transports en commun. Les principaux enjeux concernent toutefois la vulnérabilité socio-économique des habitants, une faible mixité fonctionnelle, des difficultés liées à la qualité et à l'occupation des logements ainsi qu'un accès limité aux commerces et équipements de proximité.",
+        "image_main": "/image/context/villeneuve/main.jpg",
+        "images_glance": [
+          "/image/context/villeneuve/glance_1.jpg",
+          "/image/context/villeneuve/glance_2.jpg",
+          "/image/context/villeneuve/glance_3.jpg",
+          "/image/context/villeneuve/glance_4.jpg",
+          "/image/context/villeneuve/glance_5.jpg",
+          "/image/context/villeneuve/glance_6.jpg",
+          "/image/context/villeneuve/glance_7.jpg",
+          "/image/context/villeneuve/glance_8.jpg"
+        ]
+      }
     }
   ]
 }

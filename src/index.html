@@ -208,7 +208,7 @@
 	<div id="biblioRoot"></div>
 	<div id="contextControls">
 		<button data-action="context:prev">&larr;</button>
-		<div class="contextName" data-key="context:name"></div>
+		<button class="contextName" data-action="context:open" data-key="context:name" disabled></button>
 		<button data-action="context:next">&rarr;</button>
 	</div>
 	<div id="attribution">
@@ -217,8 +217,8 @@
 </div>
 
 {{> credits }}
-
 {{> lexicon }}
+{{> context }}
 
 <script type="module" src="/main.ts"></script>
 </body>

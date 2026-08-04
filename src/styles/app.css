@@ -6,6 +6,7 @@
 @import "parts/legend.css";
 @import "parts/popup.css";
 @import "parts/lexicon.css";
+@import "parts/context.css";
 
 #app {
     --sideColumn: 20rem;

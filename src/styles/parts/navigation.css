@@ -28,6 +28,15 @@
     margin: 0 var(--4);
     min-width: 20rem;
     text-align: center;
+    padding: .25rem;
+    border-radius: var(--1-5);
+}
+
+.contextName:disabled,
+.contextName:disabled:hover {
+    border: none;
+    background: none;
+    cursor: default;
 }
 
 /*

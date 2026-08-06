@@ -218,7 +218,7 @@ async function main(withLoader = true) {
 	console.info(`App loaded in: ${Date.now() - loadStartedAt} ms`);
 
 	// @ts-expect-error
-	const minLoadtimeMs = import.meta.env.DEV ? 0 : 5_000;
+	const minLoadtimeMs = import.meta.env.DEV ? 0 : 3_000;
 	const alreadyLoadedPercent = loaderPercent;
 	const leftToLoadPercent = 100 - loaderPercent;
 

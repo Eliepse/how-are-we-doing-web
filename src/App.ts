@@ -30,6 +30,7 @@ import { Animator } from "./Engine2D/Animator/Animator";
 import { Scene } from "./Engine2D/Animator/Scene";
 import { Sequence } from "./Engine2D/Animator/Sequence";
 import { Opacity } from "./Engine2D/ValueObject/Opacity";
+import { RevealDiagramScene } from "./Animations/RevealDiagramScene";
 
 export type Feature =
 	"detailed-relations"
@@ -306,25 +307,7 @@ export class App {
 		// Start the engine
 		Engine.start();
 
-		const facilityGroup = Engine.nodeByUname("group:facility");
-		const determinantGroup = Engine.nodeByUname("group:determinant");
-		const pathologyGroup = Engine.nodeByUname("group:pathology");
-
-		const diagramRevealScene = new Scene(
-			"home",
-			[
-				[1250, new Sequence((r) => this.diagram?.setOpacity(new Opacity(r)), 750)],
-				[1250, new Sequence((r) => pathologyGroup?.setOpacity(new Opacity(r)), 1_000)],
-				[1750, new Sequence((r) => determinantGroup?.setOpacity(new Opacity(r)), 1_000)],
-				[2250, new Sequence((r) => facilityGroup?.setOpacity(new Opacity(r)), 1_000)],
-			],
-		);
-
-		this.diagram?.setOpacity(Opacity.Transparent);
-		facilityGroup?.setOpacity(Opacity.Transparent);
-		determinantGroup?.setOpacity(Opacity.Transparent);
-		pathologyGroup?.setOpacity(Opacity.Transparent);
-		Animator.play(diagramRevealScene, () => this.setReadonly(false));
+		Animator.play(new RevealDiagramScene(this.diagram), () => this.setReadonly(false));
 	}
 
 	get debug() {

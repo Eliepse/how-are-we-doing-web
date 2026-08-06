@@ -222,6 +222,9 @@ async function main(withLoader = true) {
 	const alreadyLoadedPercent = loaderPercent;
 	const leftToLoadPercent = 100 - loaderPercent;
 
+	// Fake loading to make sure it lasts at least a minimum amount of time
+	// If the real loading takes more time more time than the minium, no fake
+	// loading time is added
 	while (Date.now() - loadStartedAt < minLoadtimeMs) {
 		const loadTimeMs = Date.now() - loadStartedAt;
 		const forceWaitMs = minLoadtimeMs - loadTimeMs;

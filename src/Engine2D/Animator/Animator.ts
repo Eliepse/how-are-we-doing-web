@@ -20,6 +20,7 @@ export class Animator implements Tickable {
 
 		this.currentScenes.add(scene);
 		this.scenesStartedAt.set(scene, Date.now());
+		scene.onstarted();
 
 		scene.onended = () => {
 			this.stop(scene);

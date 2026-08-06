@@ -6,6 +6,7 @@ type TrackedSequenceConfig = {
 };
 
 export class Scene implements Tickable {
+	public onstarted: (() => void) = () => undefined;
 	public onended: (() => void) = () => undefined;
 	private sequences = new Set<[number, Sequence]>();
 

@@ -1,13 +1,16 @@
 import type { Tickable } from "../Time/Tickable";
 import { clamp } from "../math";
-import { Interpolation } from "../Time/interpolations";
-
-type TimingFn = (typeof Interpolation)[keyof typeof Interpolation];
+import { Interpolation, type TimingFn } from "../Time/interpolations";
 
 type ProcessClb = (
 	// The progression as a float from 0 to 1
 	progress: number,
 ) => void;
+
+export interface SequenceConfig {
+	timingFunction?: TimingFn;
+	inverted?: boolean;
+}
 
 export class Sequence implements Tickable {
 	public readonly timingFunction: TimingFn = Interpolation.linear;
@@ -16,7 +19,7 @@ export class Sequence implements Tickable {
 	constructor(
 		private processClb: ProcessClb,
 		public readonly durationMs: number,
-		config?: { timingFunction?: TimingFn; inverted?: boolean; },
+		config?: SequenceConfig,
 	) {
 		this.timingFunction = config?.timingFunction ?? Interpolation.linear;
 		this.inverted = config?.inverted ?? false;

@@ -87,13 +87,24 @@ export class NodeSequence extends Sequence {
 
 	override tick(_deltaTime: number, time: number, _timeUTC: number, _deltaTimeMs: number, _ticks: number) {
 		PROP_NAMES.forEach((propName) => {
-			const span = this.spans[propName].reverse().find((span) => span.startAt <= time);
+			const spans = this.spans[propName];
+			let i = this.spans[propName].length - 1,
+				span: Span | undefined;
 
-			if (!span) {
+			for (; i >= 0; i--) {
+				const _span = spans[i];
+				if (undefined !== _span && _span.startAt <= time) {
+					span = _span;
+					break;
+				}
+			}
+
+			if (!span || !span.endAt) {
 				return;
 			}
 
-			const progress = span.timing(time / this.durationMs);
+			const spanProgress = (time - span.startAt) / (span.endAt - span.startAt);
+			const progress = span.timing(spanProgress);
 
 			switch (propName) {
 				case "position":

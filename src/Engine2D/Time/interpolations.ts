@@ -1,4 +1,8 @@
 import { Opacity } from "../ValueObject/Opacity";
+import { Vector } from "../ValueObject/Vector";
+import { Angle } from "../ValueObject/Angle";
+
+export type TimingFn = (typeof Interpolation)[keyof typeof Interpolation];
 
 export type Interpolator<T> = (ratio: number, from: T, to: T) => T;
 
@@ -8,6 +12,17 @@ export function interpolateNumber(ratio: number, from: number, to: number): numb
 
 export function interpolateOpacity(ratio: number, from: Opacity, to: Opacity): Opacity {
 	return new Opacity(interpolateNumber(ratio, from.ratio, to.ratio));
+}
+
+export function interpolatePosition(ratio: number, from: Vector, to: Vector): Vector {
+	return new Vector(
+		interpolateNumber(ratio, from.x, to.x),
+		interpolateNumber(ratio, from.y, to.y),
+	);
+}
+
+export function interpolateAngle(ratio: number, from: Angle, to: Angle): Angle {
+	return new Angle(interpolateNumber(ratio, from.rad, to.rad));
 }
 
 export function linear(x: number) {

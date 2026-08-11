@@ -1,18 +1,18 @@
-import type { Scene } from "./Scene";
 import type { Tickable } from "../Time/Tickable";
+import type { TickableComposition } from "./Composition/TickableComposition";
 
 export class Animator implements Tickable {
 	private static _instance: Animator = new Animator();
 
-	currentScenes = new Set<Scene>();
-	scenesStartedAt = new WeakMap<Scene, number>();
+	currentScenes = new Set<TickableComposition>();
+	scenesStartedAt = new WeakMap<TickableComposition, number>();
 
-	stop(scene: Scene) {
+	stop(scene: TickableComposition) {
 		this.currentScenes.delete(scene);
 		this.scenesStartedAt.delete(scene);
 	}
 
-	play(scene: Scene, onDone: () => void, delayMs?: number) {
+	play(scene: TickableComposition, onDone: () => void, delayMs?: number) {
 		if (this.currentScenes.has(scene)) {
 			console.warn(`The scene '${scene.name}' is already playing`);
 			return;
@@ -52,7 +52,7 @@ export class Animator implements Tickable {
 		return Animator._instance;
 	}
 
-	static play(scene: Scene, onDone?: () => void, delayMs?: number): void {
+	static play(scene: TickableComposition, onDone?: () => void, delayMs?: number): void {
 		Animator.instance().play(scene, onDone ?? (() => undefined), delayMs);
 	}
 }

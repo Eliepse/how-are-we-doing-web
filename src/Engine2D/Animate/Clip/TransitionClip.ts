@@ -1,6 +1,7 @@
-import type { Tickable } from "../Time/Tickable";
-import { clamp } from "../math";
-import { Interpolation, type TimingFn } from "../Time/interpolations";
+import type { Clipable } from "./Clipable";
+import type { Tickable } from "../../Time/Tickable";
+import { Interpolation, type TimingFn } from "../../Time/interpolations";
+import { clamp } from "../../math";
 
 type ProcessClb = (
 	// The progression as a float from 0 to 1
@@ -12,13 +13,13 @@ export interface SequenceConfig {
 	inverted?: boolean;
 }
 
-export class Sequence implements Tickable {
+export class TransitionClip implements Tickable, Clipable {
 	public readonly timingFunction: TimingFn = Interpolation.linear;
 	public readonly inverted: boolean = false;
 
 	constructor(
 		private processClb: ProcessClb,
-		public readonly durationMs: number,
+		private readonly durationMs: number,
 		config?: SequenceConfig,
 	) {
 		this.timingFunction = config?.timingFunction ?? Interpolation.linear;
@@ -26,7 +27,11 @@ export class Sequence implements Tickable {
 	}
 
 	tick(_deltaTime: number, time: number, _timeUTC: number, _deltaTimeMs: number, _ticks: number): void {
-		const progression = clamp(0, time / this.durationMs, 1);
+		const progression = clamp(0, time / this.getDuration(), 1);
 		this.processClb(this.timingFunction(this.inverted ? 1 - progression : progression));
+	}
+
+	getDuration(): number {
+		return this.durationMs;
 	}
 }

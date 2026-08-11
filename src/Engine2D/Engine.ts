@@ -8,7 +8,7 @@ import { VirtualTree } from "./Core/VirtualTree";
 import type { Renderer } from "./Renderer/Renderer";
 import { type Transition } from "./Time/Transition";
 import { Input } from "./Interaction/Input";
-import { Animator } from "./Animator/Animator";
+import { Animator } from "./Animate/Animator";
 import type { Tickable } from "./Time/Tickable";
 
 export type EngineMouseEvent = { cursor: Vector };

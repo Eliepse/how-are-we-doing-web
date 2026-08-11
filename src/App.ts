@@ -26,12 +26,8 @@ import { LinkRenderer } from "./Diagram/Renderer/LinkRenderer";
 import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
 import { linkGradient } from "./Diagram/Shape/LinkGradient";
 import { linkArrow } from "./Diagram/Shape/LinkArrow";
-import { Animator } from "./Engine2D/Animator/Animator";
-import { Scene } from "./Engine2D/Animator/Scene";
-import { Sequence } from "./Engine2D/Animator/Sequence";
-import { Opacity } from "./Engine2D/ValueObject/Opacity";
-import { RevealDiagramScene } from "./Animations/RevealDiagramScene";
-import { wait } from "./helpers";
+import { makeScene } from "./Animations/RevealDiagramScene";
+import { Timeline } from "./Engine2D/Animate/Timeline";
 
 export type Feature =
 	"detailed-relations"
@@ -308,7 +304,7 @@ export class App {
 		// Start the engine
 		Engine.start();
 
-		Animator.play(new RevealDiagramScene(this.diagram), () => this.setReadonly(false), 1000);
+		Timeline.play(makeScene(this.diagram)).then(() => this.setReadonly(false));
 	}
 
 	get debug() {

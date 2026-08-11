@@ -1,15 +1,17 @@
-import { Sequence, type SequenceConfig } from "./Sequence";
-import { type Node2D } from "../Node/Node2D";
-import type { Vector } from "../ValueObject/Vector";
-import type { Angle } from "../ValueObject/Angle";
-import type { Opacity } from "../ValueObject/Opacity";
+import { type SequenceConfig } from "./TransitionClip";
+import { type Node2D } from "../../Node/Node2D";
+import type { Vector } from "../../ValueObject/Vector";
+import type { Angle } from "../../ValueObject/Angle";
+import type { Opacity } from "../../ValueObject/Opacity";
 import {
 	interpolateAngle,
 	interpolateOpacity,
 	interpolatePosition,
 	Interpolation,
 	type TimingFn,
-} from "../Time/interpolations";
+} from "../../Time/interpolations";
+import type { Clipable } from "./Clipable";
+import type { Tickable } from "../../Time/Tickable";
 
 const PROP_NAMES = ["position", "rotation", "opacity"] as const;
 
@@ -27,22 +29,21 @@ type Span<TProp extends keyof Keyframe = keyof Keyframe> = {
 	value: [Keyframe[TProp], Keyframe[TProp]];
 }
 
-const DUMMY_FN = () => undefined;
-
-export class NodeSequence extends Sequence {
+export class NodeClip implements Tickable, Clipable {
 	private readonly spans: {
 		position: Array<Span<"position">>,
 		rotation: Array<Span<"rotation">>,
 		opacity: Array<Span<"opacity">>,
 	} = { position: [], rotation: [], opacity: [] };
+	private readonly durationMs: number;
 
 	constructor(
 		private node: Node2D,
 		keyframes: Record<number, Keyframe>,
-		config?: SequenceConfig,
+		config?: Pick<SequenceConfig, "timingFunction">,
 	) {
 		const timeKeys = Object.keys(keyframes).map((k) => parseInt(k));
-		super(DUMMY_FN, Math.max(...timeKeys), config);
+		this.durationMs = Math.max(...timeKeys);
 
 		PROP_NAMES.forEach((propName) => {
 			const positionTimeKeys = timeKeys.filter((timeKey) => keyframes[timeKey] && propName in keyframes[timeKey]);
@@ -85,7 +86,7 @@ export class NodeSequence extends Sequence {
 	}
 
 
-	override tick(_deltaTime: number, time: number, _timeUTC: number, _deltaTimeMs: number, _ticks: number) {
+	tick(_deltaTime: number, time: number, _timeUTC: number, _deltaTimeMs: number, _ticks: number) {
 		PROP_NAMES.forEach((propName) => {
 			const spans = this.spans[propName];
 			let i = this.spans[propName].length - 1,
@@ -108,15 +109,22 @@ export class NodeSequence extends Sequence {
 
 			switch (propName) {
 				case "position":
+					// @ts-expect-error
 					this.node.setPosition(interpolatePosition(progress, span.value[0], span.value[1]));
 					return;
 				case "rotation":
+					// @ts-expect-error
 					this.node.setRotation(interpolateAngle(progress, span.value[0], span.value[1]));
 					return;
 				case "opacity":
+					// @ts-expect-error
 					this.node.setOpacity(interpolateOpacity(progress, span.value[0], span.value[1]));
 					return;
 			}
 		});
+	}
+
+	getDuration(): number {
+		return this.durationMs;
 	}
 }

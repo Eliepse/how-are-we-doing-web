@@ -1,16 +1,19 @@
-import { type Sequence } from "./Sequence";
-import type { Tickable } from "../Time/Tickable";
+import type { Composition } from "./Composition";
+import type { Tickable } from "../../Time/Tickable";
+import type { Clipable } from "../Clip/Clipable";
 
 type TrackedSequenceConfig = {
 	delay?: number;
 };
 
-export class Scene implements Tickable {
+type AcceptedClips = Clipable & Tickable;
+
+export class TickableComposition implements Tickable, Composition {
 	public onstarted: (() => void) = () => undefined;
 	public onended: (() => void) = () => undefined;
-	private sequences = new Set<[number, Sequence]>();
+	private sequences = new Set<[number, AcceptedClips]>();
 
-	constructor(public readonly name: string, sequences: Array<[number, Sequence]> = []) {
+	constructor(public readonly name: string, sequences: Array<[number, AcceptedClips]> = []) {
 		sequences.forEach(([delay, sequence]) => this.add(sequence, { delay: 0 <= delay ? delay : undefined }));
 	}
 
@@ -21,7 +24,7 @@ export class Scene implements Tickable {
 			const sequenceTime = time - delay;
 
 			// Sequence not ended yet
-			if (sequenceTime < sequence.durationMs) {
+			if (sequenceTime < sequence.getDuration()) {
 				ended = false;
 			}
 
@@ -38,13 +41,7 @@ export class Scene implements Tickable {
 		}
 	}
 
-	public add(sequence: Sequence, config: TrackedSequenceConfig = {}): void {
+	public add(sequence: AcceptedClips, config: TrackedSequenceConfig = {}): void {
 		this.sequences.add([config.delay ?? 0, sequence]);
-	}
-
-	private findDeltaToEnd(): number {
-		let delta = 0;
-		this.sequences.forEach(([delay, sequence]) => delta = Math.max(delta, delay + sequence.durationMs));
-		return delta;
 	}
 }

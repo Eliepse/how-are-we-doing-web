@@ -124,12 +124,18 @@
 
 <div id="app">
 	<div id="navigation">
-		<div style="justify-self: start; display: flex; gap: .5rem">
+		<div data-key="actions-side" style="justify-self: start; display: flex; gap: .5rem">
 			<button data-action="locale:toggle" style="text-transform: uppercase" data-locale-current>
 				FR
 			</button>
 			<button data-action="credits:open" data-translate="general.credits">
 				Credits
+			</button>
+			<button data-action="demo:open" data-translate="general.demo">
+				Tutoriel
+			</button>
+			<button data-action="demo:close" data-translate="general.demo_close" style="display: none">
+				Quitter le tutoriel
 			</button>
 		</div>
 
@@ -153,7 +159,7 @@
 			</li>
 		</ul>
 
-		<div style="justify-self: end">
+		<div style="justify-self: end" data-key="actions-side">
 			<button data-action="lexicon:open" data-translate="general.lexicon">
 				Lexicon
 			</button>
@@ -219,6 +225,7 @@
 {{> credits }}
 {{> lexicon }}
 {{> context }}
+{{> presenter }}
 
 <script type="module" src="/main.ts"></script>
 </body>

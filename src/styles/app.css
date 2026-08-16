@@ -7,6 +7,8 @@
 @import "parts/popup.css";
 @import "parts/lexicon.css";
 @import "parts/context.css";
+@import "parts/presenter.css";
+@import "parts/tutorial.css";
 
 #app {
     --sideColumn: 20rem;

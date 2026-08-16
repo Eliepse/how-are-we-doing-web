@@ -1,0 +1,27 @@
+#presenter {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    justify-items: center;
+
+    z-index: 20;
+    pointer-events: none;
+}
+
+#presenter .left {
+    grid-column: 1/2;
+    grid-row: 1/2;
+}
+
+#presenter .center {
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+#presenter .right {
+    grid-column: 3/4;
+    grid-row: 1/2;
+}

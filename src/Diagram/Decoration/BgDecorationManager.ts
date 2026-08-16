@@ -50,6 +50,7 @@ export class BgDecorationManager extends Node2D {
 	constructor() {
 		super();
 		this.timer += Math.random() * 1234;
+		this.setUname("decoration:main:background");
 	}
 
 	override onProcess(deltaTime: number): void {

@@ -15,6 +15,7 @@ import { SystemActionsHandler } from "./Actions/SystemActionsHandler";
 import "/styles/styles.css";
 // @ts-expect-error
 import "/styles/app.css";
+import { DemoActionsHandler } from "./Actions/DemoActionsHandler";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
@@ -210,6 +211,7 @@ async function main(withLoader = true) {
 		new ContextActionsHandler(app),
 		new LexiconActionsHandler(collector),
 		new ModeActionsHandler(app, collector),
+		new DemoActionsHandler(collector),
 		new SystemActionsHandler(app),
 	);
 

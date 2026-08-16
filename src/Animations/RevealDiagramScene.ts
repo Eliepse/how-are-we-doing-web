@@ -29,13 +29,13 @@ export function makeScene(diagram: Diagram) {
 	}
 
 	const revealComposition = new TickableComposition(
-		"home",
 		[
 			[0, new FadeInNode(diagram, 750)],
 			[0, new FadeInNode(pathologyGroup, 1_000)],
 			[500, new FadeInNode(determinantGroup, 1_000)],
 			[1000, new FadeInNode(facilityGroup, 1_000)],
 		],
+		"home",
 	);
 
 	revealComposition.onstarted = () => {

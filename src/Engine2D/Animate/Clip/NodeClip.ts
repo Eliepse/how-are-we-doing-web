@@ -1,4 +1,4 @@
-import { type SequenceConfig } from "./TransitionClip";
+import { type TransitionClipConfig } from "./TransitionClip";
 import { type Node2D } from "../../Node/Node2D";
 import type { Vector } from "../../ValueObject/Vector";
 import type { Angle } from "../../ValueObject/Angle";
@@ -40,7 +40,7 @@ export class NodeClip implements Tickable, Clipable {
 	constructor(
 		private node: Node2D,
 		keyframes: Record<number, Keyframe>,
-		config?: Pick<SequenceConfig, "timingFunction">,
+		config?: Pick<TransitionClipConfig, "timingFunction">,
 	) {
 		const timeKeys = Object.keys(keyframes).map((k) => parseInt(k));
 		this.durationMs = Math.max(...timeKeys);

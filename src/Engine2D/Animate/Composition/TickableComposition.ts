@@ -13,8 +13,11 @@ export class TickableComposition implements Tickable, Composition {
 	public onended: (() => void) = () => undefined;
 	private sequences = new Set<[number, AcceptedClips]>();
 
-	constructor(public readonly name: string, sequences: Array<[number, AcceptedClips]> = []) {
-		sequences.forEach(([delay, sequence]) => this.add(sequence, { delay: 0 <= delay ? delay : undefined }));
+	constructor(
+		clips: Array<[number, AcceptedClips]> = [],
+		public readonly name: string | undefined = undefined,
+	) {
+		clips.forEach(([delay, sequence]) => this.add(sequence, { delay: 0 <= delay ? delay : undefined }));
 	}
 
 	tick(deltaTime: number, time: number, timeUTC: number, deltaTimeMs: number, ticks: number): void {

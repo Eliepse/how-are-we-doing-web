@@ -14,7 +14,8 @@ export class Animator implements Tickable {
 
 	play(scene: TickableComposition, onDone: () => void, delayMs?: number) {
 		if (this.currentScenes.has(scene)) {
-			console.warn(`The scene '${scene.name}' is already playing`);
+			const sceneName = scene.name ? `'${scene.name}'` : "<unamed>";
+			console.warn(`The scene ${sceneName} is already playing`);
 			return;
 		}
 

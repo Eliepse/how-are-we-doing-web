@@ -173,7 +173,7 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 	}
 
 	private propagateClick(cursor: Vector): void {
-		if(this._readonly) {
+		if (this._readonly) {
 			return;
 		}
 
@@ -192,7 +192,7 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 	}
 
 	private handleMouseMove(cursor: Vector): void {
-		if(this._readonly) {
+		if (this._readonly) {
 			return;
 		}
 
@@ -308,6 +308,16 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 
 	static nodeByUname<T extends Node2D>(uname: string): T | undefined {
 		return Engine._instance._nodeByUname.get(uname) as T;
+	}
+
+	static nodeByUnameOrThrow<T extends Node2D>(uname: string): T {
+		const node = Engine._instance._nodeByUname.get(uname) as T;
+
+		if (!node) {
+			throw new Error(`Node '${uname}' not found`);
+		}
+
+		return node;
 	}
 
 	static nodesByTag<T extends Node2D>(tag: string): Set<T> {

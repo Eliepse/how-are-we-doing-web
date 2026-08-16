@@ -8,7 +8,7 @@ type ProcessClb = (
 	progress: number,
 ) => void;
 
-export interface SequenceConfig {
+export interface TransitionClipConfig {
 	timingFunction?: TimingFn;
 	inverted?: boolean;
 }
@@ -20,7 +20,7 @@ export class TransitionClip implements Tickable, Clipable {
 	constructor(
 		private processClb: ProcessClb,
 		private readonly durationMs: number,
-		config?: SequenceConfig,
+		config?: TransitionClipConfig,
 	) {
 		this.timingFunction = config?.timingFunction ?? Interpolation.linear;
 		this.inverted = config?.inverted ?? false;

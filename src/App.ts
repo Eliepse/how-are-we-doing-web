@@ -28,6 +28,7 @@ import { linkGradient } from "./Diagram/Shape/LinkGradient";
 import { linkArrow } from "./Diagram/Shape/LinkArrow";
 import { makeScene } from "./Animations/RevealDiagramScene";
 import { Timeline } from "./Engine2D/Animate/Timeline";
+import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
 
 export type Feature =
 	"detailed-relations"
@@ -39,7 +40,7 @@ export type Feature =
 	| "facility"
 	| "det-links:facility";
 
-export class App {
+export class App extends EventTarget {
 	private static _instance?: App = undefined;
 
 	private readonly translator: Translator;
@@ -62,7 +63,6 @@ export class App {
 	]);
 
 	public onContextChanged = (_context: Context) => undefined;
-	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
 	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
 	public onFeatureChanged = () => undefined;
 
@@ -70,6 +70,8 @@ export class App {
 		rootDom: Element,
 		diagramDom: Element,
 	) {
+		super();
+
 		const labelDom = document.createElement("div");
 		labelDom.id = "labels";
 
@@ -247,7 +249,7 @@ export class App {
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
 
-			this.onSelectionChanged(node);
+			this.dispatchEvent(new NodeSelectionEvent(node));
 
 			if (undefined === node) {
 				this.labelManager.hide("selected");
@@ -411,5 +413,9 @@ export class App {
 
 	setReadonly(state: boolean) {
 		Engine.setReadonly(state);
+	}
+
+	clearSelection() {
+		this.diagram?.selectNode(undefined);
 	}
 }

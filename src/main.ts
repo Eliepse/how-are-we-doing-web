@@ -16,6 +16,7 @@ import "/styles/styles.css";
 // @ts-expect-error
 import "/styles/app.css";
 import { DemoActionsHandler } from "./Actions/DemoActionsHandler";
+import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
@@ -151,7 +152,14 @@ async function main(withLoader = true) {
 		}
 	};
 
-	app.onSelectionChanged = (node) => {
+	app.addEventListener("selection:changed", (e) => {
+		if(!(e instanceof NodeSelectionEvent)) {
+			return;
+		}
+
+		const node = e.selection;
+		console.debug(e.selection?.id);
+
 		if (node) {
 			collector.logEvent("selection_changed", { id: node.id, class: node.constructor.name });
 		}
@@ -172,7 +180,7 @@ async function main(withLoader = true) {
 			type: "selectionChanged",
 			data: { nodes: broadcastNodes },
 		});
-	};
+	});
 
 	app.onFeatureChanged = () => {
 		const legendPrimary = document.querySelector<HTMLElement>("figure[data-legend=primary]");

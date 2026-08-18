@@ -10,6 +10,11 @@ import { WaitComposition } from "../../Engine2D/Animate/Composition/WaitComposit
 import { Opacity } from "../../Engine2D/ValueObject/Opacity";
 import { App } from "../../App";
 import { HTMLScene } from "../../Animations/Scene/HTMLScene";
+import { Pathology } from "../../Diagram/Items/Pathology/Pathology";
+import { AwaitNodeSelectionComposition } from "../../Animations/Composition/AwaitNodeSelectionComposition";
+import { SelectNodeActionScene } from "../../Animations/Scene/SelectNodeActionScene";
+import { Facility } from "../../Diagram/Items/Facility/Facility";
+import { Determinant } from "../../Diagram/Items/Determinant/Determinant";
 
 const domCache = new Map<string, HTMLElement>();
 
@@ -31,7 +36,6 @@ function getDom(key: string): HTMLElement {
 }
 
 export class EssentialDemo extends Scene {
-
 	constructor() {
 		const pathologies = Engine.nodeByUnameOrThrow("group:pathology");
 		const determinants = Engine.nodeByUnameOrThrow("group:determinant");
@@ -39,51 +43,6 @@ export class EssentialDemo extends Scene {
 		const decorations = Engine.nodeByUnameOrThrow("decoration:main:background");
 
 		const presenter = Presenter.presenter;
-		// presenter.clear();
-
-		// presenter.getCellDOM("B1").innerHTML = `
-		// 	<div id="demo-1" class="tutorial-regular" style="display: none; opacity: 0">
-		// 		<p>
-		// 			Quand on pense à la santé, on pense d'abord<br/>
-		// 			aux médecins, aux médicaments, aux hôpitaux...
-		// 		</p>
-		// 		<p>
-		// 			mais beaucoup moins à l'environnement<br/>
-		// 			dans lequel nous vivons
-		// 		</p>
-		// 	</div>
-		//
-		// 	<div id="demo-2" class="tutorial-regular" style="display: none; opacity: 0">
-		// 		<p>
-		// 			<strong>Notre santé est toutefois influencée par de multiples facteurs</strong><br/>
-		// 			dont les effets se cumulent tout au long de la vie.
-		// 		</p>
-		// 	</div>
-		//
-		// 	<div id="demo-3" class="tutorial-regular" style="display: none; opacity: 0">
-		// 		<p>
-		// 			Les recherches scientifiques menées sur ces facteurs,<br>
-		// 			appelés <strong>les déterminants de santé,</strong><br>
-		// 			révèlent une réalitée souvent méconnue :
-		// 		</p>
-		// 		<p id="demo-3-2" style="opacity: 0">
-		// 			Les soins médicaux et la génétique n'expliqueraient<br/>
-		// 			qu'environ <strong>30% de notre état de santé.</strong>
-		// 		</p>
-		// 	</div>
-		//
-		// 	<div id="demo-4" class="tutorial-regular" style="display: none; opacity: 0">
-		// 		<p>
-		// 			Les 70 % restants dépendent de notre situation sociale et économique,<br/>
-		// 			de nos modes de vie et de notre environnement au quotidien :
-		// 		</p>
-		// 		<p id="demo-4-2" style="opacity: 0">
-		// 			la qualité de nos logements, l'air que nous respirons,<br/>
-		// 			notre proximité avec la nature, notre facilité à nous déplacer<br/>
-		// 			à pied ou à vélo, le sentiment de sécurité dans notre quartier…
-		// 		</p>
-		// 	</div>
-		// `;
 
 		super([
 			new ActionComposition(() => App.instance().setReadonly(true)),
@@ -210,13 +169,13 @@ export class EssentialDemo extends Scene {
 			// Select pathology
 			new HTMLScene(
 				(register) => {
-					register("action", getDom("demo-12"))
+					register("action", getDom("demo-12"));
 					register("a", getDom("demo-13"));
 					register("b", getDom("demo-14"));
 				},
 				(n) => ([
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
-					new WaitComposition(3_000),
+					new SelectNodeActionScene((node) => node instanceof Pathology && 113 === node.id),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([[0, new FadeDomClip(n("a"), "in", 1_250)]]),
 					new WaitComposition(3_000),
@@ -226,19 +185,20 @@ export class EssentialDemo extends Scene {
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([[0, new FadeDomClip(n("b"), "out", 1_250)]]),
+					new ActionComposition(() => App.instance().clearSelection()),
 				]),
 			),
 
 			// Select determinant
 			new HTMLScene(
 				(register) => {
-					register("action", getDom("demo-15"))
+					register("action", getDom("demo-15"));
 					register("info-1", getDom("demo-16"));
 					register("info-2", getDom("demo-17"));
 				},
 				(n) => ([
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
-					new WaitComposition(3_000),
+					new SelectNodeActionScene((node) => node instanceof Determinant && 17 === node.id),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([[0, new FadeDomClip(n("info-1"), "in", 1_250)]]),
 					new WaitComposition(3_000),
@@ -248,19 +208,20 @@ export class EssentialDemo extends Scene {
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([[0, new FadeDomClip(n("info-2"), "out", 1_250)]]),
+					new ActionComposition(() => App.instance().clearSelection()),
 				]),
 			),
 
 			// Select facility
 			new HTMLScene(
 				(register) => {
-					register("action", getDom("demo-18"))
+					register("action", getDom("demo-18"));
 					register("info-1", getDom("demo-19"));
 					register("info-2", getDom("demo-20"));
 				},
 				(n) => ([
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
-					new WaitComposition(3_000),
+					new SelectNodeActionScene((node) => node instanceof Facility && 29 === node.id),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([[0, new FadeDomClip(n("info-1"), "in", 1_250)]]),
 					new WaitComposition(3_000),
@@ -270,6 +231,7 @@ export class EssentialDemo extends Scene {
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([[0, new FadeDomClip(n("info-2"), "out", 1_250)]]),
+					new ActionComposition(() => App.instance().clearSelection()),
 				]),
 			),
 

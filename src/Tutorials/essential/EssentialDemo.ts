@@ -5,7 +5,6 @@ import { Scene } from "../../Engine2D/Animate/Scene/Scene";
 import { ActionComposition } from "../../Engine2D/Animate/Composition/ActionComposition";
 import { FadeNodeClip } from "../../Engine2D/Animate/Predefined/FadeNodeClip";
 import { FadeDomClip } from "../../Engine2D/Animate/Predefined/FadeDomClip";
-import { Presenter } from "../Presenter";
 import { WaitComposition } from "../../Engine2D/Animate/Composition/WaitComposition";
 import { Opacity } from "../../Engine2D/ValueObject/Opacity";
 import { App } from "../../App";
@@ -14,25 +13,8 @@ import { Pathology } from "../../Diagram/Items/Pathology/Pathology";
 import { SelectNodeActionScene } from "../../Animations/Scene/SelectNodeActionScene";
 import { Facility } from "../../Diagram/Items/Facility/Facility";
 import { Determinant } from "../../Diagram/Items/Determinant/Determinant";
-
-const domCache = new Map<string, HTMLElement>();
-
-function getDom(key: string): HTMLElement {
-	let node: HTMLElement | undefined | null = domCache.get(key);
-
-	if (node) {
-		return node;
-	}
-
-	node = document.querySelector<HTMLElement>(`#${key}`);
-
-	if (!node) {
-		throw new Error(`#${key} not found`);
-	}
-
-	domCache.set(key, node);
-	return node;
-}
+import { domOrThrow } from "../../helpers";
+import { IntroScene } from "../common/IntroScene";
 
 export class EssentialDemo extends Scene {
 	constructor() {
@@ -40,8 +22,6 @@ export class EssentialDemo extends Scene {
 		const determinants = Engine.nodeByUnameOrThrow("group:determinant");
 		const facilities = Engine.nodeByUnameOrThrow("group:facility");
 		const decorations = Engine.nodeByUnameOrThrow("decoration:main:background");
-
-		const presenter = Presenter.presenter;
 
 		super([
 			new ActionComposition(() => App.instance().setReadonly(true)),
@@ -55,14 +35,14 @@ export class EssentialDemo extends Scene {
 
 			new WaitComposition(1_000),
 
-			// new IntroScene(),
+			new IntroScene(),
 
 			// Select pathology
 			new HTMLScene(
 				(register) => {
-					register("action", getDom("demo-12"));
-					register("a", getDom("demo-13"));
-					register("b", getDom("demo-14"));
+					register("action", domOrThrow("#demo-12"));
+					register("a", domOrThrow("#demo-13"));
+					register("b", domOrThrow("#demo-14"));
 				},
 				(n) => ([
 					new TickableComposition([
@@ -94,9 +74,9 @@ export class EssentialDemo extends Scene {
 			// Select determinant
 			new HTMLScene(
 				(register) => {
-					register("action", getDom("demo-15"));
-					register("info-1", getDom("demo-16"));
-					register("info-2", getDom("demo-17"));
+					register("action", domOrThrow("#demo-15"));
+					register("info-1", domOrThrow("#demo-16"));
+					register("info-2", domOrThrow("#demo-17"));
 				},
 				(n) => ([
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
@@ -125,9 +105,9 @@ export class EssentialDemo extends Scene {
 			// Select facility
 			new HTMLScene(
 				(register) => {
-					register("action", getDom("demo-18"));
-					register("info-1", getDom("demo-19"));
-					register("info-2", getDom("demo-20"));
+					register("action", domOrThrow("#demo-18"));
+					register("info-1", domOrThrow("#demo-19"));
+					register("info-2", domOrThrow("#demo-20"));
 				},
 				(n) => ([
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),

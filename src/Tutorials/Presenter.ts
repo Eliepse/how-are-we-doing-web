@@ -12,17 +12,7 @@ class DOMPresenter {
 	}
 
 	clear() {
-		this.rootDOM.querySelectorAll<HTMLElement>(`[data-slot] > *`).forEach((el) => el.remove());
-	}
-
-	getCellDOM(key: string): HTMLElement {
-		const dom = this.rootDOM.querySelector<HTMLElement>(`[data-slot='${key}']`);
-
-		if (!dom) {
-			throw new Error(`Unable to find cell '${key}'`);
-		}
-
-		return dom;
+		document.querySelectorAll<HTMLElement>(".presentor-item").forEach((el) => el.style.opacity = "0");
 	}
 }
 
@@ -45,5 +35,9 @@ export class Presenter {
 
 	static hide() {
 		Presenter.presenter.hide();
+	}
+
+	static clear() {
+		Presenter.presenter.clear();
 	}
 }

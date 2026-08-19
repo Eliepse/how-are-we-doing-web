@@ -7,14 +7,15 @@ type TrackedSequenceConfig = {
 };
 
 type AcceptedClips = Clipable & Tickable;
+export type ClipTuple = [number, AcceptedClips];
 
 export class TickableComposition implements Tickable, Composition {
 	public onstarted: (() => void) = () => undefined;
 	public onended: (() => void) = () => undefined;
-	private sequences = new Set<[number, AcceptedClips]>();
+	private sequences = new Set<ClipTuple>();
 
 	constructor(
-		clips: Array<[number, AcceptedClips]> = [],
+		clips: Array<ClipTuple> = [],
 		public readonly name: string | undefined = undefined,
 	) {
 		clips.forEach(([delay, sequence]) => this.add(sequence, { delay: 0 <= delay ? delay : undefined }));

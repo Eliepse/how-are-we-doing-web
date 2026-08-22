@@ -10,18 +10,37 @@ import { ActionComposition } from "../Engine2D/Animate/Composition/ActionComposi
 import { WaitComposition } from "../Engine2D/Animate/Composition/WaitComposition";
 import { Interpolation } from "../Engine2D/Time/interpolations";
 import { domOrThrow } from "../helpers";
+import { makeDiagramFadeClips } from "../Animations/Composition/DiagramFadeComposition";
+import { App } from "../App";
 
 export class DemoActionsHandler implements ActionsHandler {
-	private uiElements: HTMLElement[] = [];
-	private closeButtons: HTMLElement[] = [];
+	private readonly uiElements: HTMLElement[] = [];
+	private readonly closeButtons: HTMLElement[] = [];
+	private readonly selector: HTMLElement;
+	private canSelectDemo = false;
 
 	constructor(private readonly collector: Collector) {
 		this.uiElements = Array.from(document.querySelectorAll<HTMLElement>("#navigation [data-key='actions-side'] [data-action]"));
 		this.closeButtons = Array.from(document.querySelectorAll<HTMLElement>("#navigation [data-action='demo:close']"));
+		this.selector = domOrThrow(".demo-selector");
+
+		this.selector.querySelectorAll<HTMLButtonElement>("button[data-demo]").forEach((btn) => {
+			const name = btn.dataset.demo;
+
+			if ("essential" !== name && "complete" !== name && "advanced" !== name) {
+				return;
+			}
+
+			btn.addEventListener("mousedown", () => {
+				void this.startDemo(name);
+			});
+		});
 	}
 
 	async open() {
-		this.collector.logEvent("demo_opened");
+		this.collector.logEvent("demo_selector_opened");
+
+		App.instance().setReadonly(true);
 
 		await Timeline.play(new Scene([
 			new WaitComposition(150),
@@ -30,16 +49,40 @@ export class DemoActionsHandler implements ActionsHandler {
 				[0, new FadeDomClip(domOrThrow("#modes"), "out", 1250, { timingFunction: Interpolation.easeInOutCubic })],
 				[0, new FadeDomClip(domOrThrow("#contextControls"), "out", 1250, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
-			new ActionComposition(() => this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "none" : "")),
+			new ActionComposition(() => {
+				this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "none" : "");
+				this.selector.style.opacity = "0";
+				this.selector.style.display = "";
+			}),
 			new TickableComposition([
-				...this.closeButtons.map((el) => [0, new FadeDomClip(el, "in", 500, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
+				...makeDiagramFadeClips("out", 2_000),
+				...this.closeButtons.map((el) => [1_500, new FadeDomClip(el, "in", 750, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
+				[1_500, new FadeDomClip(this.selector, "in", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
 		]));
 
-		void Demo.start();
+		this.canSelectDemo = true;
+	}
+
+	private async startDemo(name: "essential" | "complete" | "advanced") {
+		if (!this.canSelectDemo) {
+			return;
+		}
+
+		this.canSelectDemo = false;
+
+		await Timeline.play(new Scene([
+			new TickableComposition([
+				[0, new FadeDomClip(this.selector, "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
+			]),
+		]));
+
+		await Demo.start();
 	}
 
 	async close() {
+		this.canSelectDemo = false;
+
 		Demo.stop();
 		Presenter.hide();
 
@@ -48,15 +91,19 @@ export class DemoActionsHandler implements ActionsHandler {
 		await Timeline.play(new Scene([
 			new WaitComposition(150),
 			new TickableComposition([
-				...this.closeButtons.map((el) => [0, new FadeDomClip(el, "out", 500, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
+				...this.closeButtons.map((el) => [0, new FadeDomClip(el, "out", 750, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
+				[0, new FadeDomClip(this.selector, "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
 			new ActionComposition(() => this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "" : "none")),
 			new TickableComposition([
 				...this.uiElements.map((el) => [0, new FadeDomClip(el, "in", 1250, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
 				[0, new FadeDomClip(domOrThrow("#modes"), "in", 1250, { timingFunction: Interpolation.easeInOutCubic })],
 				[0, new FadeDomClip(domOrThrow("#contextControls"), "in", 1250, { timingFunction: Interpolation.easeInOutCubic })],
+				...makeDiagramFadeClips("in", 2_000),
 			]),
 		]));
+
+		App.instance().setReadonly(false);
 	}
 
 	actions(): Record<string, () => void> {

@@ -9,6 +9,7 @@
 @import "parts/context.css";
 @import "parts/presenter.css";
 @import "parts/tutorial.css";
+@import "parts/demo-selector.css";
 
 #app {
     --sideColumn: 20rem;

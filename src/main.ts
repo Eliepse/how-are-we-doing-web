@@ -11,10 +11,11 @@ import { LexiconActionsHandler } from "./Actions/LexiconActionsHandler";
 import { ModeActionsHandler } from "./Actions/ModeActionsHandler";
 import { SystemActionsHandler } from "./Actions/SystemActionsHandler";
 
-// @ts-expect-error
+// @ts-ignore
 import "/styles/styles.css";
-// @ts-expect-error
+// @ts-ignore
 import "/styles/app.css";
+
 import { DemoActionsHandler } from "./Actions/DemoActionsHandler";
 import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
 

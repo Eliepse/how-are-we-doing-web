@@ -43,7 +43,7 @@ button {
     font-family: var(--sans-serif);
 }
 
-button:hover {
+button:hover:not(:disabled) {
     background: var(--dark-white);
 }
 

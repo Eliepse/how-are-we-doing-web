@@ -350,6 +350,10 @@ export class Engine<TRenderer extends Renderer = Renderer> implements Tickable {
 		Engine._instance.clock.forceTick();
 	}
 
+	static get isReadonly() {
+		return Engine._instance._readonly;
+	}
+
 	static setReadonly(state: boolean) {
 		Engine._instance._readonly = state;
 	}

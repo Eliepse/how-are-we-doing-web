@@ -341,6 +341,10 @@ export class App extends EventTarget {
 	}
 
 	previousContext(): void {
+		if(Engine.isReadonly) {
+			return;
+		}
+
 		if (undefined === this.currentContext) {
 			this.changeContext(this.contexts[0]);
 			return;
@@ -352,6 +356,10 @@ export class App extends EventTarget {
 	}
 
 	nextContext(): void {
+		if(Engine.isReadonly) {
+			return;
+		}
+
 		if (undefined === this.currentContext) {
 			this.changeContext(this.contexts[0]);
 			return;

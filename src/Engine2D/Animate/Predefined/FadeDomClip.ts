@@ -4,6 +4,8 @@ import { interpolate } from "../../../helpers";
 type Options = {
 	min?: number;
 	max?: number;
+	// Force the node to start at the given max/min instead of starting at the current opacity
+	absolute?: boolean;
 }
 
 const DUMMY_FN = () => undefined;
@@ -15,14 +17,23 @@ export class FadeDomClip extends TransitionClip {
 		durationMs: number,
 		config?: TransitionClipConfig & Options,
 	) {
-		const min = config?.min ?? 0;
-		const max = config?.max ?? 1;
 		const node = typeof dom === "string" ? document.querySelector<HTMLElement>(dom) : dom;
 
+		const target = "in" === direction ? config?.max ?? 1 : config?.min ?? 0;
+		let origin = "in" === direction ? config?.min ?? 0 : config?.max ?? 1;
+
+		// Force transition to use min/max and not current opacity as start
+		if (config?.absolute) {
+			origin = "in" === direction ? (config?.min ?? 0) : (config?.max ?? 1);
+		} else if (node && node.style.opacity) {
+			// Get current opacity from node
+			origin = parseFloat(node.style.opacity);
+		}
+
 		super(
-			node ? (progress) => node.style.opacity = interpolate(min, max, progress).toFixed(2) : DUMMY_FN,
+			node ? (progress) => node.style.opacity = interpolate(origin, target, progress).toFixed(2) : DUMMY_FN,
 			durationMs,
-			{ ...config, inverted: "in" !== direction },
+			config,
 		);
 	}
 }

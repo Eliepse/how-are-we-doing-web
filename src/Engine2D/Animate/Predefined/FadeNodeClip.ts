@@ -6,6 +6,8 @@ import type { TransitionClipConfig } from "../Clip/TransitionClip";
 type Options = {
 	min?: Opacity;
 	max?: Opacity;
+	// Force the node to start at the given max/min instead of starting at the current opacity
+	absolute?: boolean;
 }
 
 export class FadeNodeClip extends NodeClip {
@@ -15,16 +17,14 @@ export class FadeNodeClip extends NodeClip {
 		durationMs: number,
 		config?: Pick<TransitionClipConfig, "timingFunction"> & Options,
 	) {
-		const min = config?.min ?? Opacity.Transparent;
-		const max = config?.max ?? Opacity.Opaque;
+		const target = "in" === direction ? config?.max ?? Opacity.Opaque : config?.min ?? Opacity.Transparent;
+		let origin = node.getOpacity().get();
 
-		super(
-			node,
-			{
-				0: { opacity: "in" === direction ? min : max },
-				[durationMs]: { opacity: "in" === direction ? max : min },
-			},
-			config,
-		);
+		// Force transition to use min/max and not current opacity as start
+		if (config?.absolute) {
+			origin = "in" === direction ? (config?.min ?? Opacity.Transparent) : (config?.max ?? Opacity.Opaque);
+		}
+
+		super(node, { 0: { opacity: origin }, [durationMs]: { opacity: target }}, config);
 	}
 }

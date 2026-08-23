@@ -75,19 +75,24 @@ export class DemoActionsHandler implements ActionsHandler {
 			new TickableComposition([
 				[0, new FadeDomClip(this.selector, "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
+			new ActionComposition(() => this.selector.style.display = "none"),
 			new WaitComposition(500),
 		]));
 
 		await Demo.start();
+		await this.restoreView();
 	}
 
 	async close() {
+		this.collector.logEvent("demo_stopped");
 		this.canSelectDemo = false;
+		await this.restoreView()
+	}
 
+	private async restoreView() {
 		Demo.stop();
 		Presenter.hide();
 
-		this.collector.logEvent("demo_stopped");
 
 		await Timeline.play(new Scene([
 			new WaitComposition(150),
@@ -95,7 +100,10 @@ export class DemoActionsHandler implements ActionsHandler {
 				...this.closeButtons.map((el) => [0, new FadeDomClip(el, "out", 750, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
 				[0, new FadeDomClip(this.selector, "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
-			new ActionComposition(() => this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "" : "none")),
+			new ActionComposition(() => {
+				this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "" : "none");
+				this.selector.style.display = "none";
+			}),
 			new TickableComposition([
 				...this.uiElements.map((el) => [0, new FadeDomClip(el, "in", 1250, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
 				[0, new FadeDomClip(domOrThrow("#modes"), "in", 1250, { timingFunction: Interpolation.easeInOutCubic })],

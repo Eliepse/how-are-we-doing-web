@@ -1,4 +1,3 @@
-import { PrepareDemoComposition } from "../common/PrepareDemoComposition";
 import { TickableComposition } from "../../Engine2D/Animate/Composition/TickableComposition";
 import { Engine } from "../../Engine2D/Engine";
 import { Scene } from "../../Engine2D/Animate/Scene/Scene";
@@ -9,32 +8,30 @@ import { WaitComposition } from "../../Engine2D/Animate/Composition/WaitComposit
 import { Opacity } from "../../Engine2D/ValueObject/Opacity";
 import { App } from "../../App";
 import { HTMLScene } from "../../Animations/Scene/HTMLScene";
-import { Pathology } from "../../Diagram/Items/Pathology/Pathology";
 import { SelectNodeActionScene } from "../../Animations/Scene/SelectNodeActionScene";
-import { Facility } from "../../Diagram/Items/Facility/Facility";
-import { Determinant } from "../../Diagram/Items/Determinant/Determinant";
 import { domOrThrow } from "../../helpers";
 import { IntroScene } from "../common/IntroScene";
-import { makeDiagramFadeClips } from "../../Animations/Composition/DiagramFadeComposition";
 
 export class EssentialDemo extends Scene {
 	constructor() {
 		const pathologies = Engine.nodeByUnameOrThrow("group:pathology");
 		const determinants = Engine.nodeByUnameOrThrow("group:determinant");
 		const facilities = Engine.nodeByUnameOrThrow("group:facility");
+		const decorations = Engine.nodeByUnameOrThrow("decoration:main:background");
 		const selectTargets = {
 			pathology: Engine.nodeByUnameOrThrow("pathology:113"),
 			determinant: Engine.nodeByUnameOrThrow("determinant:17"),
 			facility: Engine.nodeByUnameOrThrow("facility:29"),
 		} as const;
-		console.debug(selectTargets);
 
 		super([
-			new ActionComposition(() => App.instance().setReadonly(true)),
-			new PrepareDemoComposition(),
-			new TickableComposition(makeDiagramFadeClips("out", 2_000)),
-
-			new WaitComposition(1_000),
+			new ActionComposition(() => {
+				App.instance().setReadonly(true);
+				pathologies.setOpacity(new Opacity(0.1));
+				determinants.setOpacity(new Opacity(0.1));
+				facilities.setOpacity(new Opacity(0.1));
+				decorations.setOpacity(new Opacity(0.1));
+			}),
 
 			new IntroScene(),
 
@@ -204,10 +201,6 @@ export class EssentialDemo extends Scene {
 					]),
 				],
 			),
-
-			new WaitComposition(1_000),
-			new TickableComposition(makeDiagramFadeClips("in", 2_000)),
-			new ActionComposition(() => App.instance().setReadonly(false)),
 		]);
 	}
 }

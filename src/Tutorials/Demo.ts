@@ -17,14 +17,8 @@ class Demo {
 
 		this.abortController = undefined;
 
-		Presenter.clear();
-
-		await Timeline.play(new Scene([
-			new TickableComposition(makeDiagramFadeClips("in", 300))
-		]));
-
-		App.instance().setReadonly(false);
 		Presenter.hide();
+		Presenter.clear();
 	}
 
 	stop() {

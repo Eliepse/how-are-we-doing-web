@@ -26,9 +26,20 @@ export class TransitionClip implements Tickable, Clipable {
 		this.inverted = config?.inverted ?? false;
 	}
 
+    applyStart(): void {
+        this.process(0);
+    }
+
+    applyEnd(): void {
+        this.process(1);
+    }
+
+	private process(progress: number): void {
+		this.processClb(this.timingFunction(this.inverted ? 1 - progress : progress));
+	}
+
 	tick(_deltaTime: number, time: number, _timeUTC: number, _deltaTimeMs: number, _ticks: number): void {
-		const progression = clamp(0, time / this.getDuration(), 1);
-		this.processClb(this.timingFunction(this.inverted ? 1 - progression : progression));
+		this.process(clamp(0, time / this.getDuration(), 1));
 	}
 
 	getDuration(): number {

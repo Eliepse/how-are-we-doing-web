@@ -85,6 +85,13 @@ export class NodeClip implements Tickable, Clipable {
 		});
 	}
 
+	applyEnd(): void {
+		this.tick(0, this.durationMs, 0, 0, 0);
+	}
+
+	applyStart(): void {
+		this.tick(0, 0, 0, 0, 0);
+	}
 
 	tick(_deltaTime: number, time: number, _timeUTC: number, _deltaTimeMs: number, _ticks: number) {
 		PROP_NAMES.forEach((propName) => {

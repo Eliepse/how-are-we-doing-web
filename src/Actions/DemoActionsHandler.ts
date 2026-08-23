@@ -75,6 +75,7 @@ export class DemoActionsHandler implements ActionsHandler {
 			new TickableComposition([
 				[0, new FadeDomClip(this.selector, "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
+			new WaitComposition(500),
 		]));
 
 		await Demo.start();

@@ -15,23 +15,18 @@ import { Facility } from "../../Diagram/Items/Facility/Facility";
 import { Determinant } from "../../Diagram/Items/Determinant/Determinant";
 import { domOrThrow } from "../../helpers";
 import { IntroScene } from "../common/IntroScene";
+import { makeDiagramFadeClips } from "../../Animations/Composition/DiagramFadeComposition";
 
 export class EssentialDemo extends Scene {
 	constructor() {
 		const pathologies = Engine.nodeByUnameOrThrow("group:pathology");
 		const determinants = Engine.nodeByUnameOrThrow("group:determinant");
 		const facilities = Engine.nodeByUnameOrThrow("group:facility");
-		const decorations = Engine.nodeByUnameOrThrow("decoration:main:background");
 
 		super([
 			new ActionComposition(() => App.instance().setReadonly(true)),
 			new PrepareDemoComposition(),
-			new TickableComposition([
-				[0, new FadeNodeClip(pathologies, "out", 2_000, { min: new Opacity(.1) })],
-				[0, new FadeNodeClip(determinants, "out", 2_000, { min: new Opacity(.1) })],
-				[0, new FadeNodeClip(facilities, "out", 2_000, { min: new Opacity(.1) })],
-				[0, new FadeNodeClip(decorations, "out", 2_000, { min: new Opacity(.1) })],
-			]),
+			new TickableComposition(makeDiagramFadeClips("out", 2_000)),
 
 			new WaitComposition(1_000),
 
@@ -44,17 +39,34 @@ export class EssentialDemo extends Scene {
 					register("a", domOrThrow("#demo-13"));
 					register("b", domOrThrow("#demo-14"));
 				},
-				(n) => ([
+				(n) => [
 					new TickableComposition([
 						[0, new FadeDomClip(n("action"), "in", 1_250)],
-						[0, new FadeNodeClip(pathologies, "in", 1_250, { min: new Opacity(.1) })],
+						[
+							0,
+							new FadeNodeClip(pathologies, "in", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
 					]),
-					new SelectNodeActionScene((node) => node instanceof Pathology && 113 === node.id),
+					new SelectNodeActionScene(
+						(node) => node instanceof Pathology && 113 === node.id,
+					),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("a"), "in", 1_250)],
-						[0, new FadeNodeClip(determinants, "in", 1_250, { min: new Opacity(.1) })],
-						[0, new FadeNodeClip(facilities, "in", 1_250, { min: new Opacity(.1) })],
+						[
+							0,
+							new FadeNodeClip(determinants, "in", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
+						[
+							0,
+							new FadeNodeClip(facilities, "in", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([
@@ -65,10 +77,20 @@ export class EssentialDemo extends Scene {
 					new ActionComposition(() => App.instance().clearSelection()),
 					new TickableComposition([
 						[0, new FadeDomClip(n("b"), "out", 1_250)],
-						[0, new FadeNodeClip(pathologies, "out", 1_250, { min: new Opacity(.1) })],
-						[0, new FadeNodeClip(facilities, "out", 1_250, { min: new Opacity(.1) })],
+						[
+							0,
+							new FadeNodeClip(pathologies, "out", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
+						[
+							0,
+							new FadeNodeClip(facilities, "out", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
 					]),
-				]),
+				],
 			),
 
 			// Select determinant
@@ -78,14 +100,26 @@ export class EssentialDemo extends Scene {
 					register("info-1", domOrThrow("#demo-16"));
 					register("info-2", domOrThrow("#demo-17"));
 				},
-				(n) => ([
+				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
-					new SelectNodeActionScene((node) => node instanceof Determinant && 17 === node.id),
+					new SelectNodeActionScene(
+						(node) => node instanceof Determinant && 17 === node.id,
+					),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "in", 1_250)],
-						[0, new FadeNodeClip(pathologies, "in", 1_250, { min: new Opacity(.1) })],
-						[0, new FadeNodeClip(facilities, "in", 1_250, { min: new Opacity(.1) })],
+						[
+							0,
+							new FadeNodeClip(pathologies, "in", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
+						[
+							0,
+							new FadeNodeClip(facilities, "in", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([
@@ -96,10 +130,20 @@ export class EssentialDemo extends Scene {
 					new ActionComposition(() => App.instance().clearSelection()),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-2"), "out", 1_250)],
-						[0, new FadeNodeClip(pathologies, "out", 1_250, { min: new Opacity(.1) })],
-						[0, new FadeNodeClip(determinants, "out", 1_250, { min: new Opacity(.1) })],
+						[
+							0,
+							new FadeNodeClip(pathologies, "out", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
+						[
+							0,
+							new FadeNodeClip(determinants, "out", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
 					]),
-				]),
+				],
 			),
 
 			// Select facility
@@ -109,14 +153,26 @@ export class EssentialDemo extends Scene {
 					register("info-1", domOrThrow("#demo-19"));
 					register("info-2", domOrThrow("#demo-20"));
 				},
-				(n) => ([
+				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
-					new SelectNodeActionScene((node) => node instanceof Facility && 29 === node.id),
+					new SelectNodeActionScene(
+						(node) => node instanceof Facility && 29 === node.id,
+					),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "in", 1_250)],
-						[0, new FadeNodeClip(determinants, "in", 1_250, { min: new Opacity(.1) })],
-						[0, new FadeNodeClip(pathologies, "in", 1_250, { min: new Opacity(.1) })],
+						[
+							0,
+							new FadeNodeClip(determinants, "in", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
+						[
+							0,
+							new FadeNodeClip(pathologies, "in", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([
@@ -127,20 +183,30 @@ export class EssentialDemo extends Scene {
 					new ActionComposition(() => App.instance().clearSelection()),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-2"), "out", 1_250)],
-						[0, new FadeNodeClip(pathologies, "out", 1_250, { min: new Opacity(.1) })],
-						[0, new FadeNodeClip(determinants, "out", 1_250, { min: new Opacity(.1) })],
-						[0, new FadeNodeClip(facilities, "out", 1_250, { min: new Opacity(.1) })],
+						[
+							0,
+							new FadeNodeClip(pathologies, "out", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
+						[
+							0,
+							new FadeNodeClip(determinants, "out", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
+						[
+							0,
+							new FadeNodeClip(facilities, "out", 1_250, {
+								min: new Opacity(0.1),
+							}),
+						],
 					]),
-				]),
+				],
 			),
 
 			new WaitComposition(1_000),
-			new TickableComposition([
-				[0, new FadeNodeClip(pathologies, "in", 2_000, { min: new Opacity(.2) })],
-				[0, new FadeNodeClip(determinants, "in", 2_000, { min: new Opacity(.2) })],
-				[0, new FadeNodeClip(facilities, "in", 2_000, { min: new Opacity(.2) })],
-				[0, new FadeNodeClip(decorations, "in", 2_000, { min: new Opacity(.2) })],
-			]),
+			new TickableComposition(makeDiagramFadeClips("in", 2_000)),
 			new ActionComposition(() => App.instance().setReadonly(false)),
 		]);
 	}

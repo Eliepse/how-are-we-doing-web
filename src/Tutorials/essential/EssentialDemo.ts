@@ -22,6 +22,12 @@ export class EssentialDemo extends Scene {
 		const pathologies = Engine.nodeByUnameOrThrow("group:pathology");
 		const determinants = Engine.nodeByUnameOrThrow("group:determinant");
 		const facilities = Engine.nodeByUnameOrThrow("group:facility");
+		const selectTargets = {
+			pathology: Engine.nodeByUnameOrThrow("pathology:113"),
+			determinant: Engine.nodeByUnameOrThrow("determinant:17"),
+			facility: Engine.nodeByUnameOrThrow("facility:29"),
+		} as const;
+		console.debug(selectTargets);
 
 		super([
 			new ActionComposition(() => App.instance().setReadonly(true)),
@@ -49,9 +55,7 @@ export class EssentialDemo extends Scene {
 							}),
 						],
 					]),
-					new SelectNodeActionScene(
-						(node) => node instanceof Pathology && 113 === node.id,
-					),
+					new SelectNodeActionScene((node) => selectTargets.pathology === node),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("a"), "in", 1_250)],
@@ -102,9 +106,7 @@ export class EssentialDemo extends Scene {
 				},
 				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
-					new SelectNodeActionScene(
-						(node) => node instanceof Determinant && 17 === node.id,
-					),
+					new SelectNodeActionScene((node) => selectTargets.determinant === node),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "in", 1_250)],
@@ -155,9 +157,7 @@ export class EssentialDemo extends Scene {
 				},
 				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
-					new SelectNodeActionScene(
-						(node) => node instanceof Facility && 29 === node.id,
-					),
+					new SelectNodeActionScene((node) => selectTargets.facility === node),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "in", 1_250)],

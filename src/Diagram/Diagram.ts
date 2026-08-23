@@ -175,6 +175,7 @@ export class Diagram extends Node2D {
 				const pathology = new Pathology(child.id, child.name, {
 					determinants: assoDeterminants,
 				});
+				pathology.setUname(`pathology:${child.id}`);
 				this._pathologies.set(pathology.id, pathology);
 				return pathology;
 			});
@@ -229,7 +230,7 @@ export class Diagram extends Node2D {
 							{ determinants: assoDeterminants },
 							itemArc,
 						);
-
+						facility.setUname(`facility:${child.id}`);
 						this._facilities.set(facility.id, facility);
 
 						return facility;
@@ -291,7 +292,7 @@ export class Diagram extends Node2D {
 								determinants: associations.filter(asso => child.id === asso.from.id && "determinant" === asso.to.type).map(asso => asso.to.id),
 							},
 						);
-
+						determinant.setUname(`determinant:${child.id}`);
 						this._determinants.set(determinant.id, determinant);
 
 						return determinant;

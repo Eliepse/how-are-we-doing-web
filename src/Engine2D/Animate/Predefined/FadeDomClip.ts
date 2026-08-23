@@ -19,15 +19,17 @@ export class FadeDomClip extends TransitionClip {
 	) {
 		const node = typeof dom === "string" ? document.querySelector<HTMLElement>(dom) : dom;
 
-		const target = "in" === direction ? config?.max ?? 1 : config?.min ?? 0;
-		let origin = "in" === direction ? config?.min ?? 0 : config?.max ?? 1;
+		const target = "in" === direction ? (config?.max ?? 1) : (config?.min ?? 0);
+		let origin = "in" === direction ? (config?.min ?? 0) : (config?.max ?? 1);
 
 		// Force transition to use min/max and not current opacity as start
 		if (config?.absolute) {
 			origin = "in" === direction ? (config?.min ?? 0) : (config?.max ?? 1);
 		} else if (node && node.style.opacity) {
 			// Get current opacity from node
-			origin = parseFloat(node.style.opacity);
+			// TODO(elie): doesn't work because it's calculated when instanciating, not when
+			//  		   the transition actually starts (the value differ between those states)
+			// origin = parseFloat(node.style.opacity);
 		}
 
 		super(

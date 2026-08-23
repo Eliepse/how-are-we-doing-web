@@ -10,6 +10,7 @@ export class Timeline {
 		while (current && !signal?.aborted) {
 			if(current instanceof Scene) {
 				await Timeline.play(current, signal);
+				current = scene.get(++index);
 				continue;
 			}
 

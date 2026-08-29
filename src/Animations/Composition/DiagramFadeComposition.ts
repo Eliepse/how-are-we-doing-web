@@ -8,7 +8,7 @@ const CONFIG = { min: new Opacity(0.1) };
 export function makeDiagramFadeClips(
 	direction: "in" | "out",
 	duration: number,
-	skipOnNoChange = true,
+	skipOnNoChange = false,
 ) {
 	const pathologies = Engine.nodeByUnameOrThrow("group:pathology");
 	const determinants = Engine.nodeByUnameOrThrow("group:determinant");

@@ -14,13 +14,13 @@ import { makeDiagramFadeClips } from "../Animations/Composition/DiagramFadeCompo
 import { App } from "../App";
 
 export class DemoActionsHandler implements ActionsHandler {
-	private readonly uiElements: HTMLElement[] = [];
+	private readonly uiElements: HTMLButtonElement[] = [];
 	private readonly closeButtons: HTMLElement[] = [];
 	private readonly selector: HTMLElement;
 	private canSelectDemo = false;
 
 	constructor(private readonly collector: Collector) {
-		this.uiElements = Array.from(document.querySelectorAll<HTMLElement>("#navigation [data-key='actions-side'] [data-action]"));
+		this.uiElements = Array.from(document.querySelectorAll<HTMLButtonElement>("#navigation [data-key='actions-side'] [data-action]"));
 		this.closeButtons = Array.from(document.querySelectorAll<HTMLElement>("#navigation [data-action='demo:close']"));
 		this.selector = domOrThrow(".demo-selector");
 
@@ -50,7 +50,8 @@ export class DemoActionsHandler implements ActionsHandler {
 				[0, new FadeDomClip(domOrThrow("#contextControls"), "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
 			new ActionComposition(() => {
-				this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "none" : "");
+				this.uiElements.forEach((el) => el.disabled = "demo:close" !== el.dataset.action);
+				this.uiElements.forEach((el) => el.style.opacity = "demo:close" !== el.dataset.action ? "0" : "");
 				this.selector.style.opacity = "0";
 				this.selector.style.display = "";
 			}),
@@ -101,7 +102,8 @@ export class DemoActionsHandler implements ActionsHandler {
 				[0, new FadeDomClip(this.selector, "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
 			new ActionComposition(() => {
-				this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "" : "none");
+				this.uiElements.forEach((el) => el.disabled = "demo:close" === el.dataset.action);
+				this.uiElements.forEach((el) => el.style.opacity = "demo:close" !== el.dataset.action ? "" : "0");
 				this.selector.style.display = "none";
 			}),
 			new TickableComposition([

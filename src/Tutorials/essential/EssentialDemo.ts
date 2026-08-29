@@ -224,14 +224,28 @@ export class EssentialDemo extends Scene {
 				(register) => {
 					register("lexique", domOrThrow("#demo-21"));
 					register("your-call", domOrThrow("#demo-22"));
+					register("your-call", domOrThrow("#demo-22"));
+					register("lexicon-btn", domOrThrow('#navigation [data-action="lexicon:open"]'));
 				},
 				(n) => [
+					new ActionComposition(() => {
+						n("lexicon-btn").style.background = "white";
+						n("lexicon-btn").style.color = "var(--dark-blue)";
+					}),
 					new TickableComposition([
 						[0, new FadeDomClip(n("lexique"), "in", 1_250)],
 						...makeDiagramFadeClips("out", 750),
+						[750, new FadeDomClip(n("lexicon-btn"), "in", 750)],
 					]),
-					new WaitComposition(3_000),
-					new TickableComposition([[0, new FadeDomClip(n("lexique"), "out", 1_250)]]),
+					new WaitComposition(4_000),
+					new TickableComposition([
+						[0, new FadeDomClip(n("lexique"), "out", 1_250)],
+						[0, new FadeDomClip(n("lexicon-btn"), "out", 1_250)],
+					]),
+					new ActionComposition(() => {
+						n("lexicon-btn").style.background = "";
+						n("lexicon-btn").style.color = "";
+					}),
 					new WaitComposition(500),
 					new TickableComposition([[0, new FadeDomClip(n("your-call"), "in", 1_250)]]),
 					new WaitComposition(3_000),

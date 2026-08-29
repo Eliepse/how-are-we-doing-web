@@ -11,6 +11,7 @@ import { HTMLScene } from "../../Animations/Scene/HTMLScene";
 import { SelectNodeActionScene } from "../../Animations/Scene/SelectNodeActionScene";
 import { domOrThrow } from "../../helpers";
 import { IntroScene } from "../common/IntroScene";
+import { makeDiagramFadeClips } from "../../Animations/Composition/DiagramFadeComposition";
 
 export class EssentialDemo extends Scene {
 	constructor() {
@@ -199,6 +200,42 @@ export class EssentialDemo extends Scene {
 							}),
 						],
 					]),
+				],
+			),
+
+			new HTMLScene(
+				(register) => {
+					register("lexique", domOrThrow("#demo-21"));
+					register("your-call", domOrThrow("#demo-22"));
+				},
+				(n) => [
+					new TickableComposition([
+						[0, new FadeDomClip(n("lexique"), "in", 1_250)],
+						...makeDiagramFadeClips("out", 750),
+					]),
+					new WaitComposition(3_000),
+					new TickableComposition([[0, new FadeDomClip(n("lexique"), "out", 1_250)]]),
+					new TickableComposition([[0, new FadeDomClip(n("your-call"), "in", 1_250)]]),
+					new TickableComposition([[0, new FadeDomClip(n("your-call"), "out", 1_250)]]),
+				],
+			),
+
+			new HTMLScene(
+				(register) => {
+					register("lexique", domOrThrow("#demo-21"));
+					register("your-call", domOrThrow("#demo-22"));
+				},
+				(n) => [
+					new TickableComposition([
+						[0, new FadeDomClip(n("lexique"), "in", 1_250)],
+						...makeDiagramFadeClips("out", 750),
+					]),
+					new WaitComposition(3_000),
+					new TickableComposition([[0, new FadeDomClip(n("lexique"), "out", 1_250)]]),
+					new WaitComposition(500),
+					new TickableComposition([[0, new FadeDomClip(n("your-call"), "in", 1_250)]]),
+					new WaitComposition(3_000),
+					new TickableComposition([[0, new FadeDomClip(n("your-call"), "out", 1_250)]]),
 				],
 			),
 		]);

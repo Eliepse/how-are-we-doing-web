@@ -9,7 +9,10 @@ export class SelectNodeActionScene extends Scene {
 		super([
 			new ActionComposition(() => App.instance().setReadonly(false)),
 			new AwaitNodeSelectionComposition(validator),
-			new ActionComposition(() => App.instance().setReadonly(true)),
+			new ActionComposition(() => {
+				App.instance().getDiagram().previewNode(undefined);
+				App.instance().setReadonly(true);
+			}),
 		]);
 	}
 }

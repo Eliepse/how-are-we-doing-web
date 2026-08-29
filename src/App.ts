@@ -369,6 +369,10 @@ export class App extends EventTarget {
 		this.changeContext(this.contexts[i % this.contexts.length]);
 	}
 
+	resetContext(): void {
+		this.changeContext(this.contexts[0]);
+	}
+
 	changeContext(context?: Context): void {
 		if (undefined === context) {
 			return;

@@ -45,9 +45,9 @@ export class DemoActionsHandler implements ActionsHandler {
 		await Timeline.play(new Scene([
 			new WaitComposition(150),
 			new TickableComposition([
-				...this.uiElements.map((el) => [0, new FadeDomClip(el, "out", 1250, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
-				[0, new FadeDomClip(domOrThrow("#modes"), "out", 1250, { timingFunction: Interpolation.easeInOutCubic })],
-				[0, new FadeDomClip(domOrThrow("#contextControls"), "out", 1250, { timingFunction: Interpolation.easeInOutCubic })],
+				...this.uiElements.map((el) => [0, new FadeDomClip(el, "out", 750, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
+				[0, new FadeDomClip(domOrThrow("#modes"), "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
+				[0, new FadeDomClip(domOrThrow("#contextControls"), "out", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
 			new ActionComposition(() => {
 				this.uiElements.forEach((el) => el.style.display = "demo:close" !== el.dataset.action ? "none" : "");
@@ -55,9 +55,9 @@ export class DemoActionsHandler implements ActionsHandler {
 				this.selector.style.display = "";
 			}),
 			new TickableComposition([
-				...makeDiagramFadeClips("out", 2_000),
-				...this.closeButtons.map((el) => [1_500, new FadeDomClip(el, "in", 750, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
-				[1_500, new FadeDomClip(this.selector, "in", 750, { timingFunction: Interpolation.easeInOutCubic })],
+				...makeDiagramFadeClips("out", 1_000),
+				...this.closeButtons.map((el) => [500, new FadeDomClip(el, "in", 750, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
+				[500, new FadeDomClip(this.selector, "in", 750, { timingFunction: Interpolation.easeInOutCubic })],
 			]),
 		]));
 
@@ -105,10 +105,10 @@ export class DemoActionsHandler implements ActionsHandler {
 				this.selector.style.display = "none";
 			}),
 			new TickableComposition([
-				...this.uiElements.map((el) => [0, new FadeDomClip(el, "in", 1250, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
-				[0, new FadeDomClip(domOrThrow("#modes"), "in", 1250, { timingFunction: Interpolation.easeInOutCubic })],
-				[0, new FadeDomClip(domOrThrow("#contextControls"), "in", 1250, { timingFunction: Interpolation.easeInOutCubic })],
-				...makeDiagramFadeClips("in", 2_000),
+				...this.uiElements.map((el) => [0, new FadeDomClip(el, "in", 750, { timingFunction: Interpolation.easeInOutCubic })] satisfies ClipTuple),
+				[0, new FadeDomClip(domOrThrow("#modes"), "in", 750, { timingFunction: Interpolation.easeInOutCubic })],
+				[0, new FadeDomClip(domOrThrow("#contextControls"), "in", 750, { timingFunction: Interpolation.easeInOutCubic })],
+				...makeDiagramFadeClips("in", 1_000),
 			]),
 		]));
 

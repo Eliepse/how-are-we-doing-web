@@ -27,7 +27,7 @@ export class ModeActionsHandler implements ActionsHandler {
 			return;
 		}
 
-		this.app.changeMode(mode);
+		void this.app.changeMode(mode);
 		this.collector.logEvent("mode_changed", { mode });
 
 		const legendDefault = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=default]");

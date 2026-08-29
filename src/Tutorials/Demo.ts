@@ -10,7 +10,7 @@ class Demo {
 	private abortController: AbortController|undefined = undefined;
 
 	async start() {
-		App.instance().changeMode("basic");
+		await App.instance().changeMode("basic", false);
 		App.instance().getDiagram().selectNode(undefined);
 		App.instance().getDiagram().previewNode(undefined);
 		App.instance().resetContext();

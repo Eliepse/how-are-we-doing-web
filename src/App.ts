@@ -395,7 +395,7 @@ export class App extends EventTarget {
 		this.biblio.close();
 	}
 
-	changeMode(mode: "focus" | "detailled" | "basic") {
+	async changeMode(mode: "focus" | "detailled" | "basic", animated = true) {
 		if (!this.diagram) {
 			return;
 		}
@@ -419,8 +419,11 @@ export class App extends EventTarget {
 		App.feature("facility", !isDetsFocus);
 		App.feature("det-links:facility", !isDetsFocus);
 
-		this.diagram.updateRingsOpacity();
 		this.diagram.updateNodesHighlight();
+
+		if(animated) {
+			await this.diagram.updateRingsOpacity();
+		}
 	}
 
 	setReadonly(state: boolean) {

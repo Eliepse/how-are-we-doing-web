@@ -3,16 +3,23 @@ import { ActionComposition } from "../../Engine2D/Animate/Composition/ActionComp
 import { App } from "../../App";
 import { AwaitNodeSelectionComposition } from "../Composition/AwaitNodeSelectionComposition";
 import type { SelectableNode } from "../../Diagram/Diagram";
+import { IsolateNodeComposition } from "../Composition/IsolateNodeComposition";
 
 export class SelectNodeActionScene extends Scene {
-	constructor(validator: (node: SelectableNode | undefined) => boolean) {
+	constructor(target: SelectableNode) {
 		super([
-			new ActionComposition(() => App.instance().setReadonly(false)),
-			new AwaitNodeSelectionComposition(validator),
+			new IsolateNodeComposition(target, "in", 750),
 			new ActionComposition(() => {
-				App.instance().getDiagram().previewNode(undefined);
-				App.instance().setReadonly(true);
+				App.feature("hover:determinant", false);
+				App.feature("hover:facility", false);
+				App.feature("hover:pathology", false);
+				App.instance().setReadonly(false);
 			}),
+			new AwaitNodeSelectionComposition((node) => node === target),
+			// Clear any "hover" node
+			new ActionComposition(() => App.instance().getDiagram().previewNode(undefined)),
+			new IsolateNodeComposition(target, "out", 750),
+			new ActionComposition(() => App.instance().setReadonly(true)),
 		]);
 	}
 }

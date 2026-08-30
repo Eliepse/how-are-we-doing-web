@@ -29,16 +29,21 @@ import { linkArrow } from "./Diagram/Shape/LinkArrow";
 import { makeScene } from "./Animations/RevealDiagramScene";
 import { Timeline } from "./Engine2D/Animate/Timeline";
 import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
+import { Pathology } from "./Diagram/Items/Pathology/Pathology";
+import { Facility } from "./Diagram/Items/Facility/Facility";
 
 export type Feature =
-	"detailed-relations"
+	| "detailed-relations"
 	| "focus-determinant"
 	| "determinant"
 	| "det-links:determinant"
 	| "pathology"
 	| "det-links:pathology"
 	| "facility"
-	| "det-links:facility";
+	| "det-links:facility"
+	| "hover:determinant"
+	| "hover:pathology"
+	| "hover:facility";
 
 export class App extends EventTarget {
 	private static _instance?: App = undefined;
@@ -60,6 +65,9 @@ export class App extends EventTarget {
 		"det-links:pathology",
 		"facility",
 		"det-links:facility",
+		"hover:determinant",
+		"hover:pathology",
+		"hover:facility",
 	]);
 
 	public onContextChanged = (_context: Context) => undefined;
@@ -146,6 +154,16 @@ export class App extends EventTarget {
 		return true;
 	}
 
+	static featuresAny(...features: Feature[]): boolean {
+		for (const feature of features) {
+			if (App.instance().features.has(feature)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	getDiagram(): Diagram {
 		if (undefined === this.diagram) {
 			throw new Error("Diagram not initialized");
@@ -226,6 +244,18 @@ export class App extends EventTarget {
 
 			if (node === this.diagram?.getSelectedNode()) {
 				this.labelManager.hide("hover");
+				return;
+			}
+
+			if(node instanceof Pathology && !App.feature("hover:pathology")) {
+				return;
+			}
+
+			if(node instanceof Facility && !App.feature("hover:facility")) {
+				return;
+			}
+
+			if(node instanceof Determinant && !App.feature("hover:determinant")) {
 				return;
 			}
 

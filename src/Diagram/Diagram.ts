@@ -91,11 +91,11 @@ export class Diagram extends Node2D {
 		this.addListener("mouseenter", (e: NodeEvent) => {
 			const target = e.target;
 
-			if (target instanceof Determinant && !App.feature("determinant")) {
+			if (target instanceof Determinant && !App.featuresAll("determinant", "hover:determinant")) {
 				return;
-			} else if (target instanceof Pathology && !App.feature("pathology")) {
+			} else if (target instanceof Pathology && !App.featuresAll("pathology", "hover:pathology")) {
 				return;
-			} else if (target instanceof Facility && !App.feature("facility")) {
+			} else if (target instanceof Facility && !App.featuresAll("facility", "hover:facility")) {
 				return;
 			}
 

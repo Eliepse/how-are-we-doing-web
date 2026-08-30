@@ -117,6 +117,9 @@ export class DemoActionsHandler implements ActionsHandler {
 		App.feature("hover:determinant", true);
 		App.feature("hover:facility", true);
 		App.feature("hover:pathology", true);
+		App.feature("select:determinant", true);
+		App.feature("select:facility", true);
+		App.feature("select:pathology", true);
 		App.instance().setReadonly(false);
 	}
 

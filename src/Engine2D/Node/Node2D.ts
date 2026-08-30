@@ -167,14 +167,27 @@ export class Node2D extends Observable {
 		return false;
 	}
 
-	static findParent(
-		node: Node2D | undefined,
-		callback: (node: Node2D) => boolean,
-	): Node2D | undefined {
+	static findParent(node: Node2D | undefined, callback: (node: Node2D) => boolean): Node2D | undefined {
 		if (undefined === node || callback(node)) {
 			return node;
 		}
 
 		return Node2D.findParent(node.getParent(), callback);
+	}
+
+	static filterDescendants(node: Node2D, callback: (node: Node2D) => boolean): Node2D[] {
+		const matches: Node2D[] = [];
+
+		for (const child of node.getChildren()) {
+			if (callback(child)) {
+				matches.push(child);
+			}
+
+			if (0 !== child.getChildren().length) {
+				matches.push(...Node2D.filterDescendants(child, callback));
+			}
+		}
+
+		return matches;
 	}
 }

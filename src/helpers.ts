@@ -36,3 +36,13 @@ export function shuffle<T>(array: Array<T>): Array<T> {
 
 	return array;
 }
+
+export function domOrThrow<T extends HTMLElement>(query: string): T {
+	const dom = document.querySelector<T>(query);
+
+	if (!dom) {
+		throw new Error(`Unable to find dom (query: ${query}`);
+	}
+
+	return dom;
+}

@@ -32,5 +32,7 @@
   "credits.context": "All contributions are original research, conducted within the framework of the Fondation AIA between 2019 and 2026.",
   "controls.mode.simple": "Explore",
   "controls.mode.detailled": "Refine",
-  "controls.mode.focus": "Correlate"
+  "controls.mode.focus": "Correlate",
+	"demo": "Tutorial",
+	"demo_close": "Quit the tutorial"
 }

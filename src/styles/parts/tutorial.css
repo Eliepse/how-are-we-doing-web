@@ -1,0 +1,22 @@
+.tutorial-regular {
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    border-radius: .75rem;
+}
+
+.tutorial-regular strong {
+    font-weight: normal;
+    color: var(--color-secondary);
+}
+
+.tutorial--action {
+    border: 2px dotted var(--red);
+    color: var(--red);
+    padding: 2rem;
+}
+
+.tutorial--bordered {
+    border: 2px solid white;
+    padding: 2rem;
+}

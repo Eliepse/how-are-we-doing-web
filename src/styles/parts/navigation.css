@@ -7,6 +7,7 @@
     grid-row: 1 / 2;
     padding: var(--2) var(--4);
     font-size: var(--3);
+    z-index: 20;
 }
 
 /*
@@ -74,7 +75,7 @@
     font-size: .875rem
 }
 
-#modes li button:hover {
+#modes li button:hover:not(:disabled) {
     color: white;
     background: var(--dark-white);
 }

@@ -3,6 +3,7 @@ import type { SymbolAsset } from "../../Engine2D/ValueObject/Symbolic/SymbolAsse
 import { SVGShape } from "../../SVGRenderer/Shape/SVGShape";
 import type { Angle } from "../../Engine2D/ValueObject/Angle";
 import { Config } from "../../config";
+import type { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 
 export class SVGImage extends SVGShape {
 	private readonly dom: SVGImageElement;
@@ -25,6 +26,10 @@ export class SVGImage extends SVGShape {
 		this.dom.setAttribute("width", attrSize.x);
 		this.dom.setAttribute("height", attrSize.y);
 		this.dom.setAttribute("transform", `rotate(${degrees}, ${position.toString(true)})`);
+	}
+
+	updateStyle(style: SVGStyle): void {
+		this.dom.style.opacity = style.opacity.toFixed(2);
 	}
 
 	override mount(container: Element) {

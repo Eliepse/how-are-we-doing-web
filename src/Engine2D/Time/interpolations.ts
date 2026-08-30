@@ -1,4 +1,9 @@
 import { Opacity } from "../ValueObject/Opacity";
+import { Vector } from "../ValueObject/Vector";
+import { Angle } from "../ValueObject/Angle";
+import { Color } from "../ValueObject/Color";
+
+export type TimingFn = (typeof Interpolation)[keyof typeof Interpolation];
 
 export type Interpolator<T> = (ratio: number, from: T, to: T) => T;
 
@@ -8,6 +13,26 @@ export function interpolateNumber(ratio: number, from: number, to: number): numb
 
 export function interpolateOpacity(ratio: number, from: Opacity, to: Opacity): Opacity {
 	return new Opacity(interpolateNumber(ratio, from.ratio, to.ratio));
+}
+
+export function interpolatePosition(ratio: number, from: Vector, to: Vector): Vector {
+	return new Vector(
+		interpolateNumber(ratio, from.x, to.x),
+		interpolateNumber(ratio, from.y, to.y),
+	);
+}
+
+export function interpolateAngle(ratio: number, from: Angle, to: Angle): Angle {
+	return new Angle(interpolateNumber(ratio, from.rad, to.rad));
+}
+
+export function interpolateColor(ratio: number, from: Color, to: Color): Color {
+	return new Color(
+		Math.round(interpolateNumber(ratio, from.r, to.r)),
+		Math.round(interpolateNumber(ratio, from.g, to.g)),
+		Math.round(interpolateNumber(ratio, from.b, to.b)),
+		interpolateNumber(ratio, from.a, to.a),
+	);
 }
 
 export function linear(x: number) {
@@ -25,3 +50,10 @@ export function easeOutCubic(x: number): number {
 export function easeInOutCubic(x: number): number {
 	return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
+
+export const Interpolation = {
+	linear,
+	easeInCubic,
+	easeOutCubic,
+	easeInOutCubic,
+} as const;

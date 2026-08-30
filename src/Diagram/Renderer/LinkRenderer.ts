@@ -31,13 +31,17 @@ export class LinkRenderer extends SVGNodeRenderer {
 
 		const center = this.renderer.size.div(2);
 		const path = shapes.get(link.key, () => {
-			const p = new LinkPath();
-			p.updateStyle(this.getLinkStyle(link));
-			return p;
+			const path = new LinkPath();
+			const style = this.getLinkStyle(link);
+			console.debug(style, link.getGlobalOpacity().get().ratio, style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio))
+			path.updateStyle(style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio));
+			return path;
 		});
 
-		if (link.status.hasChanged()) {
-			path.updateStyle(this.getLinkStyle(link));
+		if (link.status.hasChanged() || link.getGlobalOpacity().hasChanged()) {
+			const style = this.getLinkStyle(link);
+			console.debug(style, link.getGlobalOpacity().get().ratio, style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio))
+			path.updateStyle(style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio));
 		}
 
 		if (link.from instanceof Determinant && link.to instanceof Determinant) {

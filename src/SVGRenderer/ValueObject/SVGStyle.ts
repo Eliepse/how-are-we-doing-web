@@ -15,6 +15,14 @@ export class SVGStyle {
 		this.opacity = config.opacity instanceof Opacity ? config.opacity.ratio : (config.opacity ?? 1);
 	}
 
+	withOpacity(value: number): SVGStyle {
+		return new SVGStyle({
+			fill: this.fill,
+			stroke: this.stroke,
+			opacity: value,
+		});
+	}
+
 	updateElement(element: SVGElement): void {
 		if (this.fill instanceof Color) {
 			element.setAttribute("fill", this.fill.toHexAlpha());

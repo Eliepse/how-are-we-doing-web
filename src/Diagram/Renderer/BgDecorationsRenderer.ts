@@ -3,6 +3,7 @@ import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer"
 import type { SVGRenderer } from "../../SVGRenderer/SVGRenderer";
 import { BgDecoration } from "../Decoration/BgDecoration";
 import { SVGImage } from "../Shape/SVGImage";
+import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";
 
 export class BgDecorationsRenderer extends SVGNodeRenderer {
 	constructor(renderer: SVGRenderer) {
@@ -15,11 +16,15 @@ export class BgDecorationsRenderer extends SVGNodeRenderer {
 		const sprite = shapes.get("sprite", () => new SVGImage(node.symbol, -1));
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
+		const opacity = node.getGlobalOpacity();
 
-		if (position || rotation) {
+		if (position.hasChanged() || rotation.hasChanged()) {
 			sprite.updateMesh(position.get(), node.scale, rotation.get());
 		}
-		// blob.updateStyle(new SVGStyle({ fill: genRef }));
+
+		if(opacity.hasChanged()) {
+			sprite.updateStyle(new SVGStyle({ opacity: opacity.get().ratio }));
+		}
 	}
 
 	override accepts(vnode: VirtualNode): boolean {

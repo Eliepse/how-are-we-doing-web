@@ -26,22 +26,29 @@ import { LinkRenderer } from "./Diagram/Renderer/LinkRenderer";
 import { ProfilerDisplay } from "./debug/graph/ProfilerDisplay";
 import { linkGradient } from "./Diagram/Shape/LinkGradient";
 import { linkArrow } from "./Diagram/Shape/LinkArrow";
-import { Animator } from "./Engine2D/Animator/Animator";
-import { Scene } from "./Engine2D/Animator/Scene";
-import { Sequence } from "./Engine2D/Animator/Sequence";
-import { Opacity } from "./Engine2D/ValueObject/Opacity";
+import { makeScene } from "./Animations/RevealDiagramScene";
+import { Timeline } from "./Engine2D/Animate/Timeline";
+import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
+import { Pathology } from "./Diagram/Items/Pathology/Pathology";
+import { Facility } from "./Diagram/Items/Facility/Facility";
 
 export type Feature =
-	"detailed-relations"
+	| "detailed-relations"
 	| "focus-determinant"
 	| "determinant"
 	| "det-links:determinant"
 	| "pathology"
 	| "det-links:pathology"
 	| "facility"
-	| "det-links:facility";
+	| "det-links:facility"
+	| "hover:determinant"
+	| "hover:pathology"
+	| "hover:facility"
+	| "select:determinant"
+	| "select:pathology"
+	| "select:facility";
 
-export class App {
+export class App extends EventTarget {
 	private static _instance?: App = undefined;
 
 	private readonly translator: Translator;
@@ -61,10 +68,15 @@ export class App {
 		"det-links:pathology",
 		"facility",
 		"det-links:facility",
+		"hover:determinant",
+		"hover:pathology",
+		"hover:facility",
+		"select:determinant",
+		"select:pathology",
+		"select:facility",
 	]);
 
 	public onContextChanged = (_context: Context) => undefined;
-	public onSelectionChanged = (_node: SelectableNode | undefined) => undefined;
 	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
 	public onFeatureChanged = () => undefined;
 
@@ -72,6 +84,8 @@ export class App {
 		rootDom: Element,
 		diagramDom: Element,
 	) {
+		super();
+
 		const labelDom = document.createElement("div");
 		labelDom.id = "labels";
 
@@ -144,6 +158,16 @@ export class App {
 		}
 
 		return true;
+	}
+
+	static featuresAny(...features: Feature[]): boolean {
+		for (const feature of features) {
+			if (App.instance().features.has(feature)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	getDiagram(): Diagram {
@@ -229,6 +253,18 @@ export class App {
 				return;
 			}
 
+			if(node instanceof Pathology && !App.feature("hover:pathology")) {
+				return;
+			}
+
+			if(node instanceof Facility && !App.feature("hover:facility")) {
+				return;
+			}
+
+			if(node instanceof Determinant && !App.feature("hover:determinant")) {
+				return;
+			}
+
 			const nodePosition = node.getGlobalPosition().get();
 			const hSize = Engine.getRenderer<SVGRenderer>().size.div(2);
 
@@ -249,7 +285,7 @@ export class App {
 		this.diagram.addListener("nodeSelected", (event: NodeEvent<SelectableNode | undefined>) => {
 			const node = event.target;
 
-			this.onSelectionChanged(node);
+			this.dispatchEvent(new NodeSelectionEvent(node));
 
 			if (undefined === node) {
 				this.labelManager.hide("selected");
@@ -306,25 +342,7 @@ export class App {
 		// Start the engine
 		Engine.start();
 
-		const facilityGroup = Engine.nodeByUname("group:facility");
-		const determinantGroup = Engine.nodeByUname("group:determinant");
-		const pathologyGroup = Engine.nodeByUname("group:pathology");
-
-		const diagramRevealScene = new Scene(
-			"home",
-			[
-				[1250, new Sequence((r) => this.diagram?.setOpacity(new Opacity(r)), 750)],
-				[1250, new Sequence((r) => pathologyGroup?.setOpacity(new Opacity(r)), 1_000)],
-				[1750, new Sequence((r) => determinantGroup?.setOpacity(new Opacity(r)), 1_000)],
-				[2250, new Sequence((r) => facilityGroup?.setOpacity(new Opacity(r)), 1_000)],
-			],
-		);
-
-		this.diagram?.setOpacity(Opacity.Transparent);
-		facilityGroup?.setOpacity(Opacity.Transparent);
-		determinantGroup?.setOpacity(Opacity.Transparent);
-		pathologyGroup?.setOpacity(Opacity.Transparent);
-		Animator.play(diagramRevealScene, () => this.setReadonly(false));
+		Timeline.play(makeScene(this.diagram)).then(() => this.setReadonly(false));
 	}
 
 	get debug() {
@@ -359,6 +377,10 @@ export class App {
 	}
 
 	previousContext(): void {
+		if(Engine.isReadonly) {
+			return;
+		}
+
 		if (undefined === this.currentContext) {
 			this.changeContext(this.contexts[0]);
 			return;
@@ -370,6 +392,10 @@ export class App {
 	}
 
 	nextContext(): void {
+		if(Engine.isReadonly) {
+			return;
+		}
+
 		if (undefined === this.currentContext) {
 			this.changeContext(this.contexts[0]);
 			return;
@@ -377,6 +403,10 @@ export class App {
 
 		const i = this.contexts.indexOf(this.currentContext) + 1;
 		this.changeContext(this.contexts[i % this.contexts.length]);
+	}
+
+	resetContext(): void {
+		this.changeContext(this.contexts[0]);
 	}
 
 	changeContext(context?: Context): void {
@@ -401,7 +431,7 @@ export class App {
 		this.biblio.close();
 	}
 
-	changeMode(mode: "focus" | "detailled" | "basic") {
+	async changeMode(mode: "focus" | "detailled" | "basic", animated = true) {
 		if (!this.diagram) {
 			return;
 		}
@@ -425,11 +455,18 @@ export class App {
 		App.feature("facility", !isDetsFocus);
 		App.feature("det-links:facility", !isDetsFocus);
 
-		this.diagram.updateRingsOpacity();
 		this.diagram.updateNodesHighlight();
+
+		if(animated) {
+			await this.diagram.updateRingsOpacity();
+		}
 	}
 
 	setReadonly(state: boolean) {
 		Engine.setReadonly(state);
+	}
+
+	clearSelection() {
+		this.diagram?.selectNode(undefined);
 	}
 }

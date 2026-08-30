@@ -123,43 +123,7 @@
 </div>
 
 <div id="app">
-	<div id="navigation">
-		<div style="justify-self: start; display: flex; gap: .5rem">
-			<button data-action="locale:toggle" style="text-transform: uppercase" data-locale-current>
-				FR
-			</button>
-			<button data-action="credits:open" data-translate="general.credits">
-				Credits
-			</button>
-		</div>
-
-		<ul id="modes">
-			<li>
-				<button class="active" data-action="mode:change" data-mode="basic"
-				        data-translate="general.controls.mode.simple">
-					Simple
-				</button>
-			</li>
-			<li>
-				<button data-action="mode:change" data-mode="detailled"
-				        data-translate="general.controls.mode.detailled">
-					Detailled
-				</button>
-			</li>
-			<li>
-				<button data-action="mode:change" data-mode="focus" data-translate="general.controls.mode.focus">
-					Determinants
-				</button>
-			</li>
-		</ul>
-
-		<div style="justify-self: end">
-			<button data-action="lexicon:open" data-translate="general.lexicon">
-				Lexicon
-			</button>
-			<button id="biblioToggle" style="margin-left: 8px">Bibliography</button>
-		</div>
-	</div>
+	{{> navigation }}
 
 	<div id="legendRoot">
 		<figure data-legend="secondary" style="display: none">
@@ -219,6 +183,8 @@
 {{> credits }}
 {{> lexicon }}
 {{> context }}
+{{> presenter }}
+{{> tutorials/demo-selector }}
 
 <script type="module" src="/main.ts"></script>
 </body>

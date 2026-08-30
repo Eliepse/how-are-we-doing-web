@@ -1,10 +1,11 @@
-import { Scene, type SceneChild } from "../../Engine2D/Animate/Scene/Scene";
+import { Scene, type SceneChild, type SceneConfig } from "../../Engine2D/Animate/Scene/Scene";
 
 export class HTMLScene extends Scene {
 	constructor(
 		prepare: (register: (key: string, node: HTMLElement) => void) => void,
 		compose: (node: (key: string) => HTMLElement) => SceneChild[],
 		cleanup?: (node: (key: string) => HTMLElement) => void,
+		config?: Omit<SceneConfig, "onPreScene" | "onPostScene">
 	) {
 		const nodes = new Map<string, HTMLElement>();
 		const finder = (key: string) => HTMLScene.getNode(nodes, key);
@@ -12,6 +13,7 @@ export class HTMLScene extends Scene {
 		super(
 			[],
 			{
+				...config,
 				onPreScene: () => {
 					prepare((key, node) => nodes.set(key, node));
 					compose(finder).forEach((child) => this.add(child));

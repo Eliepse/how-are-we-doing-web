@@ -3,6 +3,10 @@ import { Animator } from "./Animator";
 
 export class Timeline {
 	static async play(scene: Scene, signal?: AbortSignal) {
+		if(scene.shouldSkip()) {
+			return;
+		}
+
 		scene.onPreScene();
 
 		let index = 0, current = scene.get(index);

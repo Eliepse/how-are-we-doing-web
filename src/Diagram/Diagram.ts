@@ -211,8 +211,13 @@ export class Diagram extends Node2D {
 			);
 		});
 
-		this.addChildren((this.decorations = new BgDecorationManager()));
-		this.addChildren(new LinkManager(this._pathologies, this._determinants));
+		this.decorations = new BgDecorationManager();
+		this.decorations.setUname("decoration:main:background");
+		this.addChildren(this.decorations);
+
+		const linksManager = new LinkManager(this._pathologies, this._determinants);
+		linksManager.setUname("link:manager");
+		this.addChildren(linksManager);
 	}
 
 	override onProcess(deltaTime: number): void {

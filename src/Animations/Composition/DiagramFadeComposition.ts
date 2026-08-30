@@ -5,19 +5,18 @@ import { Opacity } from "../../Engine2D/ValueObject/Opacity";
 
 const CONFIG = { min: new Opacity(0.1), max: Opacity.Opaque };
 
-export function makeDiagramFadeClips(
-	direction: "in" | "out",
-	duration: number,
-) {
+export function makeDiagramFadeClips(direction: "in" | "out", duration: number) {
 	const pathologies = Engine.nodeByUnameOrThrow("group:pathology");
 	const determinants = Engine.nodeByUnameOrThrow("group:determinant");
 	const facilities = Engine.nodeByUnameOrThrow("group:facility");
 	const decorations = Engine.nodeByUnameOrThrow("decoration:main:background");
+	const links = Engine.nodeByUnameOrThrow("link:manager");
 
 	return [
 		[0, new FadeNodeClip(pathologies, direction, duration, CONFIG)],
 		[0, new FadeNodeClip(determinants, direction, duration, CONFIG)],
 		[0, new FadeNodeClip(facilities, direction, duration, CONFIG)],
 		[0, new FadeNodeClip(decorations, direction, duration, CONFIG)],
+		[0, new FadeNodeClip(links, direction, duration, { ...CONFIG, min: new Opacity(0.3) })],
 	] satisfies ClipTuple[];
 }

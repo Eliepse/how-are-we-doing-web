@@ -10,7 +10,6 @@ import { App } from "../../App";
 import { HTMLScene } from "../../Animations/Scene/HTMLScene";
 import { SelectNodeActionScene } from "../../Animations/Scene/SelectNodeActionScene";
 import { domOrThrow } from "../../helpers";
-import { IntroScene } from "../common/IntroScene";
 import { makeDiagramFadeClips } from "../../Animations/Composition/DiagramFadeComposition";
 import type { Pathology } from "../../Diagram/Items/Pathology/Pathology";
 import type { Determinant } from "../../Diagram/Items/Determinant/Determinant";
@@ -22,6 +21,7 @@ export class EssentialDemo extends Scene {
 		const determinants = Engine.nodeByUnameOrThrow("group:determinant");
 		const facilities = Engine.nodeByUnameOrThrow("group:facility");
 		const decorations = Engine.nodeByUnameOrThrow("decoration:main:background");
+		const links = Engine.nodeByUnameOrThrow("link:manager");
 		const selectTargets = {
 			pathology: Engine.nodeByUnameOrThrow("pathology:113") as Pathology,
 			determinant: Engine.nodeByUnameOrThrow("determinant:17") as Determinant,
@@ -35,6 +35,7 @@ export class EssentialDemo extends Scene {
 				determinants.setOpacity(new Opacity(0.1));
 				facilities.setOpacity(new Opacity(0.1));
 				decorations.setOpacity(new Opacity(0.1));
+				links.setOpacity(new Opacity(0.3));
 			}),
 
 			new IntroScene(),

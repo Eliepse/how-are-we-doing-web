@@ -64,13 +64,13 @@ export class Diagram extends Node2D {
 		this.addListener("click", (e: NodeEvent) => {
 			const target = e.target;
 
-			if (target instanceof Determinant && !App.feature("determinant")) {
+			if (target instanceof Determinant && !App.featuresAll("determinant", "select:determinant")) {
 				this.selectNode(undefined);
 				return;
-			} else if (target instanceof Pathology && !App.feature("pathology")) {
+			} else if (target instanceof Pathology && !App.featuresAll("pathology", "select:pathology")) {
 				this.selectNode(undefined);
 				return;
-			} else if (target instanceof Facility && !App.feature("facility")) {
+			} else if (target instanceof Facility && !App.featuresAll("facility", "select:facility")) {
 				this.selectNode(undefined);
 				return;
 			}

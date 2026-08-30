@@ -43,7 +43,10 @@ export type Feature =
 	| "det-links:facility"
 	| "hover:determinant"
 	| "hover:pathology"
-	| "hover:facility";
+	| "hover:facility"
+	| "select:determinant"
+	| "select:pathology"
+	| "select:facility";
 
 export class App extends EventTarget {
 	private static _instance?: App = undefined;
@@ -68,6 +71,9 @@ export class App extends EventTarget {
 		"hover:determinant",
 		"hover:pathology",
 		"hover:facility",
+		"select:determinant",
+		"select:pathology",
+		"select:facility",
 	]);
 
 	public onContextChanged = (_context: Context) => undefined;

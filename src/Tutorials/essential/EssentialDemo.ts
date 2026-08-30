@@ -60,6 +60,7 @@ export class EssentialDemo extends Scene {
 						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(.3) })],
 						[0, new FadeNodeClip(determinants, "in", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(facilities, "in", 1_250, { min: new Opacity(0.1) })],
+						[0, new FadeNodeClip(decorations, "in", 1_250, { min: new Opacity(0.1) })],
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([
@@ -73,6 +74,7 @@ export class EssentialDemo extends Scene {
 						[0, new FadeNodeClip(pathologies, "out", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(facilities, "out", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(links, "out", 1_250, { min: new Opacity(.3) })],
+						[0, new FadeNodeClip(decorations, "out", 1_250, { min: new Opacity(.3) })],
 					]),
 				],
 			),

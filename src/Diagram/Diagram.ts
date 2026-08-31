@@ -406,7 +406,6 @@ export class Diagram extends Node2D {
 		const determinants = Engine.nodesByTag<Determinant>("determinant");
 		const facilities = Engine.nodesByTag<Facility>("facility");
 		const pathologies = Engine.nodesByTag<Pathology>("pathology");
-		const detMode = App.feature("focus-determinant");
 		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
 		let previewAssoc,
 			selectionAssoc = null;
@@ -415,17 +414,11 @@ export class Diagram extends Node2D {
 			this._previewedNode instanceof Determinant &&
 			this._previewedNode !== this._selectedNode
 		) {
-			previewAssoc = AssociationManager.getAllAssociations(
-				this._previewedNode,
-				detMode ? Dir.Source : undefined,
-			);
+			previewAssoc = AssociationManager.getAllAssociations(this._previewedNode);
 		}
 
 		if (this._selectedNode) {
-			selectionAssoc = AssociationManager.getAllAssociations(
-				this._selectedNode,
-				detMode ? Dir.Source : undefined,
-			);
+			selectionAssoc = AssociationManager.getAllAssociations(this._selectedNode);
 		}
 
 		linkManager?.clearLinks();

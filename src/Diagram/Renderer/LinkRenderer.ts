@@ -33,14 +33,12 @@ export class LinkRenderer extends SVGNodeRenderer {
 		const path = shapes.get(link.key, () => {
 			const path = new LinkPath();
 			const style = this.getLinkStyle(link);
-			console.debug(style, link.getGlobalOpacity().get().ratio, style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio))
 			path.updateStyle(style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio));
 			return path;
 		});
 
 		if (link.status.hasChanged() || link.getGlobalOpacity().hasChanged()) {
 			const style = this.getLinkStyle(link);
-			console.debug(style, link.getGlobalOpacity().get().ratio, style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio))
 			path.updateStyle(style.withOpacity(style.opacity * link.getGlobalOpacity().get().ratio));
 		}
 

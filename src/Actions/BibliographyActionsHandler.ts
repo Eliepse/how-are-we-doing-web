@@ -59,6 +59,7 @@ export class BibliographyActionsHandler implements ActionsHandler {
 	actions(): Record<string, () => void> {
 		return {
 			"biblio:toggle": () => this.toggle(),
+			"biblio:close": () => this.close(),
 		};
 	}
 }

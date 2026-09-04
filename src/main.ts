@@ -159,7 +159,6 @@ async function main(withLoader = true) {
 		}
 
 		const node = e.selection;
-		console.debug(e.selection?.id);
 
 		if (node) {
 			collector.logEvent("selection_changed", { id: node.id, class: node.constructor.name });

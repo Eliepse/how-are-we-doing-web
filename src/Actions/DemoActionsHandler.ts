@@ -1,5 +1,5 @@
 import type { ActionsHandler } from "./ActionsHandler";
-import type { Collector } from "../Telemetry/Collector";
+import Collector from "../Telemetry/Collector";
 import Demo from "../Tutorials/Demo";
 import { Presenter } from "../Tutorials/Presenter";
 import { Scene } from "../Engine2D/Animate/Scene/Scene";
@@ -24,7 +24,7 @@ export class DemoActionsHandler implements ActionsHandler {
 	private readonly selector: HTMLElement;
 	private canSelectDemo = false;
 
-	constructor(private readonly collector: Collector) {
+	constructor() {
 		this.closeButtons = Array.from(
 			document.querySelectorAll<HTMLButtonElement>("#navigation [data-action='demo:close']"),
 		);
@@ -47,7 +47,7 @@ export class DemoActionsHandler implements ActionsHandler {
 	}
 
 	async open() {
-		this.collector.logEvent("demo_selector_opened");
+		Collector.logEvent("demo_selector_opened");
 
 		ActionManager.act("biblio:close");
 		App.instance().setReadonly(true);
@@ -101,7 +101,7 @@ export class DemoActionsHandler implements ActionsHandler {
 	}
 
 	async close() {
-		this.collector.logEvent("demo_stopped");
+		Collector.logEvent("demo_stopped");
 		this.canSelectDemo = false;
 		await this.restoreView();
 	}

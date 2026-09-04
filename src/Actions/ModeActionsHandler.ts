@@ -1,11 +1,10 @@
 import type { ActionsHandler } from "./ActionsHandler";
-import type { Collector } from "../Telemetry/Collector";
+import Collector from "../Telemetry/Collector";
 import { App } from "../App";
 
 export class ModeActionsHandler implements ActionsHandler {
 	constructor(
 		private readonly app: App,
-		private readonly collector: Collector,
 	) {
 	}
 
@@ -28,7 +27,7 @@ export class ModeActionsHandler implements ActionsHandler {
 		}
 
 		void this.app.changeMode(mode);
-		this.collector.logEvent("mode_changed", { mode });
+		Collector.logEvent("mode_changed", { mode });
 
 		const legendDefault = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=default]");
 		const legendFocus = document.querySelector<HTMLDivElement>("#legendRoot[data-legend=focus]");

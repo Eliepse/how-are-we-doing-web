@@ -1,12 +1,10 @@
 import type { ActionsHandler } from "./ActionsHandler";
-import type { Collector } from "../Telemetry/Collector";
+import Collector from "../Telemetry/Collector";
 
 export class CreditsActionsHandler implements ActionsHandler {
 	private readonly dom: HTMLElement;
 
-	constructor(
-		private readonly collector: Collector,
-	) {
+	constructor() {
 		const _dom = document.querySelector<HTMLElement>("#credits");
 
 		if(!_dom) {
@@ -19,13 +17,13 @@ export class CreditsActionsHandler implements ActionsHandler {
 	}
 
 	open() {
-		this.collector.logEvent("credits_opened");
+		Collector.logEvent("credits_opened");
 		this.dom.ariaHidden = "false";
 		this.dom.style.display = "";
 	}
 
 	close() {
-		this.collector.logEvent("credits_closed");
+		Collector.logEvent("credits_closed");
 		this.dom.ariaHidden = "true";
 		this.dom.style.display = "none";
 	}

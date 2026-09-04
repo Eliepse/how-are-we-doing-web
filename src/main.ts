@@ -1,7 +1,6 @@
 import { App } from "./App";
 import type { Context } from "./Diagram/Context";
 import { wait } from "./helpers";
-import { Collector } from "./Telemetry/Collector";
 import { ActionManager } from "./Actions/ActionManager";
 import { CreditsActionsHandler } from "./Actions/CreditsActionsHandler";
 import { BibliographyActionsHandler } from "./Actions/BibliographyActionsHandler";
@@ -18,6 +17,8 @@ import "/styles/app.css";
 
 import { DemoActionsHandler } from "./Actions/DemoActionsHandler";
 import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
+import Collector from "./Telemetry/Collector";
+import { IndexedDBStore } from "./Telemetry/IndexedDBStore";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
@@ -60,8 +61,12 @@ async function main(withLoader = true) {
 
 	const app = App.init(appDom, diagramDom);
 	app.setReadonly(true);
-	const collector = new Collector();
-	await collector.init();
+
+	Collector.register([
+		new IndexedDBStore(),
+	]);
+
+	await Collector.init();
 
 	// @ts-ignore
 	window.app = app;
@@ -103,7 +108,7 @@ async function main(withLoader = true) {
 
 		// Telemetry
 		diagramChannel.postMessage({ type: "contextChanged", data: { context } });
-		collector.logEvent("context_changed", { id: context.id, name: context.name });
+		Collector.logEvent("context_changed", { id: context.id, name: context.name });
 
 		// Update legend
 
@@ -161,7 +166,7 @@ async function main(withLoader = true) {
 		const node = e.selection;
 
 		if (node) {
-			collector.logEvent("selection_changed", { id: node.id, class: node.constructor.name });
+			Collector.logEvent("selection_changed", { id: node.id, class: node.constructor.name });
 		}
 
 		if (undefined === node) {
@@ -199,7 +204,7 @@ async function main(withLoader = true) {
 			return;
 		}
 
-		// collector.logEvent("preview_changed", { id: node.id, class: node.constructor.name });
+		// Collector.logEvent("preview_changed", { id: node.id, class: node.constructor.name });
 	};
 
 	translator.dyn("general.no context", (txt) => {
@@ -213,13 +218,13 @@ async function main(withLoader = true) {
 	await app.load((step, total, title) => updateLoader((step / total) * 100, title));
 
 	ActionManager.register(
-		new LanguageActionsHandler(app.getTranslator(), collector),
-		new BibliographyActionsHandler(app, collector),
-		new CreditsActionsHandler(collector),
+		new LanguageActionsHandler(app.getTranslator()),
+		new BibliographyActionsHandler(app),
+		new CreditsActionsHandler(),
 		new ContextActionsHandler(app),
-		new LexiconActionsHandler(collector),
-		new ModeActionsHandler(app, collector),
-		new DemoActionsHandler(collector),
+		new LexiconActionsHandler(),
+		new ModeActionsHandler(app),
+		new DemoActionsHandler(),
 		new SystemActionsHandler(app),
 	);
 

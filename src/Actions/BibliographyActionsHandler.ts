@@ -1,7 +1,7 @@
 import type { ActionsHandler } from "./ActionsHandler";
-import type { Collector } from "../Telemetry/Collector";
 import type { App } from "../App";
 import type { IntlStr } from "../Diagram/Translation/IntlStr";
+import Collector from "../Telemetry/Collector";
 
 export class BibliographyActionsHandler implements ActionsHandler {
 	private readonly button: HTMLButtonElement;
@@ -10,7 +10,6 @@ export class BibliographyActionsHandler implements ActionsHandler {
 
 	constructor(
 		private readonly app: App,
-		private readonly collector: Collector,
 	) {
 		const _button = document.querySelector<HTMLButtonElement>("#biblioToggle");
 
@@ -35,14 +34,14 @@ export class BibliographyActionsHandler implements ActionsHandler {
 
 	open() {
 		this.app.showBibliography();
-		this.collector.logEvent("biblio_opened");
+		Collector.logEvent("biblio_opened");
 		this.button.ariaPressed = "true";
 		this.button.innerText = this.textHide.toString();
 	}
 
 	close() {
 		this.app.hideBibliography();
-		this.collector.logEvent("biblio_closed");
+		Collector.logEvent("biblio_closed");
 		this.button.ariaPressed = "false";
 		this.button.innerText = this.textShow.toString();
 	}

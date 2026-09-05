@@ -3,6 +3,8 @@
 /Capture d’écran (25).png
 /node_modules
 /dist
+bin/
+telemtry.db
 
 src/public/wall
 .vite/

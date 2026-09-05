@@ -1,0 +1,22 @@
+{
+	"tasks": {
+		"dev": "vite",
+		"build": "vite build"
+	},
+	"desktop": {
+		"app": {
+			"name": "How are we doing?",
+			"identifier": "com.fondationaia.howarewedoing"
+		},
+		"backend": "cef",
+		"output": {
+			"linux": "./bin/my-app"
+		},
+		"macos": {
+			"codesignIdentity": "Developer ID Application: Acme, Inc. (TEAMID)"
+		}
+	},
+	"imports": {
+		"@std/assert": "jsr:@std/assert@1"
+	}
+}

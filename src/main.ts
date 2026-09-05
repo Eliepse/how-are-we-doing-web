@@ -19,6 +19,7 @@ import { DemoActionsHandler } from "./Actions/DemoActionsHandler";
 import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
 import Collector from "./Telemetry/Collector";
 import { IndexedDBStore } from "./Telemetry/IndexedDBStore";
+import { DenoBindingsStore } from "./Telemetry/DenoBindingsStore";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
@@ -64,6 +65,7 @@ async function main(withLoader = true) {
 
 	Collector.register([
 		new IndexedDBStore(),
+		new DenoBindingsStore(),
 	]);
 
 	await Collector.init();

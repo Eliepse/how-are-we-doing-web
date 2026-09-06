@@ -31,6 +31,7 @@ import { Timeline } from "./Engine2D/Animate/Timeline";
 import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
 import { Pathology } from "./Diagram/Items/Pathology/Pathology";
 import { Facility } from "./Diagram/Items/Facility/Facility";
+import { Opacity } from "./Engine2D/ValueObject/Opacity";
 
 export type Feature =
 	| "detailed-relations"
@@ -342,7 +343,16 @@ export class App extends EventTarget {
 		// Start the engine
 		Engine.start();
 
-		Timeline.play(makeScene(this.diagram)).then(() => this.setReadonly(false));
+		const facilityGroup = Engine.nodeByUnameOrThrow("group:facility");
+		const determinantGroup = Engine.nodeByUnameOrThrow("group:determinant");
+		const pathologyGroup = Engine.nodeByUnameOrThrow("group:pathology");
+		Timeline.play(makeScene(this.diagram)).then(() => {
+			this.diagram?.setOpacity(Opacity.Opaque);
+			facilityGroup.setOpacity(Opacity.Opaque);
+			determinantGroup.setOpacity(Opacity.Opaque);
+			pathologyGroup.setOpacity(Opacity.Opaque);
+			this.setReadonly(false)
+		});
 	}
 
 	get debug() {

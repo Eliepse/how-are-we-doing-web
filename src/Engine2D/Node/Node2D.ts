@@ -43,7 +43,7 @@ export class Node2D extends Observable {
 		element.setParent(this);
 	}
 
-	getChildren(): Array<Node2D> {
+	getChildren<TChild extends Node2D = Node2D>(): Array<TChild> {
 		return this.children;
 	}
 

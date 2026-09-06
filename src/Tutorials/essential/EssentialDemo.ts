@@ -1,4 +1,4 @@
-import { TickableComposition } from "../../Engine2D/Animate/Composition/TickableComposition";
+import { type ClipTuple, TickableComposition } from "../../Engine2D/Animate/Composition/TickableComposition";
 import { Engine } from "../../Engine2D/Engine";
 import { Scene } from "../../Engine2D/Animate/Scene/Scene";
 import { ActionComposition } from "../../Engine2D/Animate/Composition/ActionComposition";
@@ -15,6 +15,27 @@ import type { Pathology } from "../../Diagram/Items/Pathology/Pathology";
 import type { Determinant } from "../../Diagram/Items/Determinant/Determinant";
 import type { Facility } from "../../Diagram/Items/Facility/Facility";
 import { IntroScene } from "../common/IntroScene";
+import { TransitionClip } from "../../Engine2D/Animate/Clip/TransitionClip";
+import { interpolateOpacity } from "../../Engine2D/Time/interpolations";
+import type { FacilityFamily } from "../../Diagram/Items/Facility/FacilityFamily";
+import type { DeterminantSubFamily } from "../../Diagram/Items/Determinant/DeterminantSubFamily";
+import type { DeterminantFamily } from "../../Diagram/Items/Determinant/DeterminantFamily";
+
+function makeDecorationClips(children: Array<DeterminantSubFamily | FacilityFamily>, fadeIn = false) {
+	return children.map(
+		(child) =>
+			[
+				0,
+				new TransitionClip(
+					(progress) => {
+						child.setDecorationOpacity(interpolateOpacity(progress, Opacity.Opaque, new Opacity(0.1)));
+					},
+					1_250,
+					{ inverted: fadeIn },
+				),
+			] satisfies ClipTuple,
+	);
+}
 
 export class EssentialDemo extends Scene {
 	constructor() {
@@ -28,6 +49,11 @@ export class EssentialDemo extends Scene {
 			determinant: Engine.nodeByUnameOrThrow("determinant:17") as Determinant,
 			facility: Engine.nodeByUnameOrThrow("facility:29") as Facility,
 		} as const;
+
+		const determinantSubFamilies = determinants
+			.getChildren<DeterminantFamily>()
+			.map((family) => family.getChildren<DeterminantSubFamily>())
+			.flat();
 
 		super([
 			new ActionComposition(() => {
@@ -57,7 +83,7 @@ export class EssentialDemo extends Scene {
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("a"), "in", 1_250)],
-						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(.3) })],
+						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(0.3) })],
 						[0, new FadeNodeClip(determinants, "in", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(facilities, "in", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(decorations, "in", 1_250, { min: new Opacity(0.1) })],
@@ -73,8 +99,8 @@ export class EssentialDemo extends Scene {
 						[0, new FadeDomClip(n("b"), "out", 1_250)],
 						[0, new FadeNodeClip(pathologies, "out", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(facilities, "out", 1_250, { min: new Opacity(0.1) })],
-						[0, new FadeNodeClip(links, "out", 1_250, { min: new Opacity(.3) })],
-						[0, new FadeNodeClip(decorations, "out", 1_250, { min: new Opacity(.3) })],
+						[0, new FadeNodeClip(links, "out", 1_250, { min: new Opacity(0.3) })],
+						[0, new FadeNodeClip(decorations, "out", 1_250, { min: new Opacity(0.3) })],
 					]),
 				],
 			),
@@ -87,14 +113,18 @@ export class EssentialDemo extends Scene {
 					register("info-2", domOrThrow("#demo-17"));
 				},
 				(n) => [
-					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
+					new TickableComposition([
+						[0, new FadeDomClip(n("action"), "in", 1_250)],
+						...makeDecorationClips(determinantSubFamilies),
+					]),
 					new SelectNodeActionScene(selectTargets.determinant),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "in", 1_250)],
-						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(.3) })],
+						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(0.3) })],
 						[0, new FadeNodeClip(pathologies, "in", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(facilities, "in", 1_250, { min: new Opacity(0.1) })],
+						...makeDecorationClips(determinantSubFamilies, true),
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([
@@ -107,7 +137,7 @@ export class EssentialDemo extends Scene {
 						[0, new FadeDomClip(n("info-2"), "out", 1_250)],
 						[0, new FadeNodeClip(pathologies, "out", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(determinants, "out", 1_250, { min: new Opacity(0.1) })],
-						[0, new FadeNodeClip(links, "out", 1_250, { min: new Opacity(.3) })],
+						[0, new FadeNodeClip(links, "out", 1_250, { min: new Opacity(0.3) })],
 					]),
 				],
 			),
@@ -120,14 +150,18 @@ export class EssentialDemo extends Scene {
 					register("info-2", domOrThrow("#demo-20"));
 				},
 				(n) => [
-					new TickableComposition([[0, new FadeDomClip(n("action"), "in", 1_250)]]),
+					new TickableComposition([
+						[0, new FadeDomClip(n("action"), "in", 1_250)],
+						...makeDecorationClips(facilities.getChildren<FacilityFamily>()),
+					]),
 					new SelectNodeActionScene(selectTargets.facility),
 					new TickableComposition([[0, new FadeDomClip(n("action"), "out", 1_250)]]),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "in", 1_250)],
 						[0, new FadeNodeClip(determinants, "in", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(pathologies, "in", 1_250, { min: new Opacity(0.1) })],
-						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(.3) })],
+						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(0.3) })],
+						...makeDecorationClips(facilities.getChildren<FacilityFamily>(), true),
 					]),
 					new WaitComposition(3_000),
 					new TickableComposition([
@@ -141,7 +175,7 @@ export class EssentialDemo extends Scene {
 						[0, new FadeNodeClip(pathologies, "out", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(determinants, "out", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(facilities, "out", 1_250, { min: new Opacity(0.1) })],
-						[0, new FadeNodeClip(links, "out", 1_250, { min: new Opacity(.3) })],
+						[0, new FadeNodeClip(links, "out", 1_250, { min: new Opacity(0.3) })],
 					]),
 				],
 			),

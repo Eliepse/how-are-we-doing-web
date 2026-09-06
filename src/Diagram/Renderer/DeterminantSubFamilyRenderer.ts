@@ -20,9 +20,9 @@ export class DeterminantSubFamilyRenderer extends SVGNodeRenderer {
 		const start = position.get().add(Vector.Right.mul(node.getRadius() - 136).rot(endAngle));
 		const end = position.get().add(Vector.Right.mul(node.getRadius() + 48).rot(endAngle));
 
-		if(node.getGlobalOpacity().hasChanged()) {
+		if(node.getGlobalOpacity().hasChanged() || node.getDecorationOpacity().hasChanged()) {
 			separator.updateMesh(start, end);
-			const gOpacity = node.getGlobalOpacity().get();
+			const gOpacity = node.getGlobalOpacity().get().mul(node.getDecorationOpacity().get());
 			separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: Color.White.alpha(.6).alpha(gOpacity.ratio) }) }));
 		}
 	}

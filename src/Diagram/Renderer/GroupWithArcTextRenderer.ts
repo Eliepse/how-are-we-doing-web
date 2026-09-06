@@ -34,8 +34,8 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 			);
 		}
 
-		if (opacity.hasChanged()) {
-			arcText.updateOpacity(opacity.get());
+		if (opacity.hasChanged() || node.getDecorationOpacity().hasChanged()) {
+			arcText.updateOpacity(opacity.get().mul(node.getDecorationOpacity().get()));
 		}
 	}
 

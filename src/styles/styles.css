@@ -17,9 +17,6 @@ html, body {
     font-size: 1rem;
     font-family: var(--sans-serif);
     font-feature-settings: 'liga' 1, 'calt' 1;
-}
-
-html {
     background: var(--dark-blue);
 }
 

@@ -1,13 +1,9 @@
 import type { ActionsHandler } from "./ActionsHandler";
-import type { Collector } from "../Telemetry/Collector";
+import Collector from "../Telemetry/Collector";
 import type { Translator } from "../Diagram/Translation/Translator";
 
 export class LanguageActionsHandler implements ActionsHandler {
-	constructor(
-		private readonly translator: Translator,
-		private readonly collector: Collector,
-	) {
-	}
+	constructor(private readonly translator: Translator) {}
 
 	private updateLocalDisplay() {
 		const currentLocale = this.translator.currentLocale;
@@ -31,7 +27,7 @@ export class LanguageActionsHandler implements ActionsHandler {
 			return;
 		}
 
-		this.collector.logEvent("locale_changed", { locale: newLocale });
+		Collector.logEvent("locale_changed", { locale: newLocale });
 		void this.translator.changeLocale(newLocale);
 		this.updateLocalDisplay();
 	}

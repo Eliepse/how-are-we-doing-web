@@ -13,7 +13,6 @@ const win = new Deno.BrowserWindow({
 });
 
 win.setSize(1440, 1080);
-console.debug(win)
 
 win.addEventListener("close", () => Deno.exit(0));
 win.addEventListener("keydown", (e) => {

@@ -7,9 +7,24 @@ const db = new DatabaseSync("telemtry.db");
 
 const win = new Deno.BrowserWindow({
 	title: "How are we doing?",
-	width: 960,
-	height: 720,
+	width: 1440,
+	height: 1080,
+	frameless: true,
 });
+
+win.setSize(1440, 1080);
+
+win.addEventListener("close", () => Deno.exit(0));
+win.addEventListener("keydown", (e) => {
+	if (e.key === "Escape") {
+		Deno.exit(0);
+	}
+
+	if(e.key === "f") {
+		win.executeJs("document.body.requestFullscreen()");
+	}
+});
+
 
 win.bind("init", async () => {
 	db.exec(

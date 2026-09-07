@@ -20,6 +20,9 @@ import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
 import Collector from "./Telemetry/Collector";
 import { IndexedDBStore } from "./Telemetry/IndexedDBStore";
 import { DenoBindingsStore } from "./Telemetry/DenoBindingsStore";
+import { Pathology } from "./Diagram/Items/Pathology/Pathology";
+import { Determinant } from "./Diagram/Items/Determinant/Determinant";
+import { Facility } from "./Diagram/Items/Facility/Facility";
 
 export type BroadcastDetermiant = { label: string, id: number };
 const diagramChannel = new BroadcastChannel("diagram");
@@ -161,14 +164,23 @@ async function main(withLoader = true) {
 	};
 
 	app.addEventListener("selection:changed", (e) => {
-		if(!(e instanceof NodeSelectionEvent)) {
+		if (!(e instanceof NodeSelectionEvent)) {
 			return;
 		}
 
 		const node = e.selection;
+		let className = "Node2D";
+
+		if(node instanceof Pathology) {
+			className = "Pathology";
+		} else if(node instanceof Determinant) {
+			className = "Determinant";
+		} else if(node instanceof Facility) {
+			className = "Facility";
+		}
 
 		if (node) {
-			Collector.logEvent("selection_changed", { id: node.id, class: node.constructor.name });
+			Collector.logEvent("selection_changed", { id: node.id, class: className });
 		}
 
 		if (undefined === node) {

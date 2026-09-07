@@ -10,7 +10,8 @@
 		},
 		"backend": "cef",
 		"output": {
-			"linux": "./bin/my-app"
+			"windows": "./bin/HowAreWeDoing",
+			"linux": "./bin/how-are-we-doing"
 		},
 		"macos": {
 			"codesignIdentity": "Developer ID Application: Acme, Inc. (TEAMID)"

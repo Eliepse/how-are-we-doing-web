@@ -28,7 +28,8 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		const node = vnode.node;
 		const shapes = this.getShapes(vnode);
 		const circle = shapes.get("anchor", () => new Circle(3));
-		const element = shapes.get("virtualShape", () => new SVGSymbol(node.getShape()));
+		const background = shapes.get("bg-texture", () => new SVGSymbol(node.getShape(), 10));
+		const foreground = shapes.get("fg-texture", () => new SVGSymbol(node.getShape(), 10));
 		const circleCore = shapes.get("anchor:core", () => {
 			const shape = new Circle(3);
 			shape.updateStyle(new SVGStyle({ fill: colors.primary }));
@@ -43,7 +44,8 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		const nodeRotation = node.getGlobalRotation();
 
 		if (nodePosition.hasChanged() || nodeRotation.hasChanged()) {
-			element.updateMesh(nodePosition.get(), nodeRotation.get());
+			foreground.updateMesh(nodePosition.get(), nodeRotation.get());
+			background.updateMesh(nodePosition.get(), nodeRotation.get());
 
 			// Create a temporary node to compute the position
 			const anchor = new Node2D();
@@ -56,14 +58,16 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 		}
 
 		if (node.isApplicable().hasChanged()) {
-			element.blur(node.isApplicable().get() ? 0 : 4);
+			foreground.blur(node.isApplicable().get() ? 0 : 4);
+			background.blur(node.isApplicable().get() ? 0 : 4);
 		}
 
 		// Pattern and anchor rim
 		if (status.hasChanged() || step.hasChanged() || opacity.hasChanged()) {
 			const color = this.getStatusColor(status.get());
 			const gOpacity = opacity.get();
-			element.updateStyle(new SVGStyle({ fill: color.alpha(gOpacity.ratio), opacity: gOpacity }), stepClipsOptimized[step.get()]);
+			foreground.updateStyle(new SVGStyle({ fill: color.alpha(gOpacity.ratio), opacity: gOpacity }), stepClipsOptimized[step.get()]);
+			background.updateStyle(new SVGStyle({ fill: Color.White, opacity: gOpacity.mul(.2) }));
 
 			const forceIdleCore = "n+1" === status.get() && App.feature("detailed-relations");
 

@@ -11,13 +11,10 @@ import { ColorTransitionClip } from "../../Engine2D/Animate/Clip/ColorTransition
 import { colors } from "../../Diagram/colors";
 import { Color } from "../../Engine2D/ValueObject/Color";
 import { ActionComposition } from "../../Engine2D/Animate/Composition/ActionComposition";
+import { yieldNext } from "../../Animations/Composition/TutoNextButtonComposition";
 
-const READ_SMALL = 3_000;
-const READ_BASE = 5_000;
-const READ_LONG = 8_500;
 const TRANSITION_FAST = 450;
 const TRANSITION_BASE = 750;
-const TRANSITION_SLOW = 1_500;
 
 export class IntroScene extends Scene {
 	constructor() {
@@ -29,8 +26,8 @@ export class IntroScene extends Scene {
 			new HTMLScene(
 				(register) => register("main", domOrThrow("#demo-1")),
 				(n) => [
-					new TickableComposition([[0, new FadeDomClip(n("main"), "in", TRANSITION_SLOW)]]),
-					new WaitComposition(READ_BASE),
+					new TickableComposition([[0, new FadeDomClip(n("main"), "in", TRANSITION_BASE)]]),
+					...yieldNext(),
 					new TickableComposition([[0, new FadeDomClip(n("main"), "out", TRANSITION_BASE)]]),
 				],
 			),
@@ -38,7 +35,7 @@ export class IntroScene extends Scene {
 				(register) => register("main", domOrThrow("#demo-2")),
 				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("main"), "in", TRANSITION_BASE)]]),
-					new WaitComposition(READ_BASE),
+					...yieldNext(),
 					new TickableComposition([[0, new FadeDomClip(n("main"), "out", TRANSITION_BASE)]]),
 				],
 			),
@@ -50,9 +47,9 @@ export class IntroScene extends Scene {
 				(n) => [
 					new TickableComposition([
 						[0, new FadeDomClip(n("main"), "in", TRANSITION_BASE)],
-						[READ_BASE, new FadeDomClip(n("second"), "in", TRANSITION_BASE)],
+						[TRANSITION_BASE, new FadeDomClip(n("second"), "in", TRANSITION_BASE)],
 					]),
-					new WaitComposition(READ_BASE),
+					...yieldNext(),
 					new TickableComposition([[0, new FadeDomClip(n("main"), "out", TRANSITION_BASE)]]),
 				],
 			),
@@ -64,9 +61,9 @@ export class IntroScene extends Scene {
 				(n) => [
 					new TickableComposition([
 						[0, new FadeDomClip(n("main"), "in", TRANSITION_BASE)],
-						[3_000, new FadeDomClip(n("second"), "in", TRANSITION_BASE)],
+						[TRANSITION_BASE, new FadeDomClip(n("second"), "in", TRANSITION_BASE)],
 					]),
-					new WaitComposition(READ_BASE),
+					...yieldNext(),
 					new TickableComposition([[0, new FadeDomClip(n("main"), "out", TRANSITION_BASE)]]),
 				],
 			),
@@ -74,7 +71,7 @@ export class IntroScene extends Scene {
 				(register) => register("main", domOrThrow("#demo-5")),
 				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("main"), "in", TRANSITION_BASE)]]),
-					new WaitComposition(READ_SMALL),
+					...yieldNext(),
 					new TickableComposition([[0, new FadeDomClip(n("main"), "out", TRANSITION_BASE)]]),
 				],
 			),
@@ -82,7 +79,7 @@ export class IntroScene extends Scene {
 				(register) => register("main", domOrThrow("#demo-6")),
 				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("main"), "in", TRANSITION_BASE)]]),
-					new WaitComposition(READ_LONG),
+					...yieldNext(),
 					new TickableComposition([[0, new FadeDomClip(n("main"), "out", TRANSITION_BASE)]]),
 				],
 			),
@@ -109,7 +106,7 @@ export class IntroScene extends Scene {
 						[2_000, new FadeNodeClip(pathologies, "in", TRANSITION_FAST, { min: new Opacity(0.2) })],
 						[2_000, new FadeDomClip(n("health-details"), "in", TRANSITION_FAST)],
 					]),
-					new WaitComposition(READ_LONG),
+					...yieldNext(),
 					new TickableComposition([
 						[0, new FadeDomClip(n("health-details"), "out", TRANSITION_FAST)],
 						[0, new FadeNodeClip(pathologies, "out", TRANSITION_FAST, { min: new Opacity(0.2) })],
@@ -126,7 +123,7 @@ export class IntroScene extends Scene {
 						[1_000, new FadeNodeClip(determinants, "in", TRANSITION_FAST, { min: new Opacity(0.2) })],
 						[1_000, new FadeDomClip(n("determinant-details"), "in", TRANSITION_FAST)],
 					]),
-					new WaitComposition(READ_LONG),
+					...yieldNext(),
 					new TickableComposition([
 						[0, new FadeDomClip(n("determinant-details"), "out", TRANSITION_FAST)],
 						[0, new FadeNodeClip(determinants, "out", TRANSITION_FAST, { min: new Opacity(0.2) })],
@@ -143,7 +140,7 @@ export class IntroScene extends Scene {
 						[1_000, new FadeNodeClip(facilities, "in", TRANSITION_FAST, { min: new Opacity(0.2) })],
 						[1_000, new FadeDomClip(n("facility-details"), "in", TRANSITION_FAST)],
 					]),
-					new WaitComposition(READ_LONG),
+					...yieldNext(),
 					new TickableComposition([
 						[0, new FadeDomClip(n("list"), "out", TRANSITION_FAST)],
 						[0, new FadeDomClip(n("facility-details"), "out", TRANSITION_FAST)],
@@ -156,7 +153,7 @@ export class IntroScene extends Scene {
 				(register) => register("main", domOrThrow("#demo-11")),
 				(n) => [
 					new TickableComposition([[0, new FadeDomClip(n("main"), "in", TRANSITION_BASE)]]),
-					new WaitComposition(READ_BASE),
+					...yieldNext(),
 					new TickableComposition([[0, new FadeDomClip(n("main"), "out", TRANSITION_BASE)]]),
 				],
 			),

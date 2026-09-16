@@ -20,6 +20,7 @@ import { interpolateOpacity } from "../../Engine2D/Time/interpolations";
 import type { FacilityFamily } from "../../Diagram/Items/Facility/FacilityFamily";
 import type { DeterminantSubFamily } from "../../Diagram/Items/Determinant/DeterminantSubFamily";
 import type { DeterminantFamily } from "../../Diagram/Items/Determinant/DeterminantFamily";
+import { yieldNext } from "../../Animations/Composition/TutoNextButtonComposition";
 
 function makeDecorationClips(children: Array<DeterminantSubFamily | FacilityFamily>, fadeIn = false) {
 	return children.map(
@@ -88,12 +89,12 @@ export class EssentialDemo extends Scene {
 						[0, new FadeNodeClip(facilities, "in", 1_250, { min: new Opacity(0.1) })],
 						[0, new FadeNodeClip(decorations, "in", 1_250, { min: new Opacity(0.1) })],
 					]),
-					new WaitComposition(3_000),
+					...yieldNext(),
 					new TickableComposition([
 						[0, new FadeDomClip(n("a"), "out", 1_250)],
 						[1_500, new FadeDomClip(n("b"), "in", 1_250)],
 					]),
-					new WaitComposition(3_000),
+					...yieldNext(),
 					new ActionComposition(() => App.instance().clearSelection()),
 					new TickableComposition([
 						[0, new FadeDomClip(n("b"), "out", 1_250)],
@@ -126,12 +127,12 @@ export class EssentialDemo extends Scene {
 						[0, new FadeNodeClip(facilities, "in", 1_250, { min: new Opacity(0.1) })],
 						...makeDecorationClips(determinantSubFamilies, true),
 					]),
-					new WaitComposition(3_000),
+					...yieldNext(),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "out", 1_250)],
 						[1_500, new FadeDomClip(n("info-2"), "in", 1_250)],
 					]),
-					new WaitComposition(3_000),
+					...yieldNext(),
 					new ActionComposition(() => App.instance().clearSelection()),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-2"), "out", 1_250)],
@@ -163,12 +164,12 @@ export class EssentialDemo extends Scene {
 						[0, new FadeNodeClip(links, "in", 1_250, { min: new Opacity(0.3) })],
 						...makeDecorationClips(facilities.getChildren<FacilityFamily>(), true),
 					]),
-					new WaitComposition(3_000),
+					...yieldNext(),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-1"), "out", 1_250)],
 						[1_500, new FadeDomClip(n("info-2"), "in", 1_250)],
 					]),
-					new WaitComposition(3_000),
+					...yieldNext(),
 					new ActionComposition(() => App.instance().clearSelection()),
 					new TickableComposition([
 						[0, new FadeDomClip(n("info-2"), "out", 1_250)],
@@ -197,7 +198,7 @@ export class EssentialDemo extends Scene {
 						...makeDiagramFadeClips("out", 750),
 						[750, new FadeDomClip(n("lexicon-btn"), "in", 750)],
 					]),
-					new WaitComposition(4_000),
+					...yieldNext(),
 					new TickableComposition([
 						[0, new FadeDomClip(n("lexique"), "out", 1_250)],
 						[0, new FadeDomClip(n("lexicon-btn"), "out", 1_250)],
@@ -206,7 +207,6 @@ export class EssentialDemo extends Scene {
 						n("lexicon-btn").style.background = "";
 						n("lexicon-btn").style.color = "";
 					}),
-					new WaitComposition(500),
 					new TickableComposition([[0, new FadeDomClip(n("your-call"), "in", 1_250)]]),
 					new WaitComposition(3_000),
 					new TickableComposition([[0, new FadeDomClip(n("your-call"), "out", 1_250)]]),

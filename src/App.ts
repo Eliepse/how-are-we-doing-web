@@ -32,6 +32,7 @@ import { NodeSelectionEvent } from "./Events/NodeSelectionEvent";
 import { Pathology } from "./Diagram/Items/Pathology/Pathology";
 import { Facility } from "./Diagram/Items/Facility/Facility";
 import { Opacity } from "./Engine2D/ValueObject/Opacity";
+import { domOrThrow } from "./helpers";
 
 export type Feature =
 	| "detailed-relations"
@@ -87,16 +88,13 @@ export class App extends EventTarget {
 	) {
 		super();
 
-		const labelDom = document.createElement("div");
-		labelDom.id = "labels";
-
 		const rendererDom = document.createElement("div");
 		rendererDom.id = "diagramContainer";
 
-		diagramDom.append(labelDom, rendererDom);
+		diagramDom.append(rendererDom);
 
 		this.translator = new Translator("/translations/{context}.{lang}.json", "fr", ["en", "fr"], ["general", "nodes"]);
-		this.labelManager = new FloatingLabelManager(labelDom, this.translator);
+		this.labelManager = new FloatingLabelManager(domOrThrow("#labels"), this.translator);
 		this.biblio = new BiblioManager(rootDom, this.translator);
 
 		const renderer = new SVGRenderer("diagram", rendererDom, new Vector(1100, 1100), Config.Render.debug);

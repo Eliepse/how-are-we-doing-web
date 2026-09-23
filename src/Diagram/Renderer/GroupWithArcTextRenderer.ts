@@ -26,16 +26,23 @@ export class GroupWithArcTextRenderer extends SVGNodeRenderer {
 		);
 
 		if (position.hasChanged() || rotation.hasChanged()) {
+			const angle = rotation.get();
+			const angleCenter = angle.add(node.getArc().div(2));
+			const isInverted = angleCenter.sin > 0;
+
+			arcText.invert(isInverted);
+			const offset = node instanceof FacilityFamily ? 32 : 44;
+
 			arcText.updateMesh(
 				position.get(),
-				node.getRadius() + (node instanceof FacilityFamily ? 32 : 44),
-				rotation.get().sub(angleShift),
-				rotation.get().sub(angleShift).add(node.getArc()),
+				node.getRadius() + offset + (isInverted ? 12 : 0),
+				angle.sub(angleShift),
+				angle.sub(angleShift).add(node.getArc()),
 			);
 		}
 
-		if (opacity.hasChanged()) {
-			arcText.updateOpacity(opacity.get());
+		if (opacity.hasChanged() || node.getDecorationOpacity().hasChanged()) {
+			arcText.updateOpacity(opacity.get().mul(node.getDecorationOpacity().get()));
 		}
 	}
 

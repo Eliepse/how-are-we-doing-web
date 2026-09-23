@@ -15,6 +15,7 @@ export class FacilityFamilyRenderer extends SVGNodeRenderer {
 		const position = node.getGlobalPosition();
 		const rotation = node.getGlobalRotation();
 		const opacity = node.getGlobalOpacity();
+		const decorationOpacity = node.getDecorationOpacity();
 
 		if (position.hasChanged() || rotation.hasChanged()) {
 			const angleShift = node.getItemArc().div(2);
@@ -24,8 +25,9 @@ export class FacilityFamilyRenderer extends SVGNodeRenderer {
 			separator.updateMesh(start, end);
 		}
 
-		if (opacity.hasChanged()) {
-			separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: Color.White.alpha(opacity.get()) }) }));
+		if (opacity.hasChanged() || decorationOpacity.hasChanged()) {
+			const styleOpacity = opacity.get().mul(decorationOpacity.get());
+			separator.updateStyle(new SVGStyle({ stroke: new Stroke({ color: Color.White.alpha(styleOpacity) }) }));
 		}
 	}
 

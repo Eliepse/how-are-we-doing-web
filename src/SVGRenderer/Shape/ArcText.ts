@@ -16,7 +16,7 @@ export class ArcText extends SVGShape {
 	private readonly textPathDom: SVGTextPathElement;
 	private readonly textDom: SVGTextElement;
 
-	constructor(private text: string) {
+	constructor(private text: string, private inverted: boolean = false) {
 		super(1);
 
 		const id = arcIndexGenerator.next().value;
@@ -32,14 +32,15 @@ export class ArcText extends SVGShape {
 		this.textPathDom.setAttribute("startOffset", "50%");
 
 		this.textDom = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		this.textDom.setAttribute("rotate", this.inverted ? "180" : "0");
 		this.textDom.append(this.textPathDom);
 
 		this.updateText(text);
 	}
 
-	updateText(text: string): void {
-		this.text = text;
-		this.textPathDom.textContent = this.text;
+	updateText(text?: string): void {
+		this.text = text ?? this.text;
+		this.textPathDom.textContent = this.inverted ? this.invertText(this.text) : this.text;
 	}
 
 	updateMesh(center: Vector, radius: number, startAngle: Angle, endAngle: Angle): void {
@@ -48,10 +49,31 @@ export class ArcText extends SVGShape {
 		const end = new Vector(endAngle.cos * radius, endAngle.sin * radius).add(center);
 
 		this.pathDom.setAttribute("d", `M ${start} A ${radius} ${radius} 0 ${largeArc} 1 ${end}`);
+		this.textDom.setAttribute("rotate", this.inverted ? "180" : "0");
 	}
 
 	updateOpacity(value: Opacity) {
 		this.textDom.style.opacity = value.ratio.toFixed(2);
+	}
+
+	invert(value: boolean) {
+		if(this.inverted === value) {
+			return;
+		}
+
+		this.inverted = value;
+		this.updateText();
+	}
+
+	private invertText(text: string): string {
+		const c = text.length;
+		let _text = "", i = c -1;
+
+		for (;i>=0;i--) {
+			_text += this.text.at(i);
+		}
+
+		return _text;
 	}
 
 	override mount(container: Element): void {

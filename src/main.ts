@@ -1,6 +1,6 @@
 import { App } from "./App";
 import type { Context } from "./Diagram/Context";
-import { wait } from "./helpers";
+import { domOrThrow, wait } from "./helpers";
 import { ActionManager } from "./Actions/ActionManager";
 import { CreditsActionsHandler } from "./Actions/CreditsActionsHandler";
 import { BibliographyActionsHandler } from "./Actions/BibliographyActionsHandler";
@@ -23,8 +23,13 @@ import { DenoBindingsStore } from "./Telemetry/DenoBindingsStore";
 import { Pathology } from "./Diagram/Items/Pathology/Pathology";
 import { Determinant } from "./Diagram/Items/Determinant/Determinant";
 import { Facility } from "./Diagram/Items/Facility/Facility";
+import { Color } from "./Engine2D/ValueObject/Color";
+import { colors } from "./Diagram/colors";
+import { style } from "./Diagram/Shape/LinkPath";
+import { SVGStyle } from "./SVGRenderer/ValueObject/SVGStyle";
+import { Stroke } from "./SVGRenderer/ValueObject/Stroke";
 
-export type BroadcastDetermiant = { label: string, id: number };
+export type BroadcastDetermiant = { label: string; id: number };
 const diagramChannel = new BroadcastChannel("diagram");
 
 async function main(withLoader = true) {
@@ -66,10 +71,7 @@ async function main(withLoader = true) {
 	const app = App.init(appDom, diagramDom);
 	app.setReadonly(true);
 
-	Collector.register([
-		new IndexedDBStore(),
-		new DenoBindingsStore(),
-	]);
+	Collector.register([new IndexedDBStore(), new DenoBindingsStore()]);
 
 	await Collector.init();
 
@@ -84,30 +86,31 @@ async function main(withLoader = true) {
 	const ctxDetailsModal = document.querySelector<HTMLElement>("#context-details");
 	const openCtxActionBtns = document.querySelectorAll<HTMLButtonElement>("button[data-action='context:open']");
 
-	document.querySelectorAll<HTMLButtonElement>("button[data-action='context:close']")
-		.forEach((btn) => btn.addEventListener("mousedown", () => {
+	document.querySelectorAll<HTMLButtonElement>("button[data-action='context:close']").forEach((btn) =>
+		btn.addEventListener("mousedown", () => {
 			if (btn.disabled || !ctxDetailsModal) {
 				return;
 			}
 
 			ctxDetailsModal.ariaHidden = "true";
 			ctxDetailsModal.style.display = "none";
-		}));
-	openCtxActionBtns.forEach((btn) => btn.addEventListener("mousedown", () => {
-		if (btn.disabled || !ctxDetailsModal) {
-			return;
-		}
+		}),
+	);
+	openCtxActionBtns.forEach((btn) =>
+		btn.addEventListener("mousedown", () => {
+			if (btn.disabled || !ctxDetailsModal) {
+				return;
+			}
 
-		ctxDetailsModal.ariaHidden = "false";
-		ctxDetailsModal.style.display = "";
-	}));
+			ctxDetailsModal.ariaHidden = "false";
+			ctxDetailsModal.style.display = "";
+		}),
+	);
 
 	app.onContextChanged = (context: Context) => {
 		// Update display
 		document.querySelectorAll<HTMLElement>("[data-key='context:name']").forEach((node) => {
-			node.textContent = translator
-				.translate(context.name.toLowerCase(), "general")
-				.toUpperCase();
+			node.textContent = translator.translate(context.name.toLowerCase(), "general").toUpperCase();
 			node.dataset.tr = context.id;
 		});
 
@@ -129,7 +132,7 @@ async function main(withLoader = true) {
 
 		// Update button and modal
 		const details = context.details;
-		openCtxActionBtns.forEach((btn) => btn.disabled = !details);
+		openCtxActionBtns.forEach((btn) => (btn.disabled = !details));
 
 		if (!details && ctxDetailsModal) {
 			ctxDetailsModal.ariaHidden = "true";
@@ -137,7 +140,8 @@ async function main(withLoader = true) {
 		}
 
 		if (details) {
-			document.querySelectorAll<HTMLElement | HTMLImageElement>("#context-details [data-key^='context:']")
+			document
+				.querySelectorAll<HTMLElement | HTMLImageElement>("#context-details [data-key^='context:']")
 				.forEach((el) => {
 					switch (el.dataset.key) {
 						case "context:title":
@@ -154,9 +158,11 @@ async function main(withLoader = true) {
 							return;
 						case "context:img:glance":
 							el.innerHTML = "";
-							el.innerHTML = details.images_glance.map((src) => {
-								return `<li><img src="${src}"/></li>`;
-							}).join("");
+							el.innerHTML = details.images_glance
+								.map((src) => {
+									return `<li><img src="${src}"/></li>`;
+								})
+								.join("");
 							return;
 					}
 				});
@@ -171,11 +177,11 @@ async function main(withLoader = true) {
 		const node = e.selection;
 		let className = "Node2D";
 
-		if(node instanceof Pathology) {
+		if (node instanceof Pathology) {
 			className = "Pathology";
-		} else if(node instanceof Determinant) {
+		} else if (node instanceof Determinant) {
 			className = "Determinant";
-		} else if(node instanceof Facility) {
+		} else if (node instanceof Facility) {
 			className = "Facility";
 		}
 
@@ -222,9 +228,7 @@ async function main(withLoader = true) {
 	};
 
 	translator.dyn("general.no context", (txt) => {
-		document
-			.querySelectorAll<HTMLElement>("[data-tr='no-context']")
-			.forEach((el) => (el.innerHTML = txt));
+		document.querySelectorAll<HTMLElement>("[data-tr='no-context']").forEach((el) => (el.innerHTML = txt));
 	});
 
 	const loadStartedAt = Date.now();
@@ -259,7 +263,7 @@ async function main(withLoader = true) {
 		const forceWaitMs = minLoadtimeMs - loadTimeMs;
 		const delay = Math.min(Math.max(Math.random() * forceWaitMs, 350), 850);
 		await wait(delay);
-		updateLoader(Math.min(100, alreadyLoadedPercent + (leftToLoadPercent * (loadTimeMs / minLoadtimeMs))), "");
+		updateLoader(Math.min(100, alreadyLoadedPercent + leftToLoadPercent * (loadTimeMs / minLoadtimeMs)), "");
 	}
 
 	updateLoader(100, "Ready");
@@ -270,6 +274,42 @@ async function main(withLoader = true) {
 	loaderDom.root && (loaderDom.root.style.opacity = "0");
 	await wait(1000);
 	loaderDom.root?.remove();
+
+	const colInPrim = domOrThrow<HTMLInputElement>("#colInPrim");
+	const colInSec = domOrThrow<HTMLInputElement>("#colInSec");
+
+	const evToCol = (e: Event) => {
+		const target = e.target;
+		if (!(target instanceof HTMLInputElement)) {
+			throw new Error("Wrong element type");
+		}
+
+		const color = Color.fromHex(target.value);
+
+		if (!color) {
+			throw new Error("Invalid color");
+		}
+
+		return color;
+	};
+
+	colInPrim.value = colors.primary.toHex();
+	colInPrim.addEventListener("click", (e) => e.stopPropagation())
+	colInPrim.addEventListener("change", (e) => {
+		e.stopPropagation();
+		colors.upd("primary", evToCol(e));
+
+		style.selected = new SVGStyle({ stroke: new Stroke({ width: 2, color: colors.primary }), opacity: 0.6 });
+	});
+	colInSec.value = colors.secondary.toHex();
+	colInSec.addEventListener("click", (e) => e.stopPropagation())
+	colInSec.addEventListener("change", (e) => {
+		e.stopPropagation();
+		colors.upd("secondary", evToCol(e));
+
+		style.secondary = new SVGStyle({ stroke: new Stroke({ width: 2, color: colors.secondary }), opacity: 0.45 });
+		style.selectedDeterminantMode = new SVGStyle({ stroke: new Stroke({ width: 2, color: colors.secondary, strokeDash: [6, 3] }) });
+	});
 }
 
 void main();

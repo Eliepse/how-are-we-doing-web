@@ -24,7 +24,6 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			return shape;
 		});
 
-
 		if (position.hasChanged() || status.hasChanged()) {
 			core.updateMesh(position.get());
 			edge.updateMesh(position.get(), node.getRadius());
@@ -35,6 +34,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 			edge.updateStyle(new SVGStyle({ stroke: new Stroke({ width: 2.5, color }) }));
 
 			if ("selected" === status.get()) {
+				core.updateStyle(new SVGStyle({ fill: colors.primary }));
 				core.show();
 			} else {
 				core.hide();
@@ -44,7 +44,7 @@ export class PathologyRenderer extends SVGNodeRenderer {
 
 	private getStatusColor(status: ActiveStatus | false): Color {
 		if ("selected" === status) {
-			return Color.Red;
+			return colors.primary;
 		}
 
 		if ("dimmed" === status) {

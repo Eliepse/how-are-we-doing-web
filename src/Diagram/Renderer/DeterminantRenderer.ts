@@ -99,7 +99,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 
 	private getStatusColor(status: ActiveStatus | false): Color {
 		if ("selected" === status) {
-			return Color.Red;
+			return colors.primary;
 		}
 
 		if ("preview" === status) {

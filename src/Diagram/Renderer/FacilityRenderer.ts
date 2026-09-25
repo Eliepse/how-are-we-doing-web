@@ -5,6 +5,7 @@ import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import { Facility } from "../Items/Facility/Facility";
 import { SVGNodeRenderer } from "../../SVGRenderer/NodeRenderer/SVGNodeRenderer";
 import type { ActiveStatus } from "../types";
+import { colors } from "../colors";
 
 export class FacilityRenderer extends SVGNodeRenderer {
 	override render(vnode: VirtualNode<Facility>): void {
@@ -29,7 +30,7 @@ export class FacilityRenderer extends SVGNodeRenderer {
 
 	private getStatusColor(status: ActiveStatus | false): Color {
 		if ("selected" === status) {
-			return Color.Red;
+			return colors.primary;
 		}
 
 		if ("dimmed" === status) {

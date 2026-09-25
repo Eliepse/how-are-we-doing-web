@@ -47,4 +47,14 @@ export class Color {
 			.padStart(2, "0");
 		return "#" + [r, g, b, a].join("");
 	}
+
+	static fromHex(value: string): Color {
+		const offset = "#" === value.charAt(0) ? 1 : 0;
+		return new Color(
+			parseInt(value.slice(offset, offset + 2) || "FF", 16),
+			parseInt(value.slice(offset + 2, offset + 4) || "FF", 16),
+			parseInt(value.slice(offset + 4, offset + 6) || "FF", 16),
+			parseInt(value.slice(offset + 6, offset + 8) || "FF", 16) / 255,
+		);
+	}
 }

@@ -1,6 +1,6 @@
 import { Node2D } from "../../../Engine2D/Node/Node2D";
 import { Attribute } from "../../../Engine2D/Core/Attribute";
-import { Dir, type Direction } from "../../AssociationManager";
+import { Dir, type Direction } from "../../Links/AssociationManager";
 import { Pathology } from "../Pathology/Pathology";
 
 type Status = "selected" | "n+1" | "preview";

@@ -7,7 +7,7 @@ import { LinkPath, style } from "../Shape/LinkPath";
 import { Link } from "../Items/Link/Link";
 import { Determinant } from "../Items/Determinant/Determinant";
 import { Pathology } from "../Items/Pathology/Pathology";
-import { Dir } from "../AssociationManager";
+import { Dir } from "../Links/AssociationManager";
 import { SVGSymbol } from "../../SVGRenderer/Shape/SVGSymbol";
 import { linkArrow } from "../Shape/LinkArrow";
 import { SVGStyle } from "../../SVGRenderer/ValueObject/SVGStyle";

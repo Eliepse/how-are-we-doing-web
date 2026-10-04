@@ -33,6 +33,9 @@ import { Pathology } from "./Diagram/Items/Pathology/Pathology";
 import { Facility } from "./Diagram/Items/Facility/Facility";
 import { Opacity } from "./Engine2D/ValueObject/Opacity";
 import { domOrThrow } from "./helpers";
+import type db from "./public/data/database.json";
+import { AssociationManager, type NodeRef } from "./Diagram/Links/AssociationManager";
+import { Association } from "./Diagram/Links/Association";
 
 export type Feature =
 	| "detailed-relations"
@@ -59,7 +62,7 @@ export class App extends EventTarget {
 
 	private contexts: Context[] = [];
 	private currentContext?: Context;
-	private database?: any;
+	private database?: typeof db;
 
 	private diagram?: Diagram;
 	private biblio: BiblioManager;
@@ -82,10 +85,7 @@ export class App extends EventTarget {
 	public onPreviewChanged = (_node: SelectableNode | undefined) => undefined;
 	public onFeatureChanged = () => undefined;
 
-	private constructor(
-		rootDom: Element,
-		diagramDom: Element,
-	) {
+	private constructor(rootDom: Element, diagramDom: Element) {
 		super();
 
 		const rendererDom = document.createElement("div");
@@ -93,7 +93,12 @@ export class App extends EventTarget {
 
 		diagramDom.append(rendererDom);
 
-		this.translator = new Translator("/translations/{context}.{lang}.json", "fr", ["en", "fr"], ["general", "nodes"]);
+		this.translator = new Translator(
+			"/translations/{context}.{lang}.json",
+			"fr",
+			["en", "fr"],
+			["general", "nodes"],
+		);
 		this.labelManager = new FloatingLabelManager(domOrThrow("#labels"), this.translator);
 		this.biblio = new BiblioManager(rootDom, this.translator);
 
@@ -116,15 +121,12 @@ export class App extends EventTarget {
 		renderer.addNodeRenderer(new FallbackRenderer(renderer));
 	}
 
-	static init(
-		rootDom: Element,
-		diagramDom: Element,
-	) {
+	static init(rootDom: Element, diagramDom: Element) {
 		if (undefined !== this._instance) {
 			console.warn("App has already been instantiated, overriding...");
 		}
 
-		return this._instance = new App(rootDom, diagramDom);
+		return (this._instance = new App(rootDom, diagramDom));
 	}
 
 	static instance() {
@@ -180,11 +182,11 @@ export class App extends EventTarget {
 	async load(clb?: (step: number, total: number, title: string) => void) {
 		const steps = 3;
 		let step = 0;
-		clb ??= (() => undefined);
+		clb ??= () => undefined;
 
 		// Database
 		clb(step++, steps, "Loading diagram elements and links");
-		this.database = await (await fetch("data/database.json")).json();
+		this.database = (await (await fetch("data/database.json")).json()) as typeof db;
 
 		// Translations
 		clb(step++, steps, "Loading translations");
@@ -198,21 +200,23 @@ export class App extends EventTarget {
 			...(await (await fetch("contexts/grenoble.json")).json())?.contexts,
 		];
 
-		this.contexts = contexts.map((context: {
-			id: string;
-			name: string;
-			default?: boolean;
-			determinants: { [k in DeterminantKey]: number };
-			details: Details;
-		}) => {
-			return new Context(
-				context.id,
-				context.name,
-				context.determinants,
-				true === context.default,
-				context.details,
-			);
-		});
+		this.contexts = contexts.map(
+			(context: {
+				id: string;
+				name: string;
+				default?: boolean;
+				determinants: { [k in DeterminantKey]: number };
+				details: Details;
+			}) => {
+				return new Context(
+					context.id,
+					context.name,
+					context.determinants,
+					true === context.default,
+					context.details,
+				);
+			},
+		);
 
 		this.loaded = true;
 	}
@@ -221,6 +225,23 @@ export class App extends EventTarget {
 		if (false === this.loaded) {
 			await this.load();
 		}
+
+		if (undefined === this.database) {
+			throw new Error("Database failed to load");
+		}
+
+		const typesMap = { 0: "facility", 1: "determinant", 2: "pathology" } as const;
+		type linkMember = [0 | 1 | 2, number];
+
+		for (const link of this.database.links) {
+			const nodes = (link.members as linkMember[]).map(
+				(item) => ({ type: typesMap[item[0]], id: item[1] }) satisfies NodeRef,
+			);
+
+			AssociationManager.register(new Association(nodes, link.sources ?? []));
+		}
+
+		console.debug(AssociationManager);
 
 		this.diagram = new Diagram(
 			this.database.pathologies,
@@ -252,15 +273,15 @@ export class App extends EventTarget {
 				return;
 			}
 
-			if(node instanceof Pathology && !App.feature("hover:pathology")) {
+			if (node instanceof Pathology && !App.feature("hover:pathology")) {
 				return;
 			}
 
-			if(node instanceof Facility && !App.feature("hover:facility")) {
+			if (node instanceof Facility && !App.feature("hover:facility")) {
 				return;
 			}
 
-			if(node instanceof Determinant && !App.feature("hover:determinant")) {
+			if (node instanceof Determinant && !App.feature("hover:determinant")) {
 				return;
 			}
 
@@ -349,7 +370,7 @@ export class App extends EventTarget {
 			facilityGroup.setOpacity(Opacity.Opaque);
 			determinantGroup.setOpacity(Opacity.Opaque);
 			pathologyGroup.setOpacity(Opacity.Opaque);
-			this.setReadonly(false)
+			this.setReadonly(false);
 		});
 	}
 
@@ -385,7 +406,7 @@ export class App extends EventTarget {
 	}
 
 	previousContext(): void {
-		if(Engine.isReadonly) {
+		if (Engine.isReadonly) {
 			return;
 		}
 
@@ -400,7 +421,7 @@ export class App extends EventTarget {
 	}
 
 	nextContext(): void {
-		if(Engine.isReadonly) {
+		if (Engine.isReadonly) {
 			return;
 		}
 
@@ -465,7 +486,7 @@ export class App extends EventTarget {
 
 		this.diagram.updateNodesHighlight();
 
-		if(animated) {
+		if (animated) {
 			await this.diagram.updateRingsOpacity();
 		}
 	}

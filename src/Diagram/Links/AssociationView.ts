@@ -56,4 +56,11 @@ export class AssociationView {
 	filterByTypeAll(types: NodeRef["type"][]) {
 		return new AssociationView(this.associations.filter((association) => association.hasTypeAll(types)));
 	}
+
+	/**
+	 * Extract a new view with all associations that only contains determinants
+	 */
+	filterByOnlyDeterminants() {
+		return new AssociationView(this.associations.filter((association) => association.hasOnlyDeterminant()));
+	}
 }

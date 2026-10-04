@@ -303,8 +303,6 @@ export class Diagram extends Node2D {
 			viewSelection = AssociationManager.filterByNode(this._selectedNode);
 		}
 
-		console.debug(viewSelection);
-
 		linkManager?.clearLinks();
 
 		const withDetailedAssocs = App.feature("detailed-relations");
@@ -424,13 +422,13 @@ export class Diagram extends Node2D {
 		}
 
 		// Update links
-		if (App.feature("focus-determinant")) {
-			if (this._previewedNode instanceof Determinant) {
-				linkManager?.showInterDeterminantLinks(this._previewedNode, true);
+		if (App.feature("focus-determinant") && linkManager) {
+			if (this._previewedNode && viewPreview) {
+				linkManager.showViewInterDeterminantsLinks(viewPreview, true);
 			}
 
-			if (this._selectedNode instanceof Determinant) {
-				linkManager?.showInterDeterminantLinks(this._selectedNode);
+			if (this._selectedNode && viewSelection) {
+				linkManager.showViewInterDeterminantsLinks(viewSelection, false);
 			}
 
 			return;
@@ -447,16 +445,6 @@ export class Diagram extends Node2D {
 			if (this._selectedNode && viewSelection) {
 				linkManager.showViewLinks(viewSelection, this._selectedNode.status.get(), false);
 			}
-
-			// if (this._selectedNode instanceof Determinant && viewSelection) {
-			// 	linkManager?.showViewLinks(viewSelection, this._selectedNode.status.get(), true);
-			// 	// linkManager?.showDeterminantPathologyLinks(this._selectedNode);
-			// } else if (this._selectedNode instanceof Pathology && viewSelection) {
-			// 	linkManager?.showViewLinks(viewSelection, this._selectedNode.status.get());
-			// 	// linkManager?.showPathologyLinks(this._selectedNode);
-			// } else if (this._selectedNode instanceof Facility) {
-			// 	linkManager?.showDeterminantPathologyLinksFromFacility(this._selectedNode);
-			// }
 		}
 	}
 

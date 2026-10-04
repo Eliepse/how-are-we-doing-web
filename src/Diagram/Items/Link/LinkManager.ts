@@ -19,24 +19,39 @@ export class LinkManager extends Node2D {
 		super();
 
 		// Extract all associations that has a pathology and a determinant
-		const view = AssociationManager.all().filterByTypeAll(["pathology", "determinant"]);
+		const pathologiesView = AssociationManager.all().filterByTypeAll(["pathology", "determinant"]);
 
-		// Create an index to quickly lookup if an association exists or not
-		const index = new Set(
-			view.associations.map((association) => {
-				let pathologyId, determinantId;
+		// Extract all associations that has only determinants
+		const determinantsView = AssociationManager.all().filterByOnlyDeterminants();
 
-				for (const node of association.nodes) {
-					if ("determinant" === node.type) {
-						determinantId = node.id;
-					} else if ("pathology" === node.type) {
-						pathologyId = node.id;
-					}
+		// Index to quickly lookup if an association exists or not
+		const index = new Set<string>();
+
+		// Index pathology-determinant associations
+		for (const association of pathologiesView.associations) {
+			let pathologyId, determinantId;
+
+			for (const node of association.nodes) {
+				if ("determinant" === node.type) {
+					determinantId = node.id;
+				} else if ("pathology" === node.type) {
+					pathologyId = node.id;
 				}
+			}
 
-				return `p${pathologyId}-d${determinantId}`;
-			}),
-		);
+			index.add(`p${pathologyId}-d${determinantId}`);
+		}
+
+		// Index determinant-determinant associations
+		for (const association of determinantsView.associations) {
+			const [a, b] = association.nodes;
+
+			if (!a || !b) {
+				continue;
+			}
+
+			index.add(`d${a.id}-d${b.id}`);
+		}
 
 		// Create links by checking every combination possible
 		for (const [pkey, pathology] of this.pathologies) {
@@ -58,55 +73,28 @@ export class LinkManager extends Node2D {
 		}
 
 		// Create determinants links
-		// for (const [key, determinant] of this.determinants) {
-		// 	determinant.associations.determinants.forEach((assoId) => {
-		// 		const nodeKey = `d${key}-d${assoId}`;
-		// 		const invertedKey = `d${assoId}-d${key}`;
-		// 		const to = this.determinants.get(assoId);
-		//
-		// 		// Prevent duplicates from inversed size associations
-		// 		const linkInverted = this.links.get(invertedKey);
-		// 		if (undefined !== linkInverted) {
-		// 			// linkInverted.bidirectional = true;
-		// 			return;
-		// 		}
-		//
-		// 		if (undefined === to) {
-		// 			console.warn(`Could not find associated node (asso. key: ${nodeKey})`);
-		// 			return;
-		// 		}
-		//
-		// 		const link = new Link(determinant, to, nodeKey);
-		// 		link.hide();
-		// 		this.links.set(nodeKey, link);
-		// 		this.links.set(invertedKey, link);
-		// 		this.addChildren(link);
-		// 	});
-		// }
-	}
+		for (const [aKey, aDeterminant] of this.determinants) {
+			for (const [bKey, bDeterminant] of this.determinants) {
+				if(aKey === bKey) {
+					continue;
+				}
 
-	showInterDeterminantLinks(node: Determinant, preview = false) {
-		const view = AssociationManager.filterByNode(node);
+				const nodeKey = `d${aKey}-d${bKey}`;
 
-		// for (const [detId, direction] of view.entries()) {
-		// 	const nodeKey = Dir.Source === direction ? `d${detId}-d${node.id}` : `d${node.id}-d${detId}`;
-		// 	const link = this.links.get(nodeKey);
-		//
-		// 	if (undefined === link) {
-		// 		console.warn(`Unable to find link for asso: d${node.id}-d${detId}`);
-		// 		continue;
-		// 	}
-		//
-		// 	// link.direction = Dir.Bidirectional === direction ? Dir.Bidirectional : Dir.Target;
-		// 	link.status?.set(preview ? "preview" : "selected");
-		// 	link.show();
-		// }
+				if (false === index.has(nodeKey)) {
+					continue;
+				}
+
+				const link = new Link(aDeterminant, bDeterminant, nodeKey);
+				link.hide();
+				this.links.set(nodeKey, link);
+				this.addChildren(link);
+			}
+		}
 	}
 
 	showViewLinks(view: AssociationView, sourceStatus: ActiveStatus | false, preview = false) {
-		const filteredView = view.filterByTypeAll(["pathology", "determinant"]);
-
-		for (const association of view.associations) {
+		for (const association of view.filterByTypeAll(["pathology", "determinant"]).associations) {
 			let pathologyId, determinantId;
 
 			for (const node of association.nodes) {
@@ -131,6 +119,27 @@ export class LinkManager extends Node2D {
 			} else {
 				link?.status?.set("selected");
 			}
+		}
+	}
+
+	showViewInterDeterminantsLinks(view: AssociationView, preview = false) {
+		for (const association of view.filterByOnlyDeterminants().associations) {
+			const [a, b] = association.nodes;
+
+			if (!a || !b) {
+				continue;
+			}
+
+			const link = this.links.get(`d${a.id}-d${b.id}`);
+
+			if (undefined === link) {
+				console.warn(`Unable to find link for asso: d${a.id}-d${b.id}`);
+				continue;
+			}
+
+			// link.direction = Dir.Bidirectional === direction ? Dir.Bidirectional : Dir.Target;
+			link.status?.set(preview ? "preview" : "selected");
+			link.show();
 		}
 	}
 

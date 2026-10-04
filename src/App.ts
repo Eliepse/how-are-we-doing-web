@@ -241,7 +241,9 @@ export class App extends EventTarget {
 			AssociationManager.register(new Association(nodes, link.sources ?? []));
 		}
 
-		console.debug(AssociationManager);
+		for (const link of this.database.associations) {
+			AssociationManager.register(new Association([link.from as NodeRef, link.to as NodeRef], link.sources ?? []));
+		}
 
 		this.diagram = new Diagram(
 			this.database.pathologies,

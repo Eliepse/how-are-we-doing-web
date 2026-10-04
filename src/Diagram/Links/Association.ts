@@ -40,4 +40,11 @@ export class Association {
 	hasTypeAll(types: NodeRef["type"][]) {
 		return types.every((type) => this.types.has(type));
 	}
+
+	/**
+	 * Check if the association only exists between determinants
+	 */
+	hasOnlyDeterminant() {
+		return 1 === this.types.size && this.types.has("determinant");
+	}
 }

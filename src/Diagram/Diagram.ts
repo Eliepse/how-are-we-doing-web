@@ -21,7 +21,7 @@ import { Attribute } from "../Engine2D/Core/Attribute";
 import { Engine } from "../Engine2D/Engine";
 import { Opacity } from "../Engine2D/ValueObject/Opacity";
 import { LinkManager } from "./Items/Link/LinkManager";
-import { AssociationManager, type AssoNodeType, Dir } from "./AssociationManager";
+import { AssociationManager } from "./AssociationManager";
 import { linkGradient } from "./Shape/LinkGradient";
 import { App } from "../App";
 import { Animator } from "../Engine2D/Animate/Animator";
@@ -35,6 +35,7 @@ export type PathologiesData = (typeof db)["pathologies"];
 export type FacilitiesData = (typeof db)["facilities"];
 export type DeterminantsData = (typeof db)["determinants"];
 export type AssociationsData = (typeof db)["associations"];
+export type LinksData = (typeof db)["links"];
 
 type Source = { source: string; doi: string };
 type SourceList = Map<number, Array<Source>>;
@@ -45,10 +46,7 @@ export class Diagram extends Node2D {
 	private _pathologies = new Map<number, Pathology>();
 	private _determinants = new Map<number, Determinant>();
 	private _facilities = new Map<number, Facility>();
-	private _linksSources = new Map<
-		Determinant["id"],
-		{ pathologies: SourceList; facilities: SourceList }
-	>();
+	private _linksSources = new Map<Determinant["id"], { pathologies: SourceList; facilities: SourceList }>();
 	public backgroundBlobClock = new Attribute(0);
 	public decorations: BgDecorationManager;
 	public links: "pathologies" | "determinants" = "pathologies";
@@ -75,11 +73,7 @@ export class Diagram extends Node2D {
 				return;
 			}
 
-			if (
-				target instanceof Pathology ||
-				target instanceof Determinant ||
-				target instanceof Facility
-			) {
+			if (target instanceof Pathology || target instanceof Determinant || target instanceof Facility) {
 				this.selectNode(target);
 				e.stopPropagation();
 				return;
@@ -104,10 +98,7 @@ export class Diagram extends Node2D {
 				return;
 			}
 
-			if (
-				"determinants" !== this.links &&
-				(target instanceof Pathology || target instanceof Facility)
-			) {
+			if ("determinants" !== this.links && (target instanceof Pathology || target instanceof Facility)) {
 				this.previewNode(target);
 				return;
 			}
@@ -123,11 +114,7 @@ export class Diagram extends Node2D {
 				return;
 			}
 
-			if (
-				target instanceof Determinant ||
-				target instanceof Pathology ||
-				target instanceof Facility
-			) {
+			if (target instanceof Determinant || target instanceof Pathology || target instanceof Facility) {
 				this.previewNode(undefined);
 			}
 		});
@@ -147,69 +134,21 @@ export class Diagram extends Node2D {
 		determinants.setRotation(Angle.fromDeg(266));
 		this.addChildren(determinants);
 
-		determinantsData.forEach((family) =>
-			family.children.forEach((subFamily) =>
-				subFamily.children.forEach((det) => {
-					const pathologiesSources: SourceList = new Map();
-					const facilitiesSources: SourceList = new Map();
-
-					Object.entries(det.pathologies).forEach(([id, sources]) =>
-						pathologiesSources.set(parseInt(id), sources.sources),
-					);
-
-					Object.entries(det.facilities).forEach(([id, sources]) =>
-						facilitiesSources.set(parseInt(id), sources.sources),
-					);
-
-					this._linksSources.set(det.id, {
-						pathologies: pathologiesSources,
-						facilities: facilitiesSources,
-					});
-				}),
-			),
-		);
-
 		const pathologies = new Node2D();
 		pathologies.setUname("group:pathology");
 		pathologiesData.forEach((familyData, index) => {
 			const children = familyData.children.map((child) => {
-				const assoDeterminants = Object.keys(child.determinants).map((v) =>
-					parseInt(v),
-				);
-
-				// Register assocations
-				assoDeterminants.forEach((id) =>
-					AssociationManager.register(
-						{ type: "facility", id: child.id },
-						{ type: "determinant", id },
-						true,
-					),
-				);
-
-				const pathology = new Pathology(child.id, child.name, {
-					determinants: assoDeterminants,
-				});
+				const pathology = new Pathology(child.id, child.name, { determinants: [] });
 				pathology.setUname(`pathology:${child.id}`);
 				this._pathologies.set(pathology.id, pathology);
 				return pathology;
 			});
 
 			const family = new PathologyFamily(familyData.name, children, 96);
-			family.setPosition(
-				Vector.Right.mul(100).rot(-index * Math.PI * (2 / 3) + Math.PI * 0.75),
-			);
+			family.setPosition(Vector.Right.mul(100).rot(-index * Math.PI * (2 / 3) + Math.PI * 0.75));
 			pathologies.addChildren(family);
 		});
 		this.addChildren(pathologies);
-
-		// Register associations
-		associationData.forEach((asso) => {
-			AssociationManager.register(
-				{ type: asso.from.type as AssoNodeType, id: asso.from.id },
-				{ type: asso.to.type as AssoNodeType, id: asso.to.id },
-				false,
-			);
-		});
 
 		this.decorations = new BgDecorationManager();
 		this.decorations.setUname("decoration:main:background");
@@ -234,25 +173,7 @@ export class Diagram extends Node2D {
 				new FacilityFamily(
 					group.name,
 					group.children.map((child) => {
-						const assoDeterminants = Object.keys(child.determinants).map((v) =>
-							parseInt(v),
-						);
-
-						// Register associations
-						assoDeterminants.forEach((id) =>
-							AssociationManager.register(
-								{ type: "facility", id: child.id },
-								{ type: "determinant", id },
-								true,
-							),
-						);
-
-						const facility = new Facility(
-							child.id,
-							child.name,
-							{ determinants: assoDeterminants },
-							itemArc,
-						);
+						const facility = new Facility(child.id, child.name, { determinants: [] }, itemArc);
 						facility.setUname(`facility:${child.id}`);
 						this._facilities.set(facility.id, facility);
 
@@ -264,16 +185,9 @@ export class Diagram extends Node2D {
 		);
 	}
 
-	private buildDeterminantFamilies(
-		data: DeterminantsData,
-		associations: AssociationsData,
-	): Array<DeterminantFamily> {
+	private buildDeterminantFamilies(data: DeterminantsData, associations: AssociationsData): Array<DeterminantFamily> {
 		const totalDeterminants = data.reduce(
-			(sum, family) =>
-				family.children.reduce(
-					(sum, subFamily) => sum + subFamily.children.length,
-					sum,
-				),
+			(sum, family) => family.children.reduce((sum, subFamily) => sum + subFamily.children.length, sum),
 			0,
 		);
 		const itemArc = new Angle(Math.PI * 2).div(totalDeterminants);
@@ -285,8 +199,7 @@ export class Diagram extends Node2D {
 			const subFamilies = familyData.children.map((subFamilyData) => {
 				const determinants = subFamilyData.children;
 				const subFamilyArc = itemArc.mul(determinants.length);
-				const asset =
-					determinantAssets[subFamilyData.name as keyof typeof determinantAssets];
+				const asset = determinantAssets[subFamilyData.name as keyof typeof determinantAssets];
 
 				if (undefined === asset) {
 					throw new Error("Cannot find the determinant asset");
@@ -295,29 +208,6 @@ export class Diagram extends Node2D {
 				const subFamily = new DeterminantSubFamily(
 					subFamilyData.name,
 					determinants.map((child) => {
-						const assoPathologies = Object.keys(child.pathologies).map((v) =>
-							parseInt(v),
-						);
-						const assoFacilities = Object.keys(child.facilities).map((v) =>
-							parseInt(v),
-						);
-
-						// Register associations
-						assoPathologies.forEach((id) =>
-							AssociationManager.register(
-								{ type: "determinant", id: child.id },
-								{ type: "pathology", id },
-								true,
-							),
-						);
-						assoFacilities.forEach((id) =>
-							AssociationManager.register(
-								{ type: "determinant", id: child.id },
-								{ type: "facility", id },
-								true,
-							),
-						);
-
 						const determinant = new Determinant(
 							child.id,
 							child.name as DeterminantKey,
@@ -325,14 +215,10 @@ export class Diagram extends Node2D {
 							asset,
 							{ arc: itemArc },
 							{
-								facilities: assoFacilities,
-								pathologies: assoPathologies,
+								facilities: [],
+								pathologies: [],
 								determinants: associations
-									.filter(
-										(asso) =>
-											child.id === asso.from.id &&
-											"determinant" === asso.to.type,
-									)
+									.filter((asso) => child.id === asso.from.id && "determinant" === asso.to.type)
 									.map((asso) => asso.to.id),
 							},
 						);
@@ -410,10 +296,7 @@ export class Diagram extends Node2D {
 		let previewAssoc,
 			selectionAssoc = null;
 
-		if (
-			this._previewedNode instanceof Determinant &&
-			this._previewedNode !== this._selectedNode
-		) {
+		if (this._previewedNode instanceof Determinant && this._previewedNode !== this._selectedNode) {
 			previewAssoc = AssociationManager.getAllAssociations(this._previewedNode);
 		}
 
@@ -457,9 +340,7 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			determinant.setStatus(
-				hasActiveNode && this._previewedNode instanceof Determinant ? "dimmed" : false,
-			);
+			determinant.setStatus(hasActiveNode && this._previewedNode instanceof Determinant ? "dimmed" : false);
 		}
 
 		const isPreviewSecondary = "n+1" === this._previewedNode?.status?.get();
@@ -488,9 +369,7 @@ export class Diagram extends Node2D {
 				}
 			}
 
-			facility.setStatus(
-				hasActiveNode && this._previewedNode instanceof Facility ? "dimmed" : false,
-			);
+			facility.setStatus(hasActiveNode && this._previewedNode instanceof Facility ? "dimmed" : false);
 		}
 
 		const withPathologies = App.feature("pathology");
@@ -501,10 +380,7 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			if (
-				this._selectedNode === pathology ||
-				selectionAssoc?.pathology?.has(pathology.id)
-			) {
+			if (this._selectedNode === pathology || selectionAssoc?.pathology?.has(pathology.id)) {
 				pathology.setStatus("selected");
 				continue;
 			} else if (this._previewedNode === pathology) {
@@ -520,9 +396,7 @@ export class Diagram extends Node2D {
 				}
 			}
 
-			pathology.setStatus(
-				hasActiveNode && this._previewedNode instanceof Pathology ? "dimmed" : false,
-			);
+			pathology.setStatus(hasActiveNode && this._previewedNode instanceof Pathology ? "dimmed" : false);
 		}
 
 		// Update decoration
@@ -562,10 +436,7 @@ export class Diagram extends Node2D {
 			const noSelection = !this._selectedNode;
 
 			// Only display links for hovered node for secondary nodes, or if there's no selection
-			if (
-				this._previewedNode instanceof Determinant &&
-				(noSelection || isPreviewSecondary)
-			) {
+			if (this._previewedNode instanceof Determinant && (noSelection || isPreviewSecondary)) {
 				linkManager?.showDeterminantPathologyLinks(this._previewedNode, true);
 			}
 
@@ -626,15 +497,9 @@ export class Diagram extends Node2D {
 		}
 
 		return {
-			pathologies: pathologiesId
-				.map((id) => this._pathologies.get(id))
-				.filter((v) => undefined !== v),
-			determinants: determinantsId
-				.map((id) => this._determinants.get(id))
-				.filter((v) => undefined !== v),
-			facilities: facilitiesId
-				.map((id) => this._facilities.get(id))
-				.filter((v) => undefined !== v),
+			pathologies: pathologiesId.map((id) => this._pathologies.get(id)).filter((v) => undefined !== v),
+			determinants: determinantsId.map((id) => this._determinants.get(id)).filter((v) => undefined !== v),
+			facilities: facilitiesId.map((id) => this._facilities.get(id)).filter((v) => undefined !== v),
 		};
 	}
 
@@ -692,54 +557,16 @@ export class Diagram extends Node2D {
 
 		return new Promise<void>((resolve) => {
 			if (!App.feature("determinant")) {
-				this.selectNode(
-					this._selectedNode instanceof Determinant ? this._selectedNode : undefined,
-				);
-				this.previewNode(
-					this._previewedNode instanceof Determinant
-						? this._previewedNode
-						: undefined,
-				);
+				this.selectNode(this._selectedNode instanceof Determinant ? this._selectedNode : undefined);
+				this.previewNode(this._previewedNode instanceof Determinant ? this._previewedNode : undefined);
 			}
 
 			Animator.play(
 				new TickableComposition([
-					[
-						0,
-						new FadeNodeClip(
-							families.pathology,
-							App.feature("pathology") ? "in" : "out",
-							500,
-							conf,
-						),
-					],
-					[
-						0,
-						new FadeNodeClip(
-							families.facility,
-							App.feature("facility") ? "in" : "out",
-							500,
-							conf,
-						),
-					],
-					[
-						0,
-						new FadeNodeClip(
-							families.determinant,
-							App.feature("determinant") ? "in" : "out",
-							500,
-							conf,
-						),
-					],
-					[
-						0,
-						new FadeNodeClip(
-							this.decorations,
-							App.feature("pathology") ? "in" : "out",
-							500,
-							conf,
-						),
-					],
+					[0, new FadeNodeClip(families.pathology, App.feature("pathology") ? "in" : "out", 500, conf)],
+					[0, new FadeNodeClip(families.facility, App.feature("facility") ? "in" : "out", 500, conf)],
+					[0, new FadeNodeClip(families.determinant, App.feature("determinant") ? "in" : "out", 500, conf)],
+					[0, new FadeNodeClip(this.decorations, App.feature("pathology") ? "in" : "out", 500, conf)],
 				]),
 				resolve,
 			);

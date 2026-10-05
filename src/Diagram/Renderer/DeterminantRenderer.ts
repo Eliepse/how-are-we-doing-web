@@ -67,7 +67,7 @@ export class DeterminantRenderer extends SVGNodeRenderer {
 			const color = this.getStatusColor(status.get());
 			const gOpacity = opacity.get();
 			foreground.updateStyle(new SVGStyle({ fill: color.alpha(gOpacity.ratio), opacity: gOpacity }), stepClipsOptimized[step.get()]);
-			background.updateStyle(new SVGStyle({ fill: Color.White, opacity: gOpacity.mul(.2) }));
+			background.updateStyle(new SVGStyle({ fill: Color.White, opacity: gOpacity.mul(.15) }));
 
 			const forceIdleCore = "n+1" === status.get() && App.feature("detailed-relations");
 

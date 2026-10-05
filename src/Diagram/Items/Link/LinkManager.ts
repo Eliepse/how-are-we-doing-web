@@ -123,21 +123,20 @@ export class LinkManager extends Node2D {
 	}
 
 	showViewInterDeterminantsLinks(view: AssociationView, preview = false) {
-		for (const association of view.filterByOnlyDeterminants().associations) {
+		for (const association of view.associations) {
 			const [a, b] = association.nodes;
 
-			if (!a || !b) {
+			if (a?.type !== "determinant" || b?.type !== "determinant") {
 				continue;
 			}
 
 			const link = this.links.get(`d${a.id}-d${b.id}`);
 
 			if (undefined === link) {
-				console.warn(`Unable to find link for asso: d${a.id}-d${b.id}`);
+				console.warn(`Unable to find link for association: d${a.id}-d${b.id}`);
 				continue;
 			}
 
-			// link.direction = Dir.Bidirectional === direction ? Dir.Bidirectional : Dir.Target;
 			link.status?.set(preview ? "preview" : "selected");
 			link.show();
 		}

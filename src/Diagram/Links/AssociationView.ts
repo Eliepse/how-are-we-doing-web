@@ -34,7 +34,15 @@ export class AssociationView {
 		}
 	}
 
-	has(node: SelectableNode): boolean {
+	/**
+	 * @param node
+	 * @param atPosition
+	 */
+	has(node: SelectableNode, atPosition?: number): boolean {
+		if(undefined !== atPosition) {
+			return this.associations.some((association) => association.has(node, atPosition));
+		}
+
 		if (node instanceof Pathology) {
 			return this.pathologies.has(node.id);
 		}
@@ -55,6 +63,16 @@ export class AssociationView {
 	 */
 	filterByTypeAll(types: NodeRef["type"][]) {
 		return new AssociationView(this.associations.filter((association) => association.hasTypeAll(types)));
+	}
+
+	/**
+	 * Return a view with associations that include the given node.
+	 *
+	 * @param source The node to search
+	 * @param atPosition Also match the position of the given node (useful for directional association, like inter-determinant)
+	 */
+	filterByNode(source: SelectableNode, atPosition?: number): AssociationView {
+		return new AssociationView(this.associations.filter((association) => association.has(source, atPosition)));
 	}
 
 	/**

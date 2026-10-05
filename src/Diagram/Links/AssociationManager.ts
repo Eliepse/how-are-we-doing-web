@@ -21,8 +21,14 @@ export class AssociationManager {
 		this.registry.push(association);
 	}
 
-	static filterByNode(source: SelectableNode): AssociationView {
-		return new AssociationView(this.registry.filter((association) => association.has(source)));
+	/**
+	 * Return a view with associations that include the given node.
+	 *
+	 * @param source The node to search
+	 * @param atPosition Also match the position of the given node (useful for directional association, like inter-determinant)
+	 */
+	static filterByNode(source: SelectableNode, atPosition?: number): AssociationView {
+		return new AssociationView(this.registry.filter((association) => association.has(source, atPosition)));
 	}
 
 	static all(): AssociationView {

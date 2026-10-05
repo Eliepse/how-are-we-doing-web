@@ -19,20 +19,39 @@ export class Association {
 		this.nodes.forEach((node) => this.types.add(node.type));
 	}
 
-	has(node: SelectableNode): boolean {
+	/**
+	 * Check if the given node is included in the association
+	 *
+	 * @param node The node to search
+	 * @param atPosition Match the node at a specific position in the association
+	 */
+	has(node: SelectableNode, atPosition?: number): boolean {
+		const type = this.getNodeType(node);
+
+		// Match at a specific position
+		if (undefined !== atPosition) {
+			const target = this.nodes[atPosition] ?? null;
+			return target?.id === node.id && target?.type === type;
+		}
+
+		// Match at least one (no positional condition)
+		return this.nodes.some((target) => target.type === type && target.id === node.id);
+	}
+
+	private getNodeType(node: SelectableNode): NodeRef["type"] {
 		if (node instanceof Pathology) {
-			return this.nodes.some((v) => v.type === "pathology" && v.id === node.id);
+			return "pathology";
 		}
 
 		if (node instanceof Determinant) {
-			return this.nodes.some((v) => v.type === "determinant" && v.id === node.id);
+			return "determinant";
 		}
 
 		if (node instanceof Facility) {
-			return this.nodes.some((v) => v.type === "facility" && v.id === node.id);
+			return "facility";
 		}
 
-		return false;
+		throw new Error("Unsupported node");
 	}
 
 	/**

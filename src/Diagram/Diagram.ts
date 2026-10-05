@@ -311,6 +311,8 @@ export class Diagram extends Node2D {
 		const facilities = Engine.nodesByTag<Facility>("facility");
 		const pathologies = Engine.nodesByTag<Pathology>("pathology");
 		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
+		const determinantViewSelected = this?._selectedView?.filterByOnlyDeterminants();
+		const determinantViewPreview = this?._selectedView?.filterByOnlyDeterminants();
 
 		linkManager?.clearLinks();
 
@@ -326,17 +328,13 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			// if (selectionAssoc?.determinant?.has(determinant.id)) {
-			if (this._selectedView?.has(determinant)) {
-				if (!(this._selectedNode instanceof Determinant)) {
-					determinant.setStatus("selected");
-					continue;
-				}
-
-				if (withDetailedAssocs) {
-					determinant.setStatus("n+1");
-					continue;
-				}
+			if (this._selectedView?.has(determinant) && !(this._selectedNode instanceof Determinant)) {
+				determinant.setStatus("selected");
+				continue;
+			} else if (withDetailedAssocs && this._selectedView?.has(determinant, 1)) {
+				// Check position "1" to get only associations where the determinant is the target
+				determinant.setStatus("n+1");
+				continue;
 			}
 
 			if (this._previewedNode === determinant) {
@@ -344,7 +342,8 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			if (this._previewView?.has(determinant) && withDetailedAssocs) {
+			// Check position "1" to get only associations where the determinant is the target
+			if (withDetailedAssocs && this._previewView?.has(determinant, 1)) {
 				determinant.setStatus("n+1");
 				continue;
 			}
@@ -369,11 +368,9 @@ export class Diagram extends Node2D {
 				facility.setStatus("preview");
 				continue;
 			} else if (withFacilityAssocs) {
-				// if (selectionAssoc?.facility?.has(facility.id)) {
 				if (this._selectedView?.has(facility)) {
 					facility.setStatus("selected");
 					continue;
-					// } else if (previewAssoc?.facility?.has(facility.id)) {
 				} else if (this._previewView?.has(facility)) {
 					facility.setStatus("preview");
 					continue;
@@ -433,11 +430,19 @@ export class Diagram extends Node2D {
 		// Update links
 		if (App.feature("focus-determinant") && linkManager) {
 			if (this._previewedNode && this._previewView) {
-				linkManager.showViewInterDeterminantsLinks(this._previewView, true);
+				linkManager.showViewInterDeterminantsLinks(
+					// Check position "0" to get only associations where the determinant is the source
+					this._previewView.filterByNode(this._previewedNode, 0),
+					true,
+				);
 			}
 
 			if (this._selectedNode && this._selectedView) {
-				linkManager.showViewInterDeterminantsLinks(this._selectedView, false);
+				linkManager.showViewInterDeterminantsLinks(
+					// Check position "0" to get only associations where the determinant is the source
+					this._selectedView.filterByNode(this._selectedNode, 0),
+					false,
+				);
 			}
 
 			return;
@@ -497,12 +502,12 @@ export class Diagram extends Node2D {
 			return sources;
 		}
 
-		for(const association of view.associations) {
-			if(association.hasTypeAll(["pathology", "determinant"])) {
+		for (const association of view.associations) {
+			if (association.hasTypeAll(["pathology", "determinant"])) {
 				sources.pathologies.push(...association.sources);
 			}
 
-			if(association.hasTypeAll(["determinant", "facility"])) {
+			if (association.hasTypeAll(["determinant", "facility"])) {
 				sources.facilities.push(...association.sources);
 			}
 		}

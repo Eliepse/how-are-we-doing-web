@@ -36,6 +36,7 @@ import { domOrThrow } from "./helpers";
 import type db from "./public/data/database.json";
 import { AssociationManager, type NodeRef } from "./Diagram/Links/AssociationManager";
 import { Association } from "./Diagram/Links/Association";
+import { Source } from "./Diagram/Links/Source";
 
 export type Feature =
 	| "detailed-relations"
@@ -230,21 +231,30 @@ export class App extends EventTarget {
 			throw new Error("Database failed to load");
 		}
 
-		const typesMap = { 0: "facility", 1: "determinant", 2: "pathology" } as const;
-		type linkMember = [0 | 1 | 2, number];
+		/*
+			Register all links/associations from the database
+		 */
 
+		const TYPES_MAP = { 0: "facility", 1: "determinant", 2: "pathology" } as const;
+		type LinkMember = [0 | 1 | 2, number];
+
+		// Hydrate and register links between nodes
 		for (const link of this.database.links) {
-			const nodes = (link.members as linkMember[]).map(
-				(item) => ({ type: typesMap[item[0]], id: item[1] }) satisfies NodeRef,
+			const nodes = (link.members as LinkMember[]).map(
+				(item) => ({ type: TYPES_MAP[item[0]], id: item[1] }) satisfies NodeRef,
 			);
 
-			AssociationManager.register(new Association(nodes, link.sources ?? []));
+			const sources = link.sources.map((item) => new Source(item[0] ?? "", item[1] ?? null));
+			AssociationManager.register(new Association(nodes, sources));
 		}
 
+		// Hydrate and register links that are only between determinants
 		for (const link of this.database.associations) {
-			AssociationManager.register(new Association([link.from as NodeRef, link.to as NodeRef], link.sources ?? []));
+			const sources = link.sources.map((item) => new Source(item.name, item.doi));
+			AssociationManager.register(new Association([link.from as NodeRef, link.to as NodeRef], sources));
 		}
 
+		// Initialize diagram
 		this.diagram = new Diagram(
 			this.database.pathologies,
 			this.database.facilities,
@@ -353,8 +363,8 @@ export class App extends EventTarget {
 			activeNodes.pathologies.forEach((node) => this.biblio.addNode(node));
 
 			const links = this.diagram.getActiveLinksSources();
-			links.pathologies.forEach((l) => this.biblio.addLink("pathology", l.source.toLowerCase()));
-			links.facilities.forEach((l) => this.biblio.addLink("facility", l.source.toLowerCase()));
+			links.pathologies.forEach((source) => this.biblio.addLink("pathology", source.author.toLowerCase()));
+			links.facilities.forEach((source) => this.biblio.addLink("facility", source.author.toLowerCase()));
 		});
 
 		this.diagram.addListener("nodePreviewed", (event: NodeEvent<SelectableNode | undefined>) => {

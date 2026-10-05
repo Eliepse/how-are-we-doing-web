@@ -27,8 +27,9 @@ import { App } from "../App";
 import { Animator } from "../Engine2D/Animate/Animator";
 import { TickableComposition } from "../Engine2D/Animate/Composition/TickableComposition";
 import { FadeNodeClip } from "../Engine2D/Animate/Predefined/FadeNodeClip";
+import type { AssociationView } from "./Links/AssociationView";
+import type { Source } from "./Links/Source";
 
-export type Family = "pathology" | "determinant" | "facility";
 export type SelectableNode = Pathology | Determinant | Facility;
 
 export type PathologiesData = (typeof db)["pathologies"];
@@ -36,12 +37,13 @@ export type FacilitiesData = (typeof db)["facilities"];
 export type DeterminantsData = (typeof db)["determinants"];
 export type AssociationsData = (typeof db)["associations"];
 
-type Source = { source: string; doi: string };
 type SourceList = Map<number, Array<Source>>;
 
 export class Diagram extends Node2D {
 	private _selectedNode: SelectableNode | undefined = undefined;
 	private _previewedNode: SelectableNode | undefined = undefined;
+	private _selectedView: AssociationView | undefined = undefined;
+	private _previewView: AssociationView | undefined = undefined;
 	private _pathologies = new Map<number, Pathology>();
 	private _determinants = new Map<number, Determinant>();
 	private _facilities = new Map<number, Facility>();
@@ -245,6 +247,14 @@ export class Diagram extends Node2D {
 		});
 	}
 
+	get selectedView() {
+		return this._selectedView;
+	}
+
+	get previewView() {
+		return this._previewView;
+	}
+
 	selectNode(node: SelectableNode | undefined): void {
 		if (this._selectedNode === node) {
 			return;
@@ -252,6 +262,7 @@ export class Diagram extends Node2D {
 
 		if (undefined === node) {
 			this._selectedNode = undefined;
+			this._selectedView = undefined;
 			this.updateNodesHighlight();
 			this.dispatchEvent(new NodeEvent("nodeSelected", undefined));
 			return;
@@ -272,6 +283,7 @@ export class Diagram extends Node2D {
 		}
 
 		this._selectedNode = node;
+		this._selectedView = AssociationManager.filterByNode(node);
 		this.updateNodesHighlight();
 		this.dispatchEvent(new NodeEvent("nodeSelected", this._selectedNode));
 	}
@@ -282,6 +294,13 @@ export class Diagram extends Node2D {
 		}
 
 		this._previewedNode = node;
+
+		if (node && this._previewedNode instanceof Determinant && this._previewedNode !== this._selectedNode) {
+			this._previewView = AssociationManager.filterByNode(this._previewedNode);
+		} else {
+			this._previewView = undefined;
+		}
+
 		this.updateNodesHighlight();
 		this.dispatchEvent(new NodeEvent("nodePreviewed", this._previewedNode));
 	}
@@ -292,16 +311,6 @@ export class Diagram extends Node2D {
 		const facilities = Engine.nodesByTag<Facility>("facility");
 		const pathologies = Engine.nodesByTag<Pathology>("pathology");
 		const hasActiveNode = undefined !== (this._previewedNode || this._selectedNode);
-		let viewPreview = null,
-			viewSelection = null;
-
-		if (this._previewedNode instanceof Determinant && this._previewedNode !== this._selectedNode) {
-			viewPreview = AssociationManager.filterByNode(this._previewedNode);
-		}
-
-		if (this._selectedNode) {
-			viewSelection = AssociationManager.filterByNode(this._selectedNode);
-		}
 
 		linkManager?.clearLinks();
 
@@ -318,7 +327,7 @@ export class Diagram extends Node2D {
 			}
 
 			// if (selectionAssoc?.determinant?.has(determinant.id)) {
-			if (viewSelection?.has(determinant)) {
+			if (this._selectedView?.has(determinant)) {
 				if (!(this._selectedNode instanceof Determinant)) {
 					determinant.setStatus("selected");
 					continue;
@@ -335,7 +344,7 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			if (viewPreview?.has(determinant) && withDetailedAssocs) {
+			if (this._previewView?.has(determinant) && withDetailedAssocs) {
 				determinant.setStatus("n+1");
 				continue;
 			}
@@ -361,11 +370,11 @@ export class Diagram extends Node2D {
 				continue;
 			} else if (withFacilityAssocs) {
 				// if (selectionAssoc?.facility?.has(facility.id)) {
-				if (viewSelection?.has(facility)) {
+				if (this._selectedView?.has(facility)) {
 					facility.setStatus("selected");
 					continue;
 					// } else if (previewAssoc?.facility?.has(facility.id)) {
-				} else if (viewPreview?.has(facility)) {
+				} else if (this._previewView?.has(facility)) {
 					facility.setStatus("preview");
 					continue;
 				}
@@ -382,17 +391,17 @@ export class Diagram extends Node2D {
 				continue;
 			}
 
-			if (this._selectedNode === pathology || viewSelection?.has(pathology)) {
+			if (this._selectedNode === pathology || this._selectedView?.has(pathology)) {
 				pathology.setStatus("selected");
 				continue;
 			} else if (this._previewedNode === pathology) {
 				pathology.setStatus(isPreviewSecondary ? "n+1" : "preview");
 				continue;
 			} else if (withPathologyAssocs) {
-				if (viewSelection?.has(pathology)) {
+				if (this._selectedView?.has(pathology)) {
 					pathology.setStatus("selected");
 					continue;
-				} else if (viewPreview?.has(pathology) && isPreviewSecondary) {
+				} else if (this._previewView?.has(pathology) && isPreviewSecondary) {
 					pathology.setStatus("n+1");
 					continue;
 				}
@@ -423,12 +432,12 @@ export class Diagram extends Node2D {
 
 		// Update links
 		if (App.feature("focus-determinant") && linkManager) {
-			if (this._previewedNode && viewPreview) {
-				linkManager.showViewInterDeterminantsLinks(viewPreview, true);
+			if (this._previewedNode && this._previewView) {
+				linkManager.showViewInterDeterminantsLinks(this._previewView, true);
 			}
 
-			if (this._selectedNode && viewSelection) {
-				linkManager.showViewInterDeterminantsLinks(viewSelection, false);
+			if (this._selectedNode && this._selectedView) {
+				linkManager.showViewInterDeterminantsLinks(this._selectedView, false);
 			}
 
 			return;
@@ -438,12 +447,12 @@ export class Diagram extends Node2D {
 			const noSelection = !this._selectedNode;
 
 			// Only display links for hovered node for secondary nodes, or if there's no selection
-			if (this._previewedNode && viewPreview && (noSelection || isPreviewSecondary)) {
-				linkManager.showViewLinks(viewPreview, this._previewedNode.status.get(), true);
+			if (this._previewedNode && this._previewView && (noSelection || isPreviewSecondary)) {
+				linkManager.showViewLinks(this._previewView, this._previewedNode.status.get(), true);
 			}
 
-			if (this._selectedNode && viewSelection) {
-				linkManager.showViewLinks(viewSelection, this._selectedNode.status.get(), false);
+			if (this._selectedNode && this._selectedView) {
+				linkManager.showViewLinks(this._selectedView, this._selectedNode.status.get(), false);
 			}
 		}
 	}
@@ -461,73 +470,42 @@ export class Diagram extends Node2D {
 		determinants: Determinant[];
 		facilities: Facility[];
 	} {
-		const selectedNode = this._selectedNode;
+		const view = this._selectedView;
 
-		if (undefined === selectedNode) {
+		if (undefined === view) {
 			return { pathologies: [], determinants: [], facilities: [] };
 		}
 
-		let facilitiesId: number[] = [];
-		let determinantsId: number[] = [];
-		let pathologiesId: number[] = [];
-
-		if (selectedNode instanceof Determinant) {
-			facilitiesId = selectedNode.associations.facilities;
-			determinantsId = [selectedNode.id];
-			pathologiesId = selectedNode.associations.pathologies;
-		} else if (selectedNode instanceof Facility) {
-			facilitiesId = [selectedNode.id];
-			determinantsId = selectedNode.associations.determinants;
-			selectedNode.associations.determinants.forEach((id) => {
-				const pathologies = this._determinants.get(id)?.associations?.pathologies;
-				pathologies?.forEach((patId) => pathologiesId.push(patId));
-			});
-		} else {
-			// noinspection SuspiciousTypeOfGuard
-			if (selectedNode instanceof Pathology) {
-				pathologiesId = [selectedNode.id];
-				determinantsId = selectedNode.associations.determinants;
-				selectedNode.associations.determinants.forEach((id) => {
-					const facilities = this._determinants.get(id)?.associations?.facilities;
-					facilities?.forEach((facId) => facilitiesId.push(facId));
-				});
-			}
-		}
-
 		return {
-			pathologies: pathologiesId.map((id) => this._pathologies.get(id)).filter((v) => undefined !== v),
-			determinants: determinantsId.map((id) => this._determinants.get(id)).filter((v) => undefined !== v),
-			facilities: facilitiesId.map((id) => this._facilities.get(id)).filter((v) => undefined !== v),
+			pathologies: Array.from(view.pathologies)
+				.map((id) => this._pathologies.get(id))
+				.filter((v) => undefined !== v),
+			determinants: Array.from(view.determinants)
+				.map((id) => this._determinants.get(id))
+				.filter((v) => undefined !== v),
+			facilities: Array.from(view.facilities)
+				.map((id) => this._facilities.get(id))
+				.filter((v) => undefined !== v),
 		};
 	}
 
 	getActiveLinksSources(): { pathologies: Source[]; facilities: Source[] } {
-		const sources = { pathologies: [], facilities: [] } as {
-			pathologies: Source[];
-			facilities: Source[];
-		};
+		const view = this._selectedView;
+		const sources = { pathologies: [] as Source[], facilities: [] as Source[] };
 
-		if (undefined === this._selectedNode) {
+		if (undefined === view) {
 			return sources;
 		}
 
-		const activeNodes = this.getActiveNodes();
-
-		activeNodes.determinants.forEach((determinant) => {
-			const links = this._linksSources.get(determinant.id);
-
-			if (undefined === links) {
-				return;
+		for(const association of view.associations) {
+			if(association.hasTypeAll(["pathology", "determinant"])) {
+				sources.pathologies.push(...association.sources);
 			}
 
-			activeNodes.facilities.forEach((facility) =>
-				sources.facilities.push(...(links.facilities.get(facility.id) ?? [])),
-			);
-
-			activeNodes.pathologies.forEach((pathologies) =>
-				sources.pathologies.push(...(links.pathologies.get(pathologies.id) ?? [])),
-			);
-		});
+			if(association.hasTypeAll(["determinant", "facility"])) {
+				sources.facilities.push(...association.sources);
+			}
+		}
 
 		return sources;
 	}

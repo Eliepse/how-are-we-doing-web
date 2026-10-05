@@ -3,6 +3,7 @@ import type { SelectableNode } from "../Diagram";
 import { Pathology } from "../Items/Pathology/Pathology";
 import { Determinant } from "../Items/Determinant/Determinant";
 import { Facility } from "../Items/Facility/Facility";
+import type { Source } from "./Source";
 
 /**
  * An association between nodes without constraints
@@ -13,7 +14,7 @@ export class Association {
 
 	constructor(
 		public readonly nodes: NodeRef[],
-		public readonly sources: any[] = [],
+		public readonly sources: Source[] = [],
 	) {
 		this.nodes.forEach((node) => this.types.add(node.type));
 	}
